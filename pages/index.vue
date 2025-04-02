@@ -532,6 +532,9 @@ const closeWidget = () => {
   .trust__info {
     padding-top: 146px;
   }
+  .swiperInfo .swiper-slide {
+    height: 754px;
+  }
 }
 
 @media (max-width: 1060px) {
