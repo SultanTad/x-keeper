@@ -1,11 +1,15 @@
 <script setup>
-import { onMounted } from "vue";
-import { Swiper, SwiperSlide } from "swiper/vue";
-import "swiper/css";
-import "swiper/css/pagination";
-import { Pagination } from "swiper/modules";
-import { gsap } from "gsap";
+import { onMounted, ref } from "vue";
+import ForestCountry from "@/assets/images/forest-country-road-1.webp";
+import YellowBulldozer from "@/assets/images/yellow-bulldozer.webp";
+import Cargoes from "@/assets/images/cargoes.webp";
+import FirstSlide from "@/assets/images/image55.png";
+import WhiteBlackBg from "@/assets/images/white-black-background.png";
+import Icon1 from "@/assets/images/icon-1.svg";
+import Icon2 from "@/assets/images/icon-2.svg";
+import Icon3 from "@/assets/images/icon-3.svg";
 
+import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -23,11 +27,113 @@ onMounted(() => {
   });
 });
 
-const swiperPaginationContent = ["автомобили", "спецтехника", "грузы"];
+const activeWidget = ref(false);
+
+const sliders = [
+  {
+    title:
+      "Ведущий разработчик и производитель устройств для спутникового (GNSS) мониторинга",
+    pagination: ["автомобили", "спецтехника", "грузы"],
+    slides: [
+      {
+        img: ForestCountry,
+        icon: Icon1,
+        title: "До 5 лет без подзарядки",
+        text: "Мы нашли оптимальное соотношение между эффективнностью програмного обеспечения и экономичностью батарей2",
+      },
+      {
+        img: YellowBulldozer,
+        icon: Icon1,
+        title: "Работа в экстремальных условиях",
+        text: "Обеспечиваем устойчивость к перебоям сети связи в зонах с плохим покрытием и удалённых регионах",
+      },
+      {
+        img: Cargoes,
+        icon: Icon1,
+        title: "Доступ по всему миру",
+        text: "Автоматические переключение симкарт в зависимости от региона, позволяет контролировать грузы на всём пути следования",
+      },
+    ],
+  },
+  {
+    title: "Инновационная компания в сфере навигационно - связных технологий",
+    pagination: ["x-sim", "гибрид", "сеть"],
+    slides: [
+      {
+        img: FirstSlide,
+        icon: Icon2,
+        title: "Инновации",
+        text: "Сегодня мы создаём то, что станет стандартом завтра",
+      },
+      {
+        img: FirstSlide,
+        icon: Icon2,
+        title: "Инновации",
+        text: "Сегодня мы создаём то, что станет стандартом завтра",
+      },
+      {
+        img: FirstSlide,
+        icon: Icon2,
+        title: "Инновации",
+        text: "Сегодня мы создаём то, что станет стандартом завтра",
+      },
+    ],
+  },
+  {
+    title: "Первая цифровая система аутсорсинга лизинговых операций в России",
+    pagination: ["софт", "цифровизация", "отчётность"],
+    slides: [
+      {
+        img: WhiteBlackBg,
+        icon: Icon3,
+        title: "IT-решения",
+        text: "Мы позаботимся о важном, чтобы вы могли сосредоточиться на главном",
+      },
+      {
+        img: WhiteBlackBg,
+        icon: Icon3,
+        title: "IT-решения 2",
+        text: "Мы позаботимся о важном, чтобы вы могли сосредоточиться на главном",
+      },
+      {
+        img: WhiteBlackBg,
+        icon: Icon3,
+        title: "IT-решения 3",
+        text: "Мы позаботимся о важном, чтобы вы могли сосредоточиться на главном",
+      },
+    ],
+  },
+];
+
+const activatedWidget = () => {
+  activeWidget.value = !activeWidget.value;
+};
+const closeWidget = () => {
+  activeWidget.value = false;
+};
 </script>
 <template>
   <main class="main">
     <div class="main__bg"></div>
+    <div class="widget" @click="activatedWidget">
+      <img src="../assets/images/widget.svg" alt="" />
+    </div>
+    <div class="get-in-touch" :class="{ open__widget: activeWidget }">
+      <h2 class="title">Связаться</h2>
+      <div class="icon-wrap" @click="closeWidget">
+        <img
+          class="get-in-touch--icon"
+          src="../assets/images/close-get-in-touch.svg"
+          alt=""
+        />
+      </div>
+      <div class="contact-info">
+        <p>WhatsApp <img src="../assets/images/Whatsapp.svg" alt="" /></p>
+        <p>Telegram <img src="../assets/images/telegram.svg" alt="" /></p>
+        <p>Написать на email</p>
+        <p>Позвонить</p>
+      </div>
+    </div>
     <section class="promo">
       <div class="container">
         <div class="promo__inner">
@@ -54,40 +160,8 @@ const swiperPaginationContent = ["автомобили", "спецтехника
         </div>
       </div>
     </section>
-    <section class="info">
-      <div class="container">
-        <h2 class="info__title">
-          Ведущий разработчик и производитель устройств для спутникового (GNSS)
-          мониторинга
-        </h2>
-        <swiper
-          :pagination="{
-            clickable: true,
-            bulletActiveClass: 'info-bullet-active',
-            bulletClass: 'info-bullet',
-            renderBullet: (index, className) => {
-              return `<span class=${className}>${swiperPaginationContent[index]}</span>`;
-            },
-          }"
-          :modules="[Pagination]"
-          class="swiperInfo"
-        >
-          <swiper-slide
-            ><img src="../assets/images/cargoes.webp" alt=""
-          /></swiper-slide>
-          <swiper-slide
-            ><img
-              src="../assets/images/aerial-view-car-driving-through-autumn-forest-country-road-1.webp"
-              alt=""
-          /></swiper-slide>
-          <swiper-slide
-            ><img
-              src="../assets/images/yellow-bulldozer-field-against-backdrop-snowy-forest-1.webp"
-              alt=""
-          /></swiper-slide>
-        </swiper>
-      </div>
-    </section>
+    <InfoSlider :sliders="sliders" />
+
     <section class="about-us">
       <div class="container">
         <div class="about-us__inner">
@@ -118,6 +192,7 @@ const swiperPaginationContent = ["автомобили", "спецтехника
         </div>
       </div>
     </section>
+
     <section class="number-company">
       <div class="container">
         <h2 class="number-company__title">Цифры компании</h2>
@@ -141,6 +216,7 @@ const swiperPaginationContent = ["автомобили", "спецтехника
         </div>
       </div>
     </section>
+
     <section class="trust__info">
       <div class="container">
         <div class="trust__info-inner">
@@ -155,7 +231,7 @@ const swiperPaginationContent = ["автомобили", "спецтехника
   </main>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .main__bg {
   background-color: #ebecf3;
   height: 650px;
@@ -165,6 +241,77 @@ const swiperPaginationContent = ["автомобили", "спецтехника
   right: 0;
   position: absolute;
   z-index: -1;
+}
+.widget {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  background: #333343;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.get-in-touch {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 200;
+  max-width: 450px;
+  width: 100%;
+  background-color: #ebecf3;
+  border-radius: 34px;
+  border: 2px solid #fff;
+  display: none;
+  &.open__widget {
+    display: block;
+  }
+  .title {
+    text-align: center;
+    padding-top: 20px;
+    font-family: "VelaSans-ExtraBold";
+    font-weight: 800;
+    margin-bottom: 43px;
+    font-size: 26px;
+    line-height: 120%;
+  }
+  .icon-wrap {
+    background-color: #fff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    position: absolute;
+    right: 18px;
+    top: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .contact-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    padding: 0 18px 18px 18px;
+    p {
+      background-color: #fff;
+      border-radius: 132px;
+      padding: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "VelaSans-SemiBold";
+      font-weight: 600;
+      font-size: 16px;
+      img {
+        margin-left: 6px;
+      }
+    }
+  }
 }
 .promo {
   padding-top: 134px;
@@ -229,60 +376,6 @@ const swiperPaginationContent = ["автомобили", "спецтехника
     color: #333343;
     margin-bottom: 50px;
     text-align: center;
-  }
-}
-
-.swiperInfo .swiper-pagination {
-  max-width: 499px;
-  height: 54px;
-  border-radius: 86px;
-  background-color: rgba(255, 255, 255, 0.42);
-  border: 1px solid rgba(255, 255, 255, 0.32);
-  display: flex;
-  align-items: center;
-  padding: 5px;
-  top: 38px;
-  left: 31%;
-  position: absolute;
-}
-
-.info-bullet {
-  border-radius: 55px;
-  font-family: "VelaSans-SemiBold";
-  font-size: 20px;
-  line-height: 89%;
-  color: #fff;
-  cursor: pointer;
-  padding: 12px 26px;
-  position: relative;
-  transition: all 1s;
-}
-
-.info-bullet-active {
-  color: #333343;
-}
-
-.info-bullet-active::before {
-  position: absolute;
-  content: "";
-  background-color: #35ec6f;
-  transition: all 1s;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  top: 0;
-  left: 0;
-  border-radius: 55px;
-}
-
-.swiperInfo .swiper-slide {
-  height: 500px;
-  width: 100%;
-  img {
-    width: 100%;
-    height: 500px;
-    object-fit: cover;
-    border-radius: 80px;
   }
 }
 
@@ -375,11 +468,29 @@ const swiperPaginationContent = ["автомобили", "спецтехника
     text-align: center;
   }
 }
-
+@media (min-width: 1000px) {
+  .widget {
+    &:hover img {
+      animation: pulse 0.3s ease-in-out;
+    }
+  }
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+}
 @media (min-width: 1500px) {
   .main__bg {
     height: 846px;
   }
+
   .promo {
     &__banner {
       img {
@@ -420,6 +531,96 @@ const swiperPaginationContent = ["автомобили", "спецтехника
   }
   .trust__info {
     padding-top: 146px;
+  }
+}
+
+@media (max-width: 1060px) {
+  .about-us {
+    padding-top: 90px;
+    &__inner {
+      flex-direction: column;
+      justify-content: unset;
+    }
+    &__info {
+      margin-bottom: 50px;
+    }
+  }
+}
+
+@media (max-width: 860px) {
+  .number-company {
+    padding-top: 90px;
+    &__list {
+      grid-template-columns: 1fr;
+      gap: 30px 0;
+    }
+    &__item {
+      border-radius: 32px;
+    }
+  }
+}
+
+@media (max-width: 800px) {
+  .promo,
+  .main__bg {
+    display: none;
+  }
+  .info {
+    padding-top: 100px;
+    &__title {
+      font-size: 30px;
+      margin-bottom: 30px;
+    }
+  }
+}
+
+@media (max-width: 700px) {
+  .info {
+    &__title {
+      font-size: 25px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .info {
+    &__title {
+      font-size: 16px;
+    }
+  }
+  .about-us {
+    &__text {
+      font-size: 18px;
+    }
+    &__services {
+      gap: 30px 0;
+    }
+    &__service {
+      font-size: 20px;
+    }
+  }
+  .number-company {
+    &__title {
+      font-size: 44px;
+    }
+    &__list {
+      margin-top: 30px;
+    }
+  }
+  .trust__info {
+    padding-top: 50px;
+    &-text {
+      font-size: 20px;
+    }
+    &-inner {
+      gap: 30px 0;
+    }
+  }
+  .get-in-touch .title {
+    margin-bottom: 20px;
+  }
+  .get-in-touch .contact-info p {
+    font-size: 11px;
   }
 }
 </style>

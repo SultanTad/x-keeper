@@ -1,17 +1,38 @@
 <script setup>
 import { Swiper, SwiperSlide } from "swiper/vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/mousewheel";
 import { Pagination, Mousewheel } from "swiper/modules";
+
+const windowWidth = ref(0);
+
+const updateWidth = () => {
+  if (typeof window !== "undefined") {
+    windowWidth.value = window.innerWidth;
+  }
+};
+
+onMounted(() => {
+  updateWidth();
+  window.addEventListener("resize", updateWidth);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", updateWidth);
+});
+
+const slidesOffsetBefore = computed(() => (windowWidth.value < 800 ? 0 : 430));
+const slidesPerView = computed(() => (windowWidth.value < 400 ? 1 : 2.2));
 </script>
 <template>
   <swiper
     :pagination="{
       type: 'progressbar',
     }"
-    :slides-offset-before="430"
-    :slides-per-view="2.2"
+    :slides-offset-before="slidesOffsetBefore"
+    :slides-per-view="slidesPerView"
     :space-between="20"
     :mousewheel="true"
     :modules="[Pagination, Mousewheel]"
@@ -109,21 +130,28 @@ import { Pagination, Mousewheel } from "swiper/modules";
 }
 
 @media (min-width: 1500px) {
-    .swiperSolution .swiperSolution-slide__img {
-        width: 200px;
-        height: 220px;
-    }
-    .swiperSolution .swiperSolution-slide__title {
-        font-size: 26px;
-        max-width: unset;
-    }
-    .swiperSolution .swiperSolution-slide__text {
-        font-size: 20px;
-        max-width: 240px;
-    }
-    .swiperSolution .swiper-slide {
-        width: 431px;
-        padding: 63px 48px;
-    }
+  .swiperSolution .swiperSolution-slide__img {
+    width: 200px;
+    height: 220px;
+  }
+  .swiperSolution .swiperSolution-slide__title {
+    font-size: 26px;
+    max-width: unset;
+  }
+  .swiperSolution .swiperSolution-slide__text {
+    font-size: 20px;
+    max-width: 240px;
+  }
+  .swiperSolution .swiper-slide {
+    width: 431px;
+    padding: 63px 48px;
+  }
+}
+
+@media (max-width: 800px) {
+  .swiperSolution .swiper-pagination {
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 </style>
