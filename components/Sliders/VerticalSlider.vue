@@ -178,7 +178,7 @@ onMounted(() => {
   content: "";
 }
 
-@media (min-width: 1500px) {
+@media (min-width: 1200px) {
   .slide {
     &__title {
       font-size: 36px;

@@ -38,6 +38,7 @@ defineProps({
         <ul class="swiper-slide__list" v-if="Array.isArray(content.text)">
           <li
             class="list__item"
+            :class="`list__item--${index + 1}`"
             v-for="(item, index) in content.text"
             :key="index"
           >
@@ -87,12 +88,15 @@ defineProps({
       font-size: 35px;
       margin-bottom: 25px;
       max-width: 380px;
+      line-height: normal;
       span {
         display: block;
       }
     }
     &__list {
       padding-bottom: 60px;
+      max-width: 599px;
+      width: 100%;
     }
     &__text {
       padding-bottom: 34px;
@@ -138,8 +142,12 @@ defineProps({
       list-style-type: disc;
       font-family: "VelaSans-Medium";
       font-size: 20px;
-      line-height: 100%;
+      line-height: normal;
       margin-bottom: 21px;
+    }
+    .list__item--2 {
+      max-width: 517px;
+      width: 100%;
     }
     .list__item::marker {
       font-size: 10px;
@@ -190,7 +198,7 @@ defineProps({
   }
 }
 
-@media (min-width: 1500px) {
+@media (min-width: 1200px) {
   .swiperProducts {
     .swiper-slide {
       height: 725px;

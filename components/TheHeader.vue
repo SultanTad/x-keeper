@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from "vue";
-
 const openBurger = ref(false);
 const openMenu = ref(false);
 
@@ -19,6 +18,11 @@ const activatedBurgerMenu = () => {
   <header class="header">
     <div class="container">
       <nav class="nav">
+        <img
+          class="main-logo-invisible"
+          src="../assets/images/logo.svg"
+          alt="Logo"
+        />
         <NuxtLink to="/"
           ><img class="main-logo" src="../assets/images/logo.svg" alt="Logo"
         /></NuxtLink>
@@ -75,6 +79,10 @@ const activatedBurgerMenu = () => {
   position: relative;
   z-index: 1000;
 }
+.main-logo-invisible {
+  opacity: 0;
+  position: absolute;
+}
 .header {
   position: fixed;
   left: 0;
@@ -83,7 +91,7 @@ const activatedBurgerMenu = () => {
   align-items: center;
   height: 80px;
   z-index: 3;
-  background: #fff;
+  background: transparent;
 }
 .nav {
   display: flex;

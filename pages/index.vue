@@ -339,11 +339,13 @@ const closeWidget = () => {
     font-size: 50px;
     line-height: 120%;
     margin-bottom: 40px;
+    font-weight: 300;
     span {
       display: block;
       font-family: "VelaSans-ExtraBold";
       font-size: 22px;
       line-height: 100%;
+      font-weight: 800;
     }
   }
   &__sub-title {
@@ -355,8 +357,9 @@ const closeWidget = () => {
   }
   &__text {
     font-family: "VelaSans-Medium";
+    font-weight: 500;
     font-size: 17px;
-    line-height: 100%;
+    line-height: normal;
     margin-bottom: 80px;
     max-width: 516px;
   }
@@ -372,6 +375,7 @@ const closeWidget = () => {
   &__title {
     font-family: "VelaSans-ExtraBold";
     font-size: 36px;
+    font-weight: 800;
     line-height: 125%;
     color: #333343;
     margin-bottom: 50px;
@@ -387,6 +391,7 @@ const closeWidget = () => {
   }
   &__title {
     font-family: "VelaSans-ExtraBold";
+    font-weight: 800;
     font-size: 36px;
     line-height: 130%;
     color: #333343;
@@ -398,6 +403,7 @@ const closeWidget = () => {
     line-height: 125%;
     color: #333343;
     max-width: 588px;
+    font-weight: 300;
   }
   &__services {
     display: flex;
@@ -407,6 +413,7 @@ const closeWidget = () => {
   }
   &__service {
     font-family: "VelaSans-ExtraBold";
+    font-weight: 800;
     font-size: 26px;
     line-height: 120%;
     opacity: 0.2;
@@ -420,7 +427,7 @@ const closeWidget = () => {
     font-family: "VelaSans-Regular";
     font-weight: 400;
     font-size: 90px;
-    line-height: 100%;
+    line-height: normal;
   }
   &__list {
     display: grid;
@@ -462,7 +469,7 @@ const closeWidget = () => {
     font-family: "VelaSans-Medium";
     font-weight: 500;
     font-size: 26px;
-    line-height: 100%;
+    line-height: normal;
     color: #333343;
     max-width: 935px;
     text-align: center;
@@ -486,7 +493,7 @@ const closeWidget = () => {
     }
   }
 }
-@media (min-width: 1500px) {
+@media (min-width: 1200px) {
   .main__bg {
     height: 846px;
   }

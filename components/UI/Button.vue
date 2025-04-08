@@ -27,6 +27,7 @@ defineProps({
 .btn {
   color: #333343;
   font-family: "VelaSans-SemiBold";
+  font-weight: 600;
   font-size: 16px;
   line-height: 89%;
   letter-spacing: normal;
@@ -51,10 +52,10 @@ defineProps({
     background: transparent;
     border: 1px solid #333343;
     color: #333343;
-    opacity: .4;
+    opacity: 0.4;
   }
   &--grey-filled {
-    background: #EBECF3;
+    background: #ebecf3;
     color: #333343;
     border: none;
   }

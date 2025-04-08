@@ -178,7 +178,7 @@ gsap.registerPlugin(ScrollTrigger);
     font-family: "VelaSans-Regular";
     font-weight: 400;
     font-size: 70px;
-    line-height: 100%;
+    line-height: normal;
     margin-bottom: 20px;
     text-align: center;
   }
@@ -187,7 +187,7 @@ gsap.registerPlugin(ScrollTrigger);
     font-family: "VelaSans-Medium";
     font-weight: 500;
     font-size: 26px;
-    line-height: 100%;
+    line-height: normal;
     max-width: 737px;
   }
 }
@@ -210,7 +210,7 @@ gsap.registerPlugin(ScrollTrigger);
     font-family: "VelaSans-SemiBold";
     font-weight: 600;
     font-size: 35px;
-    line-height: 100%;
+    line-height: normal;
     color: #fff;
   }
 }
@@ -218,6 +218,8 @@ gsap.registerPlugin(ScrollTrigger);
 .history__milestone {
   &-inner {
     height: 640px;
+    max-width: 1145px;
+    margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -260,7 +262,7 @@ gsap.registerPlugin(ScrollTrigger);
       font-family: "VelaSans-Medium";
       font-weight: 500;
       font-size: 17px;
-      line-height: 100%;
+      line-height: normal;
       padding-bottom: 20px;
     }
   }
@@ -317,8 +319,9 @@ gsap.registerPlugin(ScrollTrigger);
   }
   &-subtitle {
     font-family: "VelaSans-Medium";
+    font-weight: 500;
     font-size: 26px;
-    line-height: 100%;
+    line-height: normal;
     text-align: center;
     margin-bottom: 80px;
   }
@@ -344,7 +347,7 @@ gsap.registerPlugin(ScrollTrigger);
     font-size: 20px;
     text-align: center;
     max-width: 670px;
-    line-height: 100%;
+    line-height: normal;
     margin-bottom: 50px;
   }
   &__list {
@@ -381,7 +384,7 @@ gsap.registerPlugin(ScrollTrigger);
   }
 }
 
-@media (min-width: 1500px) {
+@media (min-width: 1200px) {
   .hero {
     padding-top: 206px;
     &__title {
@@ -412,7 +415,6 @@ gsap.registerPlugin(ScrollTrigger);
     }
   }
   .solutions__turnkey {
-    height: 100vh;
     padding-top: 200px;
     &-inner {
       margin-bottom: 130px;

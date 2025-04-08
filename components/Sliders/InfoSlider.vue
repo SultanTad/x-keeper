@@ -69,6 +69,7 @@ defineProps({
 .info-bullet {
   border-radius: 55px;
   font-family: "VelaSans-SemiBold";
+  font-weight: 600;
   font-size: 20px;
   line-height: 89%;
   color: #fff;
@@ -123,13 +124,14 @@ defineProps({
     font-family: "VelaSans-SemiBold";
     font-weight: 600;
     font-size: 64px;
-    line-height: 100%;
+    line-height: normal;
     margin-bottom: 10px;
   }
   &__text {
     font-family: "VelaSans-Medium";
     font-size: 26px;
-    line-height: 100%;
+    font-weight: 500;
+    line-height: normal;
   }
 }
 

@@ -86,7 +86,7 @@
 
 @media (min-width: 1500px) {
   .footer {
-    padding-top: 262px;
+    margin-top: 262px;
   }
 }
 

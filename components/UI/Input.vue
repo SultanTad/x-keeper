@@ -26,7 +26,7 @@ input[type="number"] {
   font-size: 26px;
   font-family: "VelaSans-SemiBold";
   font-weight: 600;
-  line-height: 100%;
+  line-height: normal;
   width: 100%;
   padding: 10px 0;
   &::-webkit-outer-spin-button,
@@ -54,5 +54,10 @@ label::before {
   font-size: 24px;
   color: #777;
   transition: 300ms all;
+  font-family: "VelaSans-Medium";
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
 }
 </style>

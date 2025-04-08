@@ -276,20 +276,22 @@ const principleList = [
   &-title {
     font-family: "VelaSans-ExtraBold";
     font-size: 36px;
+    line-height: 125%;
   }
   &-content {
-    max-width: 500px;
+    max-width: 669px;
     height: 100%;
   }
   &-text {
     font-family: "VelaSans-Medium";
-    font-size: 21px;
-    line-height: 100%;
+    font-size: 26px;
+    line-height: normal;
     margin-bottom: 50px;
+    font-weight: 500;
   }
   &-list__item {
     font-family: "VelaSans-ExtraBold";
-    font-size: 20px;
+    font-size: 26px;
     line-height: 164%;
     list-style-type: disc;
   }
@@ -329,16 +331,16 @@ const principleList = [
   }
   &__title {
     font-family: "VelaSans-ExtraBold";
-    font-size: 30px;
+    font-size: 36px;
     line-height: 125%;
-    max-width: 325px;
+    max-width: 417px;
   }
   &__text {
     max-width: 615px;
     font-family: "VelaSans-Medium";
     font-weight: 500;
     font-size: 26px;
-    line-height: 100%;
+    line-height: normal;
   }
 }
 
@@ -459,7 +461,7 @@ const principleList = [
   }
 }
 
-@media (min-width: 1500px) {
+@media (min-width: 1200px) {
   .products__hero {
     padding-top: 220px;
     &-title {
@@ -584,16 +586,17 @@ const principleList = [
   .documentation__title {
     font-size: 30px;
   }
-  .documentation__link-btn--white, .documentation__link-btn--black {
+  .documentation__link-btn--white,
+  .documentation__link-btn--black {
     height: 100px;
   }
-  .documentation__link-btn--white p, .documentation__link-btn--black p {
+  .documentation__link-btn--white p,
+  .documentation__link-btn--black p {
     font-size: 25px;
   }
   .documentation__links {
     margin-bottom: 30px;
   }
-
 }
 
 @media (max-width: 350px) {
@@ -637,10 +640,12 @@ const principleList = [
   .technical-parameters {
     padding-top: 20px;
   }
-  .documentation__link-btn--white p, .documentation__link-btn--black p {
+  .documentation__link-btn--white p,
+  .documentation__link-btn--black p {
     padding-left: 30px;
   }
-  .documentation__link-btn--white img, .documentation__link-btn--black img {
+  .documentation__link-btn--white img,
+  .documentation__link-btn--black img {
     width: 80px;
     height: 80px;
   }

@@ -71,13 +71,13 @@ const isActive = (index) => {
     font-family: "VelaSans-Regular";
     font-weight: 400;
     font-size: 70px;
-    line-height: 100%;
+    line-height: normal;
   }
   &__subtitle {
     font-family: "VelaSans-Medium";
     font-weight: 500;
     font-size: 26px;
-    line-height: 100%;
+    line-height: normal;
     text-align: center;
     margin-top: 16px;
     span {
@@ -132,7 +132,7 @@ const isActive = (index) => {
   }
 }
 
-@media (min-width: 1500px) {
+@media (min-width: 1200px) {
   .drop-message {
     &__title {
       font-size: 90px;

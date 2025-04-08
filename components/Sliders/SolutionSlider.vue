@@ -129,7 +129,7 @@ const slidesPerView = computed(() => (windowWidth.value < 400 ? 1 : 2.2));
   border-radius: 80px;
 }
 
-@media (min-width: 1500px) {
+@media (min-width: 1200px) {
   .swiperSolution .swiperSolution-slide__img {
     width: 200px;
     height: 220px;
