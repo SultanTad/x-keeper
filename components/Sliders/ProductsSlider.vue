@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
+import { NuxtLink } from "#components";
 defineProps({
   paginationText: Array,
   sliderContent: Array,
@@ -57,6 +58,14 @@ defineProps({
             <p class="table-value">{{ content.specifications.value[key] }}</p>
           </div>
         </div>
+        <div class="swiper-slide__links">
+          <NuxtLink class="swiper-slide__link">
+            <Button transparent>руководство пользователя</Button>
+          </NuxtLink>
+          <NuxtLink class="swiper-slide__link">
+            <Button transparent>нотификация</Button>
+          </NuxtLink>
+        </div>
       </div>
     </swiper-slide>
   </swiper>
@@ -65,7 +74,7 @@ defineProps({
 <style lang="scss">
 .swiperProducts {
   .swiper-slide {
-    height: 500px;
+    height: 560px;
     border-radius: 80px;
     background-repeat: no-repeat;
     background-position: center;
@@ -112,12 +121,12 @@ defineProps({
       width: 100%;
       padding-top: 130px;
       gap: 5px 0;
-      padding-right: 10px;
-      padding-left: 10px;
       &-inner {
         display: flex;
         justify-content: space-between;
-        padding-bottom: 8px;
+        padding-bottom: 16px;
+        padding-right: 10px;
+        padding-left: 10px;
         border-bottom: 1px solid #ffffff33;
         .table-property {
           font-family: "VelaSans-Regular";
@@ -151,6 +160,9 @@ defineProps({
     }
     .list__item::marker {
       font-size: 10px;
+    }
+    &__links {
+      display: none;
     }
   }
   .swiper-pagination {
@@ -269,14 +281,40 @@ defineProps({
       font-size: 20px;
     }
   }
-  .swiperProducts .swiper-slide {
-    height: 518px;
+  .technical-parameters .swiperProducts .swiper-slide {
+    height: unset;
+    background-image: none !important;
+    background-color: #333343;
     &__text {
       font-size: 16px;
     }
+    &__links {
+      margin-top: 39px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px 0;
+      align-items: center;
+      padding-bottom: 36px;
+    }
+    &__link {
+      button {
+        width: 285px;
+        height: 44px;
+      }
+    }
+    &__inner {
+      flex-direction: column;
+    }
+    &__table {
+      padding-top: 42px;
+      &-inner {
+        padding-bottom: 19px;
+      }
+    }
   }
   .swiperProducts .swiper-slide .list__item {
-    font-size: 13px;
+    font-size: 16px;
+    line-height: 120%;
   }
   .products__hero .swiperProducts .swiper-slide__inner {
     padding-left: 30px;

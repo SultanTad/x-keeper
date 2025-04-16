@@ -244,6 +244,9 @@ onMounted(() => {
 }
 
 @media (max-width: 480px) {
+  .slider-container {
+    display: none;
+  }
   .slide img {
     margin-right: 10px;
     padding-left: 10px;

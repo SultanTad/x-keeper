@@ -1,40 +1,51 @@
 <template>
-  <footer class="footer">
-    <div class="container">
-      <div class="footer__inner">
-        <img
-          class="footer__logo"
-          src="../assets/images/white-logo.svg"
-          alt="footer-logo"
-        />
-        <div class="footer__content-wrapper">
-          <div class="footer__info">
-            <div class="footer__info-box">
-              <p class="info__text">Инновации</p>
-              <p class="info__text">Решения для бизнеса</p>
+  <div class="big-container">
+    <footer class="footer">
+      <div class="container">
+        <div class="footer__inner">
+          <img
+            class="footer__logo"
+            src="../assets/images/white-logo.svg"
+            alt="footer-logo"
+          />
+          <div class="footer__content-wrapper">
+            <div class="footer__info">
+              <div class="footer__info-box">
+                <NuxtLink class="info__text" to="/products">Продукция</NuxtLink>
+                <NuxtLink class="info__text" to="/business-solutions">Решения для бизнеса</NuxtLink>
+                <NuxtLink class="info__text" to="contacts">Контакты</NuxtLink>
+              </div>
+              <div class="footer__info-mobile-box">
+                <NuxtLink class="info__text" to="/products">Продукция</NuxtLink>
+                <NuxtLink class="info__text" to="/business-solutions">Решения для бизнеса</NuxtLink>
+                <NuxtLink class="info__text" to="/contacts">Контакты</NuxtLink>
+              </div>
+              <div class="footer__info-number">
+                <a href="tel:88002222283">8 800 222-22-83</a>
+              </div>
             </div>
-            <div class="footer__info-number">
-              <a href="tel:88002222283">8 800 222-22-83</a>
+            <div class="footer__actions">
+              <div class="footer__actions-box">
+                <NuxtLink><Button transparent>личный кабинет</Button></NuxtLink>
+                <NuxtLink
+                  ><Button transparent>оставить заявку</Button></NuxtLink
+                >
+              </div>
+              <div class="footer__actions-copyright">© 2006-2025 X-Keeper</div>
             </div>
-          </div>
-          <div class="footer__actions">
-            <div class="footer__actions-box">
-              <NuxtLink><Button transparent>личный кабинет</Button></NuxtLink>
-              <NuxtLink><Button transparent>оставить заявку</Button></NuxtLink>
-            </div>
-            <div class="footer__actions-copyright">© 2006-2025 X-Keeper</div>
           </div>
         </div>
       </div>
-    </div>
-  </footer>
+    </footer>
+  </div>
 </template>
 
 <style lang="scss">
 .footer {
   background-color: #333343;
   color: #fff;
-  border-radius: 24px;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
   margin-top: 200px;
   &__logo {
     width: 74px;
@@ -58,8 +69,16 @@
     font-weight: 400;
     font-size: 16px;
     line-height: 110.00000000000001%;
+    &-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px 0;
+    }
     .info__text {
       margin-bottom: 15px;
+    }
+    &-mobile-box {
+      display: none;
     }
     &-number {
       opacity: 0.5;
@@ -98,7 +117,7 @@
     border-bottom-right-radius: unset;
     margin-top: 80px;
     &__logo {
-      margin-bottom: 40px;
+      margin-bottom: 72px;
     }
     &__inner {
       flex-direction: column;
@@ -115,12 +134,22 @@
       height: 100%;
       gap: 0 30px;
     }
-    &__actions {
+    &__info {
+      font-size: 12px;
       &-box {
-        button {
-          font-size: 14px;
-          padding: 8px 16px;
-        }
+        display: none;
+      }
+      &-mobile-box {
+        display: flex;
+        flex-direction: column;
+        font-size: 15px;
+        line-height: 120%;
+      }
+    }
+    &__actions {
+      justify-content: end;
+      &-box {
+        display: none;
       }
       &-copyright {
         font-size: 11px;
@@ -134,15 +163,6 @@
     &__logo {
       width: 48px;
       height: 33px;
-    }
-    &__actions {
-      width: 170px;
-      &-box {
-        button {
-          font-size: 10px;
-          width: 100%;
-        }
-      }
     }
   }
 }

@@ -116,6 +116,7 @@ gsap.registerPlugin(ScrollTrigger);
           решений, защита данных и круглосуточная поддержка
         </h3>
         <VerticalSlider />
+        <MobileAdvantagesSlider />
       </div>
     </section>
 
@@ -154,6 +155,7 @@ gsap.registerPlugin(ScrollTrigger);
           </div>
         </div>
       </div>
+      <MobileServicesSlider />
       <div class="services__link-btn">
         <NuxtLink><Button green>оставить заявку</Button></NuxtLink>
       </div>
@@ -381,6 +383,9 @@ gsap.registerPlugin(ScrollTrigger);
     display: flex;
     align-items: center;
     justify-content: center;
+    button {
+      width: 320px;
+    }
   }
 }
 
@@ -471,7 +476,7 @@ gsap.registerPlugin(ScrollTrigger);
 }
 @media (max-width: 800px) {
   .banner {
-    padding-top: 50px;
+    padding-top: 90px;
   }
   .connection__advantages {
     padding-top: 50px;
@@ -484,7 +489,7 @@ gsap.registerPlugin(ScrollTrigger);
     }
   }
   .services {
-    padding-top: 50px;
+    padding-top: 90px;
   }
   .hero {
     padding-top: 80px;
@@ -492,16 +497,17 @@ gsap.registerPlugin(ScrollTrigger);
 }
 @media (max-width: 700px) {
   .achievements {
-    padding-top: 50px;
+    padding-top: 136px;
   }
   .solutions__turnkey {
-    padding-top: 50px;
+    padding-top: 90px;
     &-title {
       font-size: 30px;
       margin-bottom: 20px;
+      text-align: left;
     }
     &-subtitle {
-      text-align: center;
+      text-align: left;
     }
     &-inner {
       margin-bottom: 40px;
@@ -532,40 +538,45 @@ gsap.registerPlugin(ScrollTrigger);
 @media (max-width: 600px) {
   .hero {
     &__logo {
-      width: 80px;
-      height: 80px;
+      width: 133px;
+      height: 138px;
+      margin-bottom: 23px;
     }
     &__title {
-      font-size: 40px;
+      font-size: 38px;
+      line-height: 110%;
+      margin-bottom: 32px;
     }
     &__text {
-      font-size: 20px;
+      font-size: 18px;
+      line-height: 125%;
     }
   }
   .solutions {
     &__banner {
-      padding-top: 50px;
+      padding-top: 38px;
       &-img {
         border-radius: 32px;
         padding-left: 20px;
       }
       &-text {
-        font-size: 25px;
+        font-size: 22px;
+        line-height: 120%;
       }
     }
   }
   .history__milestone {
-    padding-top: 50px;
+    padding-top: 164px;
     &-inner {
       height: unset;
     }
     &-text {
-      font-size: 30px;
+      font-size: 28px;
     }
   }
   .achievements {
     &__title {
-      margin-bottom: 30px;
+      margin-bottom: 45px;
     }
     &__inner {
       flex-direction: column;
@@ -575,37 +586,73 @@ gsap.registerPlugin(ScrollTrigger);
 @media (max-width: 480px) {
   .achievements {
     &__title {
-      font-size: 30px;
+      font-size: 24px;
     }
     &__item {
       .item__title {
-        font-size: 40px;
+        font-size: 100px;
+      }
+    }
+    &__list {
+      .item__text {
+        font-size: 22px;
       }
     }
   }
-  .swiperSolution .swiperSolution-slide__title {
-    font-size: 17px;
-  }
-  .swiperSolution .swiperSolution-slide__text {
-    font-size: 13px;
-  }
-  .swiperSolution .swiperSolution-slide__img {
-    width: 110px;
-    height: 110px;
-  }
-  .swiperSolution .swiper-slide {
-    padding: 22px;
-    border-radius: 32px;
-  }
+  
   .connection__advantages {
     &-title {
-      font-size: 30px;
+      font-size: 24px;
       margin-bottom: 30px;
+      line-height: 110%;
+      text-align: left;
+    }
+    &-subtitle {
+      font-size: 18px;
+      line-height: 125%;
+      text-align: left;
     }
   }
   .services {
+    &__inner {
+      align-items: start;
+    }
     &__title {
-      font-size: 30px;
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+    &__subtitle {
+      font-size: 18px;
+      line-height: 125%;
+      text-align: left;
+      margin-bottom: 30px;
+    }
+    &__list {
+      display: none;
+    }
+    &__link-btn {
+      padding-top: 90px;
+      a {
+        width: 100%;
+        button {
+          width: 100%;
+        }
+      }
+    }
+  }
+  .solutions__turnkey {
+    &-title {
+      font-size: 24px;
+      line-height: 110.00000000000001%;
+    }
+    &-subtitle {
+      font-size: 18px;
+      line-height: 125%;
+    }
+  }
+  .banner {
+    img {
+      height: 372px;
     }
   }
 }
@@ -627,19 +674,12 @@ gsap.registerPlugin(ScrollTrigger);
     font-size: 20px;
   }
   .solutions__turnkey {
-    padding-top: 50px;
     &-title {
       font-size: 20px;
     }
     &-subtitle {
       font-size: 15px;
     }
-  }
-  .swiperSolution .swiper-slide {
-    padding: 15px;
-  }
-  .swiperSolution .swiperSolution-slide__title {
-    font-size: 15px;
   }
 }
 </style>

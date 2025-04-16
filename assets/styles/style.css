@@ -198,14 +198,13 @@ select {
 }
 
 html {
-  box-sizing: border-box;
   scroll-behavior: smooth;
 }
 
 *,
 *::before,
 *::after {
-  box-sizing: inherit;
+  box-sizing: border-box;
 }
 
 a {
@@ -221,6 +220,22 @@ img {
   width: 100%;
   margin: 0 auto;
   padding: 0 10px;
+  position: relative;
+}
+
+@media (max-width: 380px) {
+  .container {
+    padding: 0 16px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .big-container {
+    max-width: 1940px;
+    padding: 0 10px;
+    margin: 0 auto;
+    width: 100%;
+  }
 }
 
 .bullet--1:hover ~ .bullet--0 {

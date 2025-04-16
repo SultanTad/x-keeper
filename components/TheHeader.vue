@@ -1,7 +1,10 @@
 <script setup>
 import { ref } from "vue";
+import { useRoute } from "vue-router";
+
 const openBurger = ref(false);
 const openMenu = ref(false);
+const route = useRoute();
 
 const activatedBurgerMenu = () => {
   if (document.body.style.overflow === "hidden") {
@@ -12,6 +15,21 @@ const activatedBurgerMenu = () => {
   openBurger.value = !openBurger.value;
   openMenu.value = !openMenu.value;
 };
+
+const closeMenu = () => {
+  if (window.innerWidth <= 800 && (openBurger.value || openMenu.value)) {
+    openBurger.value = false;
+    openMenu.value = false;
+    document.body.style.overflow = "";
+  }
+};
+
+watch(
+  () => route.path,
+  () => {
+    closeMenu();
+  }
+);
 </script>
 
 <template>
@@ -206,6 +224,13 @@ const activatedBurgerMenu = () => {
 }
 
 @media (max-width: 800px) {
+  .header {
+    height: 50px;
+  }
+  .main-logo {
+    width: 30px;
+    height: 21px;
+  }
   .nav {
     .menu__list,
     &__btns {

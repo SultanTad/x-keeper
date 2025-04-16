@@ -37,7 +37,8 @@ defineProps({
   cursor: pointer;
   &--white {
     background: #fff;
-    border: 1px solid #33334366;
+    border: 1px solid rgba(51, 51, 67, 0.4);
+    width: 170px;
   }
   &--green {
     background: #35ec6f;
@@ -58,6 +59,21 @@ defineProps({
     background: #ebecf3;
     color: #333343;
     border: none;
+  }
+}
+@media (min-width: 1000px) {
+  .btn {
+    &--white,
+    &--grey-filled {
+      &:hover {
+        background: #d9dae1;
+      }
+    }
+    &--green {
+      &:hover {
+        background: #1bf761;
+      }
+    }
   }
 }
 </style>

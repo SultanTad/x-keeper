@@ -39,7 +39,7 @@ const sliders = [
         img: ForestCountry,
         icon: Icon1,
         title: "До 5 лет без подзарядки",
-        text: "Мы нашли оптимальное соотношение между эффективнностью програмного обеспечения и экономичностью батарей2",
+        text: "Мы нашли оптимальное соотношение между эффективнностью програмного обеспечения и экономичностью батарей",
       },
       {
         img: YellowBulldozer,
@@ -115,27 +115,27 @@ const closeWidget = () => {
 <template>
   <main class="main">
     <div class="main__bg"></div>
-    <div class="widget" @click="activatedWidget">
-      <img src="../assets/images/widget.svg" alt="" />
-    </div>
-    <div class="get-in-touch" :class="{ open__widget: activeWidget }">
-      <h2 class="title">Связаться</h2>
-      <div class="icon-wrap" @click="closeWidget">
-        <img
-          class="get-in-touch--icon"
-          src="../assets/images/close-get-in-touch.svg"
-          alt=""
-        />
+    <div class="container">
+      <div class="widget" @click="activatedWidget">
+        <img src="../assets/images/widget.svg" alt="" />
       </div>
-      <div class="contact-info">
-        <p>WhatsApp <img src="../assets/images/Whatsapp.svg" alt="" /></p>
-        <p>Telegram <img src="../assets/images/telegram.svg" alt="" /></p>
-        <p>Написать на email</p>
-        <p>Позвонить</p>
+      <div class="get-in-touch" :class="{ open__widget: activeWidget }">
+        <h2 class="title">Связаться</h2>
+        <div class="icon-wrap" @click="closeWidget">
+          <img
+            class="get-in-touch--icon"
+            src="../assets/images/close-get-in-touch.svg"
+            alt=""
+          />
+        </div>
+        <div class="contact-info">
+          <p>WhatsApp <img src="../assets/images/Whatsapp.svg" alt="" /></p>
+          <p>Telegram <img src="../assets/images/telegram.svg" alt="" /></p>
+          <p>Написать на email</p>
+          <p>Позвонить</p>
+        </div>
       </div>
-    </div>
-    <section class="promo">
-      <div class="container">
+      <section class="promo">
         <div class="promo__inner">
           <div class="promo__content">
             <h1 class="promo__title">
@@ -150,20 +150,22 @@ const closeWidget = () => {
               лизинговых операций и инструменты аналитики
             </p>
             <div class="promo__btns">
-              <NuxtLink><Button green>оставить заявку</Button></NuxtLink>
+              <NuxtLink to="/drop-message"><Button green>оставить заявку</Button></NuxtLink>
               <NuxtLink><Button white>подробнее</Button></NuxtLink>
             </div>
           </div>
           <div class="promo__banner">
             <img src="../assets/images/promo-banner.webp" alt="promo-banner" />
           </div>
+          <div class="promo__btns mobile">
+            <NuxtLink to="/drop-message"><Button green>оставить заявку</Button></NuxtLink>
+            <NuxtLink><Button white>подробнее</Button></NuxtLink>
+          </div>
         </div>
-      </div>
-    </section>
-    <InfoSlider :sliders="sliders" />
+      </section>
+      <InfoSlider :sliders="sliders" />
 
-    <section class="about-us">
-      <div class="container">
+      <section class="about-us">
         <div class="about-us__inner">
           <div class="about-us__info">
             <h2 class="about-us__title">Коротко о нас</h2>
@@ -190,11 +192,9 @@ const closeWidget = () => {
             </p>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="number-company">
-      <div class="container">
+      <section class="number-company">
         <h2 class="number-company__title">Цифры компании</h2>
         <div class="number-company__list">
           <div class="number-company__item">
@@ -214,20 +214,22 @@ const closeWidget = () => {
             <p class="item__text">клиентов по всему миру</p>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="trust__info">
-      <div class="container">
+      <section class="trust__info">
         <div class="trust__info-inner">
           <h3 class="trust__info-text">
             С нами вы получаете высокотехнологичное оборудование и уверенность в
             том, что ваши активы всегда будут доступны и защищены
           </h3>
-          <NuxtLink><Button green>оставить заявку</Button></NuxtLink>
+          <NuxtLink
+            ><Button green class="trust__info-btn"
+              >оставить заявку</Button
+            ></NuxtLink
+          >
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   </main>
 </template>
 
@@ -244,8 +246,8 @@ const closeWidget = () => {
 }
 .widget {
   position: fixed;
-  bottom: 0;
-  right: 0;
+  bottom: 16px;
+  right: 16px;
   background: #333343;
   width: 70px;
   height: 70px;
@@ -324,10 +326,14 @@ const closeWidget = () => {
     border-radius: 80px;
   }
   &__content {
+    display: flex;
+    flex-direction: column;
     padding-left: 36px;
     padding-top: 40px;
   }
   &__banner {
+    display: flex;
+    align-items: center;
     img {
       height: 460px;
       border-radius: 80px;
@@ -367,11 +373,19 @@ const closeWidget = () => {
     display: flex;
     gap: 0 10px;
     align-items: center;
+    &.mobile {
+      display: none;
+    }
   }
 }
 
 .info {
   padding-top: 200px;
+  &__title-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   &__title {
     font-family: "VelaSans-ExtraBold";
     font-size: 36px;
@@ -380,11 +394,13 @@ const closeWidget = () => {
     color: #333343;
     margin-bottom: 50px;
     text-align: center;
+    max-width: 983px;
   }
 }
 
 .about-us {
   padding-top: 200px;
+  color: #333343;
   &__inner {
     display: flex;
     justify-content: space-between;
@@ -394,14 +410,12 @@ const closeWidget = () => {
     font-weight: 800;
     font-size: 36px;
     line-height: 130%;
-    color: #333343;
     margin-bottom: 32px;
   }
   &__text {
     font-family: "VelaSans-Light";
     font-size: 32px;
     line-height: 125%;
-    color: #333343;
     max-width: 588px;
     font-weight: 300;
   }
@@ -435,7 +449,8 @@ const closeWidget = () => {
     margin-top: 50px;
   }
   &__item {
-    border: 1px solid #333343;
+    border: 1px solid rgba(51, 51, 67, 0.4);
+
     border-radius: 80px;
     padding: 25px 10px 37px 32px;
   }
@@ -458,6 +473,9 @@ const closeWidget = () => {
   button {
     cursor: pointer;
   }
+  &-btn {
+    width: 320px;
+  }
   &-inner {
     display: flex;
     flex-direction: column;
@@ -475,10 +493,21 @@ const closeWidget = () => {
     text-align: center;
   }
 }
+
+@media (min-width: 1350px) {
+  .widget {
+    right: calc((100vw - 1352px) / 2 + 3px);
+  }
+}
 @media (min-width: 1000px) {
   .widget {
     &:hover img {
       animation: pulse 0.3s ease-in-out;
+    }
+  }
+  .icon-wrap {
+    &:hover {
+      background-color: #d9dae1;
     }
   }
   @keyframes pulse {
@@ -505,8 +534,9 @@ const closeWidget = () => {
       }
     }
     &__content {
-      padding-left: 56px;
+      padding-left: 60px;
       padding-top: 60px;
+      padding-bottom: 60px;
     }
     &__title {
       margin-bottom: 87px;
@@ -571,9 +601,53 @@ const closeWidget = () => {
 }
 
 @media (max-width: 800px) {
-  .promo,
-  .main__bg {
+  .promo__btns {
     display: none;
+  }
+  .main__bg {
+    height: 870px;
+  }
+  .promo {
+    padding-top: 62px;
+    &__btns {
+      &.mobile {
+        display: flex;
+        flex-direction: column;
+        margin-top: 30px;
+        gap: 16px 0;
+        width: 100%;
+        a {
+          width: 100%;
+          button {
+            width: 100%;
+          }
+        }
+      }
+    }
+    &__inner {
+      flex-direction: column;
+      align-items: center;
+      background: unset;
+    }
+    &__title {
+      margin-bottom: 31px;
+    }
+    &__sub-title {
+      margin-bottom: 10px;
+    }
+    &__text {
+      margin-bottom: 29px;
+    }
+    &__content {
+      padding-top: unset;
+      padding-left: unset;
+      text-align: center;
+    }
+    &__banner {
+      img {
+        height: 341px;
+      }
+    }
   }
   .info {
     padding-top: 100px;
@@ -593,7 +667,16 @@ const closeWidget = () => {
 }
 
 @media (max-width: 480px) {
+  .widget {
+    width: 58px;
+    height: 58px;
+    img {
+      width: 28px;
+      height: 28px;
+    }
+  }
   .info {
+    padding-top: 90px;
     &__title {
       font-size: 16px;
     }
@@ -620,10 +703,12 @@ const closeWidget = () => {
   .trust__info {
     padding-top: 50px;
     &-text {
-      font-size: 20px;
+      font-size: 16px;
+      line-height: 120%;
+      max-width: 312px;
     }
     &-inner {
-      gap: 30px 0;
+      gap: 40px 0;
     }
   }
   .get-in-touch .title {
@@ -631,6 +716,44 @@ const closeWidget = () => {
   }
   .get-in-touch .contact-info p {
     font-size: 11px;
+  }
+  .promo {
+    padding-bottom: unset;
+    &__content {
+      width: 100%;
+      text-align: left;
+    }
+    &__banner {
+      width: 100%;
+    }
+    &__title {
+      span {
+        font-size: 18px;
+      }
+    }
+    &__sub-title {
+      font-size: 24px;
+    }
+    &__text {
+      font-size: 16px;
+    }
+    &__banner {
+      img {
+        border-radius: 32px;
+      }
+    }
+  }
+  .main__bg {
+    border-bottom-right-radius: 32px;
+    border-bottom-left-radius: 32px;
+  }
+}
+@media (max-width: 340px) {
+  .trust__info {
+    padding-top: 50px;
+    &-btn {
+      width: 280px;
+    }
   }
 }
 </style>

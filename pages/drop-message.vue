@@ -163,6 +163,7 @@ const isActive = (index) => {
 }
 @media (max-width: 600px) {
   .drop-message {
+    padding-top: 80px;
     &__title {
       font-size: 30px;
     }
@@ -170,7 +171,37 @@ const isActive = (index) => {
       font-size: 20px;
     }
     &__services-title {
+      font-size: 24px;
+      line-height: 110%;
+    }
+  }
+}
+@media (max-width: 480px) {
+  .drop-message {
+    &__title {
+      font-size: 38px;
+      line-height: 110%;
+      text-align: left;
+    }
+    &__subtitle {
       font-size: 18px;
+      line-height: 125%;
+      text-align: left;
+    }
+    &__services {
+      padding-bottom: 90px;
+      padding-top: 60px;
+      &-list {
+        flex-direction: column;
+        flex-wrap: unset;
+      }
+    }
+    &__link {
+      margin-top: 98px;
+      button {
+        font-size: 16px;
+        height: 54px;
+      }
     }
   }
 }

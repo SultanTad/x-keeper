@@ -14,35 +14,35 @@ defineProps({
     v-for="(item, index) in sliders"
     :key="index"
   >
-    <div class="container">
+    <div class="info__title-wrap">
       <h2 class="info__title">
         {{ item.title }}
       </h2>
-      <swiper
-        :pagination="{
-          clickable: true,
-          bulletActiveClass: 'info-bullet-active',
-          bulletClass: 'info-bullet',
-          renderBullet: (index, className) => {
-            return `<span class=${className}>${item.pagination[index]}</span>`;
-          },
-        }"
-        :modules="[Pagination]"
-        class="swiperInfo"
-      >
-        <swiper-slide
-          v-for="(slide, index) in item.slides"
-          :key="index"
-          :style="{ background: `url(${slide.img})` }"
-        >
-          <div class="info-slide__inner">
-            <img class="info-slide__icon" :src="slide.icon" alt="" />
-            <h3 class="info-slide__title">{{ slide.title }}</h3>
-            <p class="info-slide__text">{{ slide.text }}</p>
-          </div>
-        </swiper-slide>
-      </swiper>
     </div>
+    <swiper
+      :pagination="{
+        clickable: true,
+        bulletActiveClass: 'info-bullet-active',
+        bulletClass: 'info-bullet',
+        renderBullet: (index, className) => {
+          return `<span class=${className}>${item.pagination[index]}</span>`;
+        },
+      }"
+      :modules="[Pagination]"
+      class="swiperInfo"
+    >
+      <swiper-slide
+        v-for="(slide, index) in item.slides"
+        :key="index"
+        :style="{ backgroundImage: `url(${slide.img})` }"
+      >
+        <div class="info-slide__inner">
+          <img class="info-slide__icon" :src="slide.icon" alt="" />
+          <h3 class="info-slide__title">{{ slide.title }}</h3>
+          <p class="info-slide__text">{{ slide.text }}</p>
+        </div>
+      </swiper-slide>
+    </swiper>
   </section>
 </template>
 
@@ -167,6 +167,11 @@ defineProps({
   .info-bullet {
     padding: 10px 16px;
   }
+  .info-slider--0 {
+    .swiperInfo .swiper-slide {
+      background-position: right;
+    }
+  }
 }
 
 @media (max-width: 480px) {
@@ -194,6 +199,11 @@ defineProps({
   }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 440px) {
+  .info-slider--1 {
+    .swiperInfo .swiper-pagination {
+      width: 210px;
+    }
+  }
 }
 </style>

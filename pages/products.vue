@@ -1,8 +1,18 @@
 <script setup>
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import SliderBg from "@/assets/images/blurred_red.webp";
-import ProfileBg from "@/assets/images/desk-with-computer.png";
+import ProfileBgMobile from "@/assets/images/desk-with-computer.png";
+import ProfileBgDesctop from "@/assets/images/desk-with-computer-desctop-version.png";
 import GrayArrow from "@/assets/images/gray-arrow.svg";
 import WhiteArrow from "@/assets/images/white-arrow.svg";
+
+const windowWidth = ref(process.client ? window.innerWidth : 0);
+
+const updateWidth = () => {
+  if (process.client) {
+    windowWidth.value = window.innerWidth;
+  }
+};
 
 const paginationText1 = ["Invis Duos 3D L", "Invis Duos S"];
 const paginationText2 = ["автомобили", "грузы"];
@@ -128,6 +138,18 @@ const principleList = [
     text: "Интервал извещений владелец определяет самостоятельно.Увеличить интервал можно до семи суток, а в экстренных случаях, уменьшить до одной минуты",
   },
 ];
+
+const profileBg = computed(() =>
+  windowWidth.value > 480 ? ProfileBgDesctop : ProfileBgMobile
+);
+onMounted(() => {
+  updateWidth();
+  window.addEventListener("resize", updateWidth);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", updateWidth);
+});
 </script>
 
 <template>
@@ -197,7 +219,7 @@ const principleList = [
     <section class="profile">
       <div
         class="profile__bg"
-        :style="{ backgroundImage: `url(${ProfileBg})` }"
+        :style="{ backgroundImage: `url(${profileBg})` }"
       >
         <NuxtLink
           ><Button green class="btn--profile"
@@ -458,6 +480,9 @@ const principleList = [
   }
   &__request {
     text-align: center;
+    button {
+      width: 320px;
+    }
   }
 }
 
@@ -521,19 +546,32 @@ const principleList = [
 
 @media (max-width: 800px) {
   .products__advantages {
-    padding-top: 50px;
+    padding-top: 90px;
     &-title {
-      margin-bottom: 30px;
+      margin-bottom: 24px;
+      font-size: 24px;
     }
     &-inner {
       flex-direction: column;
     }
     &-text {
-      margin-bottom: 30px;
+      margin-bottom: 40px;
+      font-size: 18px;
     }
     &-list {
       &__item {
-        list-style-type: none;
+        list-style: none;
+        font-size: 18px;
+        position: relative;
+        padding-left: 16px;
+        &::before {
+          font-size: 10px;
+          content: "•";
+          position: absolute;
+          left: 0;
+          top: 0;
+          color: #333343;
+        }
       }
     }
     .line {
@@ -542,19 +580,32 @@ const principleList = [
   }
   .geo-location,
   .working-principle {
-    padding-top: 50px;
+    padding-top: 90px;
     &__inner {
       flex-direction: column;
     }
     &__title {
-      margin-bottom: 30px;
+      margin-bottom: 24px;
+      font-size: 24px;
+    }
+    &__text {
+      font-size: 18px;
+      line-height: 125%;
     }
   }
   .profile {
-    padding-top: 50px;
+    padding-top: 40px;
   }
   .technical-parameters {
-    padding-top: unset;
+    padding-top: 90px;
+  }
+  .theft-protection {
+    padding-top: 90px;
+  }
+  .working-principle__item {
+    span {
+      display: block;
+    }
   }
 }
 
@@ -566,9 +617,6 @@ const principleList = [
       font-size: 40px;
     }
   }
-  .theft-protection {
-    padding-top: 50px;
-  }
   .profile {
     &__bg {
       border-radius: 32px;
@@ -578,6 +626,32 @@ const principleList = [
     &__title {
       font-size: 24px;
       margin-bottom: 30px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .profile__bg {
+    background-size: contain;
+    height: 533px;
+  }
+  .profile__bg .btn--profile {
+    width: 214px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .working-principle__item {
+    font-size: 18px;
+    line-height: 125%;
+    margin-bottom: 26px;
+    span {
+      font-size: 30px;
+    }
+  }
+  .documentation {
+    &__title,
+    &__links {
+      display: none;
     }
   }
 }
@@ -633,21 +707,16 @@ const principleList = [
   .profile {
     &__bg {
       .btn--profile {
-        width: 280px;
+        width: 210px;
+        height: 40px;
       }
     }
   }
   .technical-parameters {
     padding-top: 20px;
   }
-  .documentation__link-btn--white p,
-  .documentation__link-btn--black p {
-    padding-left: 30px;
-  }
-  .documentation__link-btn--white img,
-  .documentation__link-btn--black img {
-    width: 80px;
-    height: 80px;
+  .documentation__request button {
+    width: 280px;
   }
 }
 </style>
