@@ -15,15 +15,49 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 onMounted(() => {
-  gsap.to(".about-us__service", {
-    opacity: 1,
-    duration: 2.5,
-    stagger: 0.3,
-    scrollTrigger: {
-      trigger: ".about-us",
-      start: "bottom bottom",
+  let isAnimating = false;
+  const serviceBlocks = gsap.utils.toArray(".service-block");
+
+  const getScrollbarWidth = () => {
+    return window.innerWidth - document.documentElement.clientWidth;
+  };
+
+  serviceBlocks.forEach((block) => {
+    ScrollTrigger.create({
+      trigger: block,
+      start: "top 50%",
       once: true,
-    },
+      onEnter: () => {
+        if (isAnimating) return;
+
+        isAnimating = true;
+
+        const scrollbarWidth = getScrollbarWidth();
+        document.body.style.overflow = "hidden";
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+
+        const tl = gsap.timeline();
+
+        tl.to(block.querySelector(".about-us__service"), {
+          opacity: 1,
+          duration: 1,
+        }).to(
+          block.querySelector(".about-us__line"),
+          {
+            height: "100%",
+            duration: 1,
+            ease: "power1.out",
+          },
+          "<"
+        );
+
+        tl.eventCallback("onComplete", () => {
+          document.body.style.overflow = "auto";
+          document.body.style.paddingRight = "0";
+          isAnimating = false;
+        });
+      },
+    });
   });
 });
 
@@ -150,7 +184,9 @@ const closeWidget = () => {
               лизинговых операций и инструменты аналитики
             </p>
             <div class="promo__btns">
-              <NuxtLink to="/drop-message"><Button green>оставить заявку</Button></NuxtLink>
+              <NuxtLink to="/drop-message"
+                ><Button green>оставить заявку</Button></NuxtLink
+              >
               <NuxtLink><Button white>подробнее</Button></NuxtLink>
             </div>
           </div>
@@ -158,7 +194,9 @@ const closeWidget = () => {
             <img src="../assets/images/promo-banner.webp" alt="promo-banner" />
           </div>
           <div class="promo__btns mobile">
-            <NuxtLink to="/drop-message"><Button green>оставить заявку</Button></NuxtLink>
+            <NuxtLink to="/drop-message"
+              ><Button green>оставить заявку</Button></NuxtLink
+            >
             <NuxtLink><Button white>подробнее</Button></NuxtLink>
           </div>
         </div>
@@ -176,20 +214,39 @@ const closeWidget = () => {
             </p>
           </div>
           <div class="about-us__services">
-            <p class="about-us__service">Инвестиции в инженерные разработки</p>
-            <p class="about-us__service">Собственное производство</p>
-            <p class="about-us__service">
-              Уникальная экспертиза, подтверждённая опытом и реализованными
-              проектами
-            </p>
-            <p class="about-us__service">
-              Участие в глобальных инициативах, направленных на развитие и
-              внедрение технологий будущего
-            </p>
-            <p class="about-us__service">
-              Партнёры компании – крупнейшие игроки лизинга и государственные
-              структуры отрасли связи
-            </p>
+            <div class="service-block">
+              <div class="about-us__line"></div>
+              <p class="about-us__service service-block-1">
+                Инвестиции в инженерные разработки
+              </p>
+            </div>
+            <div class="service-block">
+              <div class="about-us__line"></div>
+              <p class="about-us__service service-block-1">
+                Собственное производство
+              </p>
+            </div>
+            <div class="service-block">
+              <div class="about-us__line"></div>
+              <p class="about-us__service service-block-1">
+                Уникальная экспертиза, подтверждённая опытом и реализованными
+                проектами
+              </p>
+            </div>
+            <div class="service-block">
+              <div class="about-us__line"></div>
+              <p class="about-us__service service-block-1">
+                Участие в глобальных инициативах, направленных на развитие и
+                внедрение технологий будущего
+              </p>
+            </div>
+            <div class="service-block">
+              <div class="about-us__line"></div>
+              <p class="about-us__service service-block-1">
+                Партнёры компании – крупнейшие игроки лизинга и государственные
+                структуры отрасли связи
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -419,11 +476,25 @@ const closeWidget = () => {
     max-width: 588px;
     font-weight: 300;
   }
+  &__line {
+    position: absolute;
+    top: 0;
+    left: -20px;
+    width: 2px;
+    height: 0;
+    background-color: #333343;
+  }
   &__services {
     display: flex;
     flex-direction: column;
-    gap: 45px 0;
     max-width: 576px;
+  }
+  .service-block {
+    position: relative;
+    padding-bottom: 45px;
+    &:last-child {
+      padding-bottom: 0;
+    }
   }
   &__service {
     font-family: "VelaSans-ExtraBold";
@@ -551,8 +622,11 @@ const closeWidget = () => {
     }
   }
   .about-us {
-    &__services {
-      gap: 74px 0;
+    .service-block {
+      padding-bottom: 74px;
+      &:last-child {
+        padding-bottom: 0;
+      }
     }
   }
   .number-company {
