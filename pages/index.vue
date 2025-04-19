@@ -9,7 +9,7 @@ import Icon1 from "@/assets/images/icon-1.svg";
 import Icon2 from "@/assets/images/icon-2.svg";
 import Icon3 from "@/assets/images/icon-3.svg";
 
-import { Motion } from "motion-v";
+import { Motion, useScroll } from "motion-v";
 
 const currentAnimatingBlock = ref(null);
 
@@ -204,6 +204,17 @@ const activatedWidget = () => {
 const closeWidget = () => {
   activeWidget.value = false;
 };
+const aboutUsScroll = ref(null);
+const scrollYProgress = ref(0);
+onMounted(() => {
+  if (process.client) {
+    const { scrollYProgress: progress } = useScroll({
+      target: aboutUsScroll,
+      offset: ["start end", "end end"],
+    });
+    scrollYProgress.value = progress;
+  }
+});
 </script>
 <template>
   <main class="main">
@@ -272,7 +283,7 @@ const closeWidget = () => {
               навигационно-связных технологий и IT-инфраструктуры
             </p>
           </div>
-          <div class="about-us__services">
+          <div class="about-us__services" ref="aboutUsScroll">
             <div
               v-for="(block, index) in serviceBlocks"
               :key="block.id"
