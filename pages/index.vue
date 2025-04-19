@@ -9,57 +9,116 @@ import Icon1 from "@/assets/images/icon-1.svg";
 import Icon2 from "@/assets/images/icon-2.svg";
 import Icon3 from "@/assets/images/icon-3.svg";
 
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Motion } from "motion-v";
 
-gsap.registerPlugin(ScrollTrigger);
+const currentAnimatingBlock = ref(null);
 
-onMounted(() => {
-  let isAnimating = false;
-  const serviceBlocks = gsap.utils.toArray(".service-block");
+const serviceBlocks = [
+  { id: 1, text: "Инвестиции в инженерные разработки" },
+  {
+    id: 2,
+    text: "Собственное производство",
+  },
+  {
+    id: 3,
+    text: "Уникальная экспертиза, подтверждённая опытом и реализованными проектами",
+  },
+  {
+    id: 4,
+    text: "Участие в глобальных инициативах, направленных на развитие и внедрение технологий будущего",
+  },
+  {
+    id: 5,
+    text: "Партнёры компании – крупнейшие игроки лизинга и государственные структуры отрасли связи",
+  },
+];
 
-  const getScrollbarWidth = () => {
-    return window.innerWidth - document.documentElement.clientWidth;
-  };
+const handleAnimationStart = (blockId) => {
+  if (
+    currentAnimatingBlock.value !== null &&
+    currentAnimatingBlock.value !== blockId
+  )
+    return;
+  currentAnimatingBlock.value = blockId;
+};
 
-  serviceBlocks.forEach((block) => {
-    ScrollTrigger.create({
-      trigger: block,
-      start: "top 50%",
-      once: true,
-      onEnter: () => {
-        if (isAnimating) return;
+const handleAnimationComplete = (blockId, index) => {
+  if (index === serviceBlocks.length - 1) {
+    currentAnimatingBlock.value = null;
+  } else {
+    currentAnimatingBlock.value = serviceBlocks[index + 1]?.id || null;
+  }
+};
 
-        isAnimating = true;
+// import { gsap } from "gsap";
+// import { ScrollTrigger } from "gsap/ScrollTrigger";
+// import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 
-        const scrollbarWidth = getScrollbarWidth();
-        document.body.style.overflow = "hidden";
-        document.body.style.paddingRight = `${scrollbarWidth}px`;
+// gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-        const tl = gsap.timeline();
+// onMounted(() => {
+//   let isAnimating = false;
+//   const targetBlock = document.querySelector(".about-us__services");
 
-        tl.to(block.querySelector(".about-us__service"), {
-          opacity: 1,
-          duration: 1,
-        }).to(
-          block.querySelector(".about-us__line"),
-          {
-            height: "100%",
-            duration: 1,
-            ease: "power1.out",
-          },
-          "<"
-        );
+//   ScrollTrigger.create({
+//     trigger: targetBlock,
+//     start: "top center",
+//     end: "bottom center",
+//     onEnter: () => {
+//       gsap.to(window, {
+//         duration: 2, // <- вот это и задаёт замедление
+//         scrollTo: {
+//           offsetY: 10, // можно немного отступить
+//         },
+//         ease: "power2.out",
+//       });
+//     },
+//     once: true,
+//   });
+//   const serviceBlocks = gsap.utils.toArray(".service-block");
 
-        tl.eventCallback("onComplete", () => {
-          document.body.style.overflow = "auto";
-          document.body.style.paddingRight = "0";
-          isAnimating = false;
-        });
-      },
-    });
-  });
-});
+//   const getScrollbarWidth = () => {
+//     return window.innerWidth - document.documentElement.clientWidth;
+//   };
+
+//   serviceBlocks.forEach((block) => {
+//     ScrollTrigger.create({
+//       trigger: block,
+//       start: "top 50%",
+//       once: true,
+//       onEnter: () => {
+//         if (isAnimating) return;
+
+//         isAnimating = true;
+
+//         const scrollbarWidth = getScrollbarWidth();
+//         document.body.style.overflow = "hidden";
+//         document.body.style.paddingRight = `${scrollbarWidth}px`;
+
+//         const tl = gsap.timeline();
+
+//         tl.to(block.querySelector(".about-us__service"), {
+//           opacity: 1,
+//           duration: 1,
+//         }).to(
+//           block.querySelector(".about-us__line"),
+//           {
+//             height: "100%",
+//             duration: 1,
+//             ease: "power1.out",
+//           },
+//           "<"
+//         );
+
+//         tl.eventCallback("onComplete", () => {
+//           document.body.style.overflow = "auto";
+//           document.body.style.paddingRight = "0";
+//           isAnimating = false;
+//         });
+//       },
+//     });
+//   });
+// });
 
 const activeWidget = ref(false);
 
@@ -208,44 +267,43 @@ const closeWidget = () => {
           <div class="about-us__info">
             <h2 class="about-us__title">Коротко о нас</h2>
             <p class="about-us__text">
-              Открываем новые горизонты и снижаем риски для бизнеса, улучшаем
+              Открываем новые горизонты IT, снижаем риски для бизнеса, улучшаем
               качество жизни и безопасность людей с помощью разработанных нами
               навигационно-связных технологий и IT-инфраструктуры
             </p>
           </div>
           <div class="about-us__services">
-            <div class="service-block">
-              <div class="about-us__line"></div>
-              <p class="about-us__service service-block-1">
-                Инвестиции в инженерные разработки
-              </p>
-            </div>
-            <div class="service-block">
-              <div class="about-us__line"></div>
-              <p class="about-us__service service-block-1">
-                Собственное производство
-              </p>
-            </div>
-            <div class="service-block">
-              <div class="about-us__line"></div>
-              <p class="about-us__service service-block-1">
-                Уникальная экспертиза, подтверждённая опытом и реализованными
-                проектами
-              </p>
-            </div>
-            <div class="service-block">
-              <div class="about-us__line"></div>
-              <p class="about-us__service service-block-1">
-                Участие в глобальных инициативах, направленных на развитие и
-                внедрение технологий будущего
-              </p>
-            </div>
-            <div class="service-block">
-              <div class="about-us__line"></div>
-              <p class="about-us__service service-block-1">
-                Партнёры компании – крупнейшие игроки лизинга и государственные
-                структуры отрасли связи
-              </p>
+            <div
+              v-for="(block, index) in serviceBlocks"
+              :key="block.id"
+              class="service-block"
+            >
+              <Motion
+                class="about-us__line"
+                :initial="{ height: '0%' }"
+                :in-view="{ height: '100%' }"
+                :transition="{ duration: 1, ease: 'easeOut' }"
+                :in-view-options="{
+                  once: true,
+                  amount: 0.5,
+                  margin: '0px 0px -50% 0px',
+                }"
+              />
+              <Motion
+                class="about-us__service"
+                :initial="{ opacity: 0.2 }"
+                :in-view="{ opacity: 1 }"
+                :transition="{ duration: 1 }"
+                :in-view-options="{
+                  once: true,
+                  amount: 0.5,
+                  margin: '0px 0px -50% 0px',
+                }"
+                @animate-start="handleAnimationStart(block.id)"
+                @animate-complete="handleAnimationComplete(block.id, index)"
+              >
+                {{ block.text }}
+              </Motion>
             </div>
           </div>
         </div>
