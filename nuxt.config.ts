@@ -8,8 +8,6 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
   ],
-  modules: [
-    "motion-v/nuxt",
-  ],
+  modules: ["v-gsap-nuxt"],
   css: ["~/assets/styles/style.css"],
 });

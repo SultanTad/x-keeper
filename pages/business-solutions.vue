@@ -2,67 +2,30 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { onMounted } from "vue";
-
-gsap.registerPlugin(ScrollTrigger);
-
-// onMounted(() => {
-//   const textElement = document.querySelector(".history__milestone-text");
-//   const words = textElement.textContent.split(" ");
-
-//   textElement.innerHTML = words.map((word) => `<span>${word}</span>`).join(" ");
-
-//   gsap.fromTo(
-//     textElement.querySelectorAll("span"),
-//     {
-//       opacity: 0.5,
-//     },
-//     {
-//       opacity: 1,
-//       duration: 4,
-//       stagger: 1,
-//       scrollTrigger: {
-//         trigger: ".history__milestone-text",
-//         start: "top bottom",
-//         end: "+=100%",
-//         scrub: 1,
-//         once: true,
-//       },
-//     }
-//   );
-// });
 </script>
 
 <template>
   <div class="container">
     <section class="hero">
       <div class="hero__inner">
-        <img
-          class="hero__logo"
-          src="../assets/images/lising-main.png"
-          alt="lising-main"
-        />
+        <img class="hero__logo" src="../assets/images/lising-main.png" alt="lising-main" />
         <h2 class="hero__title">IT решения для лизинга</h2>
         <h3 class="hero__text">
-          С нами вы получаете высокотехнологичное оборудование и уверенность в
-          том, что ваши активы всегда будут доступны и защищены
+          С нами вы получаете высокотехнологичное оборудование и уверенность в том, что ваши активы всегда будут доступны и защищены
         </h3>
       </div>
     </section>
     <section class="solutions__banner">
       <div class="solutions__banner-img">
-        <p class="solutions__banner-text">
-          Устройства для мониторинга, аутсорсинг лизинговых операций,
-          инструменты аналитики
-        </p>
+        <p class="solutions__banner-text">Устройства для мониторинга, аутсорсинг лизинговых операций, инструменты аналитики</p>
       </div>
     </section>
 
     <section class="history__milestone">
       <div class="history__milestone-inner">
         <h3 class="history__milestone-text">
-          В 2016 году мы запустили цифровую систему аутсорсинга для лизинга, что
-          позволило нашим клиентам вынести процесс выдачи автомобилей за пределы
-          своих операций
+          В 2016 году мы запустили цифровую систему аутсорсинга для лизинга, что позволило нашим клиентам вынести процесс выдачи автомобилей
+          за пределы своих операций
         </h3>
       </div>
     </section>
@@ -93,12 +56,9 @@ gsap.registerPlugin(ScrollTrigger);
 
     <section class="solutions__turnkey">
       <div class="solutions__turnkey-inner">
-        <h2 class="solutions__turnkey-title">
-          Реализация проекта аутсорсинга под ключ
-        </h2>
+        <h2 class="solutions__turnkey-title">Реализация проекта аутсорсинга под ключ</h2>
         <p class="solutions__turnkey-subtitle">
-          От анализа до поддержки, берем на себя выполнение бизнес-процессов,
-          чтобы вы могли фокусироваться на развитии бизнеса
+          От анализа до поддержки, берем на себя выполнение бизнес-процессов, чтобы вы могли фокусироваться на развитии бизнеса
         </p>
       </div>
       <SolutionSlider />
@@ -112,8 +72,7 @@ gsap.registerPlugin(ScrollTrigger);
       <div class="container">
         <h2 class="connection__advantages-title">Преимущества подключения</h2>
         <h3 class="connection__advantages-subtitle">
-          Оптимизация времени и затрат, профессиональная команда, адаптивность
-          решений, защита данных и круглосуточная поддержка
+          Оптимизация времени и затрат, профессиональная команда, адаптивность решений, защита данных и круглосуточная поддержка
         </h3>
         <VerticalSlider />
         <MobileAdvantagesSlider />
@@ -124,8 +83,7 @@ gsap.registerPlugin(ScrollTrigger);
       <div class="services__inner">
         <h2 class="services__title">Сервис X-Keeper</h2>
         <h3 class="services__subtitle">
-          На протяжении всего срока договора обеспечиваем бесперебойную
-          эксплуатацию имущества, защиту от рисков и удобное управление
+          На протяжении всего срока договора обеспечиваем бесперебойную эксплуатацию имущества, защиту от рисков и удобное управление
           имуществом
         </h3>
       </div>
@@ -599,7 +557,7 @@ gsap.registerPlugin(ScrollTrigger);
       }
     }
   }
-  
+
   .connection__advantages {
     &-title {
       font-size: 24px;
