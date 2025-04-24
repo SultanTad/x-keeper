@@ -23,8 +23,17 @@ onUnmounted(() => {
   window.removeEventListener("resize", updateWidth);
 });
 
-const slidesOffsetBefore = computed(() => (windowWidth.value < 800 ? 0 : 430));
-const slidesPerView = computed(() => (windowWidth.value < 400 ? 1 : 2.2));
+const slidesOffsetBefore = computed(() => {
+  if (windowWidth.value > 1200) return 430;
+  if (windowWidth.value <= 800) return 0;
+  return 0;
+});
+const slidesPerView = computed(() => {
+  if (windowWidth.value < 400) return 1;
+  if (windowWidth.value > 400) return 1.5;
+  if (windowWidth.value > 800) return 2.2;
+  return 2;
+});
 </script>
 <template>
   <swiper
@@ -33,7 +42,7 @@ const slidesPerView = computed(() => (windowWidth.value < 400 ? 1 : 2.2));
     }"
     :slides-offset-before="slidesOffsetBefore"
     :slides-per-view="slidesPerView"
-    :space-between="14"
+    :space-between="20"
     :mousewheel="true"
     :modules="[Pagination, Mousewheel]"
     class="swiperSolution"
@@ -86,6 +95,9 @@ const slidesPerView = computed(() => (windowWidth.value < 400 ? 1 : 2.2));
 <style>
 .swiperSolution {
   padding-bottom: 50px;
+  padding-left: 16px;
+  width: 100%;
+  overflow: unset;
 }
 .swiperSolution .swiperSolution-slide__img {
   width: 150px;
@@ -104,6 +116,7 @@ const slidesPerView = computed(() => (windowWidth.value < 400 ? 1 : 2.2));
   max-width: 223px;
   font-family: "VelaSans-Medium";
   font-size: 15px;
+  line-height: normal;
 }
 .swiperSolution .swiper-pagination {
   top: unset;
@@ -117,9 +130,8 @@ const slidesPerView = computed(() => (windowWidth.value < 400 ? 1 : 2.2));
   .swiper-pagination-progressbar-fill {
   background: #333343;
 }
-.swiperSolution .swiper-slide {
-  max-width: 250px;
-  width: 100%;
+.solutions__turnkey .swiperSolution .swiper-wrapper .swiper-slide {
+  width: 300px;
   height: auto;
   background-color: #ebecf3;
   display: flex;
@@ -140,18 +152,22 @@ const slidesPerView = computed(() => (windowWidth.value < 400 ? 1 : 2.2));
   }
   .swiperSolution .swiperSolution-slide__text {
     font-size: 20px;
-    max-width: 240px;
+    max-width: 297px;
   }
   .swiperSolution .swiper-slide {
-    width: 431px;
-    padding: 63px 48px;
+    max-width: 431px;
+    padding: 48px;
   }
 }
 
 @media (max-width: 800px) {
   .swiperSolution .swiper-pagination {
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
+  }
+  .solutions__turnkey .swiperSolution .swiper-wrapper .swiper-slide {
+    border-radius: 32px;
+    padding: 20px;
   }
 }
 @media (max-width: 480px) {
@@ -174,6 +190,9 @@ const slidesPerView = computed(() => (windowWidth.value < 400 ? 1 : 2.2));
     padding: 17px 34px 29px 24px;
     border-radius: 32px;
     max-width: 300px;
+  }
+  .swiperSolution .swiper-pagination {
+    height: 2px;
   }
 }
 </style>

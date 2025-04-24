@@ -90,8 +90,9 @@ gsap.registerPlugin(ScrollTrigger);
         </div>
       </div>
     </section>
-
-    <section class="solutions__turnkey">
+  </div>
+  <section class="solutions__turnkey">
+    <div class="container">
       <div class="solutions__turnkey-inner">
         <h2 class="solutions__turnkey-title">
           Реализация проекта аутсорсинга под ключ
@@ -101,26 +102,27 @@ gsap.registerPlugin(ScrollTrigger);
           чтобы вы могли фокусироваться на развитии бизнеса
         </p>
       </div>
-      <SolutionSlider />
-    </section>
-
-    <section class="banner">
+    </div>
+    <SolutionSlider />
+  </section>
+  <section class="banner">
+    <div class="container">
       <img src="../assets/images/Frame 810424157.png" alt="" />
-    </section>
-
-    <section class="connection__advantages">
-      <div class="container">
-        <h2 class="connection__advantages-title">Преимущества подключения</h2>
-        <h3 class="connection__advantages-subtitle">
-          Оптимизация времени и затрат, профессиональная команда, адаптивность
-          решений, защита данных и круглосуточная поддержка
-        </h3>
-        <VerticalSlider />
-        <MobileAdvantagesSlider />
-      </div>
-    </section>
-
-    <section class="services">
+    </div>
+  </section>
+  <section class="connection__advantages">
+    <div class="container">
+      <h2 class="connection__advantages-title">Преимущества подключения</h2>
+      <h3 class="connection__advantages-subtitle">
+        Оптимизация времени и затрат, профессиональная команда, адаптивность
+        решений, защита данных и круглосуточная поддержка
+      </h3>
+      <VerticalSlider />
+    </div>
+    <MobileAdvantagesSlider />
+  </section>
+  <section class="services">
+    <div class="container">
       <div class="services__inner">
         <h2 class="services__title">Сервис X-Keeper</h2>
         <h3 class="services__subtitle">
@@ -155,12 +157,14 @@ gsap.registerPlugin(ScrollTrigger);
           </div>
         </div>
       </div>
-      <MobileServicesSlider />
+    </div>
+    <MobileServicesSlider />
+    <div class="container">
       <div class="services__link-btn">
         <NuxtLink><Button green>оставить заявку</Button></NuxtLink>
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
 </template>
 
 <style lang="scss">
@@ -245,7 +249,7 @@ gsap.registerPlugin(ScrollTrigger);
     font-family: "VelaSans-bold";
     font-weight: 700;
     font-size: 50px;
-    line-height: 100%;
+    line-height: normal;
   }
   &__list {
     display: flex;
@@ -258,7 +262,6 @@ gsap.registerPlugin(ScrollTrigger);
       font-weight: 300;
       font-size: 65px;
       line-height: 95%;
-      margin-bottom: 10px;
     }
     .item__text {
       font-family: "VelaSans-Medium";
@@ -276,6 +279,7 @@ gsap.registerPlugin(ScrollTrigger);
 .solutions__turnkey {
   padding-top: 150px;
   color: #333343;
+  overflow: hidden;
   &-inner {
     display: flex;
     align-items: center;
@@ -385,6 +389,9 @@ gsap.registerPlugin(ScrollTrigger);
     justify-content: center;
     button {
       width: 320px;
+      height: 70px;
+      font-size: 22px;
+      line-height: 100%;
     }
   }
 }
@@ -411,7 +418,6 @@ gsap.registerPlugin(ScrollTrigger);
       max-width: 656px;
       .item__title {
         font-size: 140px;
-        margin-bottom: 16px;
       }
       .item__text {
         font-size: 26px;
@@ -463,7 +469,7 @@ gsap.registerPlugin(ScrollTrigger);
     }
   }
 }
-@media (max-width: 1070px) {
+@media (max-width: 1350px) {
   .services__list {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -599,7 +605,7 @@ gsap.registerPlugin(ScrollTrigger);
       }
     }
   }
-  
+
   .connection__advantages {
     &-title {
       font-size: 24px;
@@ -654,11 +660,6 @@ gsap.registerPlugin(ScrollTrigger);
     img {
       height: 372px;
     }
-  }
-}
-@media (max-width: 400px) {
-  .history__milestone-text {
-    font-size: 22px;
   }
 }
 @media (max-width: 350px) {

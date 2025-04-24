@@ -74,6 +74,7 @@ import { Pagination, Mousewheel } from "swiper/modules";
 <style lang="scss">
 .swiperAdvantages {
   padding-bottom: 50px;
+  padding-left: 16px;
 }
 .swiperAdvantages .swiperAdvantages-slide__img {
   width: 150px;
@@ -163,6 +164,9 @@ import { Pagination, Mousewheel } from "swiper/modules";
     padding: 17px 34px 29px 24px;
     border-radius: 32px;
     max-width: 300px;
+  }
+  .swiperAdvantages .swiper-pagination {
+    height: 2px;
   }
 }
 @media (min-width: 480px) {

@@ -46,7 +46,7 @@ defineProps({
             {{ item }}
           </li>
         </ul>
-        <p v-else class="swiper-slide__text">{{ content.text }}</p>
+        <p v-if="!Array.isArray(content.text)" class="swiper-slide__text">{{ content.text }}</p>
 
         <div class="swiper-slide__table" v-if="content.specifications">
           <div
@@ -83,7 +83,7 @@ defineProps({
     align-items: end;
     color: #fff;
     &__inner {
-      padding-left: 50px;
+      padding-left: 56px;
     }
     .specifications {
       width: 100%;
@@ -96,7 +96,6 @@ defineProps({
       font-family: "VelaSans-bold";
       font-size: 35px;
       margin-bottom: 25px;
-      max-width: 380px;
       line-height: normal;
       span {
         display: block;
@@ -111,8 +110,8 @@ defineProps({
       padding-bottom: 34px;
       font-family: "VelaSans-Medium";
       font-size: 20px;
-      line-height: 100%;
-      max-width: 700px;
+      line-height: normal;
+      max-width: 922px;
     }
     &__table {
       display: flex;
@@ -153,6 +152,9 @@ defineProps({
       font-size: 20px;
       line-height: normal;
       margin-bottom: 21px;
+      &:last-child {
+        margin-bottom: unset;
+      }
     }
     .list__item--2 {
       max-width: 517px;
@@ -174,7 +176,7 @@ defineProps({
     display: flex;
     align-items: center;
     padding: 5px;
-    top: 38px;
+    top: 65px;
     left: 50%;
     transform: translate(-50%, -50%);
     position: absolute;
@@ -190,6 +192,7 @@ defineProps({
     padding: 12px 26px;
     position: relative;
     transition: all 1s;
+    white-space: nowrap;
   }
 
   .product-bullet-active {
@@ -208,6 +211,12 @@ defineProps({
     left: 0;
     border-radius: 55px;
   }
+}
+
+.technical-parameters .swiperProducts .swiper-slide,
+.products__hero .swiperProducts .swiper-slide {
+  background-image: none !important;
+  background-color: #333343;
 }
 
 @media (min-width: 1200px) {
@@ -251,7 +260,7 @@ defineProps({
     border-radius: 32px;
   }
   .swiperProducts .product-bullet {
-    padding: 12px 16px;
+    padding: 10px 16px;
     font-size: 15px;
   }
 }
@@ -263,12 +272,12 @@ defineProps({
   .swiperProducts .swiper-pagination {
     height: 40px;
   }
-  .products__hero .swiperProducts .swiper-pagination {
-    width: 230px;
-  }
-  .technical-parameters .swiperProducts .swiper-pagination {
-    width: 230px;
-  }
+  // .products__hero .swiperProducts .swiper-pagination {
+  //   width: 230px;
+  // }
+  // .technical-parameters .swiperProducts .swiper-pagination {
+  //   width: 230px;
+  // }
 }
 @media (max-width: 480px) {
   .products__hero .swiperProducts .swiper-slide {
@@ -278,13 +287,12 @@ defineProps({
   }
   .theft-protection .swiperProducts .swiper-slide {
     &__title {
-      font-size: 20px;
+      font-size: 26px;
+      line-height: 100%;
     }
   }
   .technical-parameters .swiperProducts .swiper-slide {
     height: unset;
-    background-image: none !important;
-    background-color: #333343;
     &__text {
       font-size: 16px;
     }
@@ -306,11 +314,18 @@ defineProps({
       flex-direction: column;
     }
     &__table {
-      padding-top: 42px;
+      padding-top: 74px;
       &-inner {
         padding-bottom: 19px;
       }
     }
+  }
+  .swiperProducts .swiper-slide__text {
+    font-size: 16px;
+    line-height: 120%;
+  }
+  .swiperProducts .swiper-pagination {
+    top: 38px;
   }
   .swiperProducts .swiper-slide .list__item {
     font-size: 16px;
@@ -327,6 +342,12 @@ defineProps({
   }
   .swiperProducts .swiper-slide__table-inner .table-value {
     font-size: 13px;
+  }
+  .swiperProducts .product-bullet {
+    padding: 10px 9px;
+  }
+  .swiperProducts .swiper-slide__list {
+    padding-bottom: 36px;
   }
 }
 </style>

@@ -223,7 +223,7 @@ onUnmounted(() => {
       >
         <NuxtLink
           ><Button green class="btn--profile"
-            >демо личного кабинета
+            ><span>демо личного кабинета</span>
           </Button></NuxtLink
         >
       </div>
@@ -380,6 +380,12 @@ onUnmounted(() => {
     justify-content: center;
     .btn--profile {
       width: 320px;
+      height: 70px;
+      color: #333343;
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: normal;
     }
   }
 }
@@ -482,6 +488,11 @@ onUnmounted(() => {
     text-align: center;
     button {
       width: 320px;
+      height: 70px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: normal;
     }
   }
 }
@@ -639,6 +650,14 @@ onUnmounted(() => {
     width: 214px;
     font-size: 14px;
     font-weight: 500;
+    height: 41px;
+    line-height: 89%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    span {
+      width: 126px;
+    }
   }
   .working-principle__item {
     font-size: 18px;
@@ -652,6 +671,14 @@ onUnmounted(() => {
     &__title,
     &__links {
       display: none;
+    }
+    &__request {
+      button {
+        height: 54px;
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 89%;
+      }
     }
   }
 }

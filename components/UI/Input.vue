@@ -1,13 +1,42 @@
 <script setup>
-defineProps({
+import { defineModel, ref, computed, onMounted } from "vue";
+
+// Деструктурируем props
+const { type, placeholder, shouldValidate, isInvalid } = defineProps({
   type: String,
   placeholder: String,
+  shouldValidate: Boolean,
+  isInvalid: Boolean,
+});
+const inputValue = defineModel({ type: String, required: true });
+
+const isFocused = ref(false);
+
+const isLabelShrunk = computed(() => {
+  return isFocused.value || inputValue.value.length > 0;
+});
+
+onMounted(() => {
+  // Устанавливаем начальное значение для inputValue
+  console.log(inputValue.value);
+  
 });
 </script>
+
 <template>
   <div class="input-wrapper">
-    <input :type="type" class="input" />
-    <label :title="placeholder"></label>
+    <input
+      :type="type"
+      class="input"
+      v-model="inputValue"
+      :class="{ invalid: isInvalid }"
+      @focus="isFocused = true"
+      @blur="isFocused = false"
+    />
+    <label
+      :title="placeholder"
+      :class="{ filled: isLabelShrunk}"
+    ></label>
   </div>
 </template>
 
@@ -15,9 +44,11 @@ defineProps({
 .input-wrapper {
   position: relative;
 }
+
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
 .input {
   border-top: unset;
   border-right: unset;
@@ -29,15 +60,18 @@ input[type="number"] {
   line-height: normal;
   width: 100%;
   padding: 10px 0;
+
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
+
   &:focus {
     outline: none;
     border-bottom: 1px solid #333343;
   }
+
   &:focus + label::before {
     line-height: 20px;
     font-size: 20px;
@@ -45,7 +79,11 @@ input[type="number"] {
     background: #fff;
     left: 0;
   }
+  &.invalid {
+    border-bottom: 1px solid #ff0000;
+  }
 }
+
 label::before {
   content: attr(title);
   position: absolute;
@@ -55,9 +93,16 @@ label::before {
   color: #777;
   transition: 300ms all;
   font-family: "VelaSans-Medium";
-  font-size: 24px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+}
+
+label.filled::before {
+  line-height: 20px;
+  font-size: 20px;
+  top: -10px;
+  background: #fff;
+  left: 0;
 }
 </style>

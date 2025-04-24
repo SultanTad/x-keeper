@@ -12,12 +12,16 @@
             <div class="footer__info">
               <div class="footer__info-box">
                 <NuxtLink class="info__text" to="/products">Продукция</NuxtLink>
-                <NuxtLink class="info__text" to="/business-solutions">Решения для бизнеса</NuxtLink>
+                <NuxtLink class="info__text" to="/business-solutions"
+                  >Решения для бизнеса</NuxtLink
+                >
                 <NuxtLink class="info__text" to="contacts">Контакты</NuxtLink>
               </div>
               <div class="footer__info-mobile-box">
                 <NuxtLink class="info__text" to="/products">Продукция</NuxtLink>
-                <NuxtLink class="info__text" to="/business-solutions">Решения для бизнеса</NuxtLink>
+                <NuxtLink class="info__text" to="/business-solutions"
+                  >Решения для бизнеса</NuxtLink
+                >
                 <NuxtLink class="info__text" to="/contacts">Контакты</NuxtLink>
               </div>
               <div class="footer__info-number">
@@ -155,15 +159,11 @@
         font-size: 11px;
       }
     }
-  }
-}
-
-@media (max-width: 360px) {
-  .footer {
     &__logo {
       width: 48px;
       height: 33px;
     }
   }
 }
+
 </style>

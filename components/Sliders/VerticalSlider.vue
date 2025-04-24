@@ -156,9 +156,12 @@ onMounted(() => {
   background-image: url(../../assets/images/vertical-slider-arrow.svg);
   width: 45px;
   height: 45px;
-  background-size: cover;
+  background-size: 18px;
+  background-position: center center;
   background-repeat: no-repeat;
   z-index: 1000;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
 }
 
 .v-slick-arrow.prev {
@@ -209,6 +212,14 @@ onMounted(() => {
   }
   .slide {
     height: 540px !important;
+  }
+  .v-slick-arrow.next,
+  .v-slick-arrow.prev {
+    width: 70px;
+    height: 70px;
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.4);
+    }
   }
 }
 

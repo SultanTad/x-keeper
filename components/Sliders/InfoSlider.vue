@@ -60,7 +60,7 @@ defineProps({
   display: flex;
   align-items: center;
   padding: 5px;
-  top: 45px;
+  top: 65px;
   left: 50%;
   transform: translate(-50%, -50%);
   position: absolute;
@@ -113,7 +113,6 @@ defineProps({
   &__inner {
     padding-bottom: 60px;
     padding-left: 60px;
-    max-width: 808px;
   }
   &__icon {
     width: 52px;
@@ -126,12 +125,14 @@ defineProps({
     font-size: 64px;
     line-height: normal;
     margin-bottom: 10px;
+    max-width: 773px;
   }
   &__text {
     font-family: "VelaSans-Medium";
     font-size: 26px;
     font-weight: 500;
     line-height: normal;
+    max-width: 808px;
   }
 }
 

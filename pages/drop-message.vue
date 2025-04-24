@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 const activeIndexes = ref([]);
 const servicesList = [
   "лизинг",
@@ -9,6 +9,40 @@ const servicesList = [
   "для интеграторов",
   "лизинг",
 ];
+
+// Состояния для каждого инпута
+const name = ref("");
+const phone = ref("");
+const email = ref("");
+
+// Состояние для активации валидации
+const shouldValidate = ref(false);
+
+// Проверки для каждого инпута
+const isNameInvalid = computed(() => {
+  if (!shouldValidate.value) return false;
+  return name.value.trim() === ""; // Проверка на пустое имя
+});
+
+const isPhoneInvalid = computed(() => {
+  if (!shouldValidate.value) return false;
+  if (phone.value === "") return true; // Пустое поле
+  const cleanValue = String(phone.value).replace(/\D/g, ""); // Убираем все не-цифры
+  return cleanValue.length !== 11; // Номер должен быть 11 цифр (включая код страны)
+});
+
+const isEmailInvalid = computed(() => {
+  if (!shouldValidate.value) return false;
+  if (email.value === "") return true; // Пустое поле
+  // Простая проверка email (наличие @ и домена)
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return !emailPattern.test(email.value);
+});
+
+// Обработчик кнопки "Отправить"
+const handleSubmit = () => {
+  shouldValidate.value = true;
+};
 
 const setActive = (index) => {
   if (activeIndexes.value.includes(index)) {
@@ -25,7 +59,7 @@ const isActive = (index) => {
 </script>
 <template>
   <section class="drop-message">
-    <div class="container">
+    <div class="mini-container">
       <h2 class="drop-message__title">Оставить заявку</h2>
       <h3 class="drop-message__subtitle">
         Заполните заявку или позвоните нам: <span>+7 (495) 989-22-83</span>
@@ -50,13 +84,31 @@ const isActive = (index) => {
       <div class="drop-message__contacts">
         <h3 class="drop-message__contacts-title">Контактные данные</h3>
         <form class="drop-message__contacts-form">
-          <Input :type="'text'" :placeholder="'Имя'" />
-          <Input :type="'number'" :placeholder="'Телефон'" />
-          <Input :type="'email'" :placeholder="'Email'" />
+          <Input
+            :type="'text'"
+            :placeholder="'Имя'"
+            v-model="name"
+            :isInvalid="isNameInvalid"
+            :shouldValidate="shouldValidate"
+          />
+          <Input
+            :type="'tel'"
+            :placeholder="'Телефон'"
+            v-model="phone"
+            :isInvalid="isPhoneInvalid"
+            :shouldValidate="shouldValidate"
+          />
+          <Input
+            :type="'email'"
+            :placeholder="'Email'"
+            v-model="email"
+            :isInvalid="isEmailInvalid"
+            :shouldValidate="shouldValidate"
+          />
         </form>
       </div>
       <div class="drop-message__link">
-        <Button grey>отправить</Button>
+        <Button grey @click="handleSubmit">отправить</Button>
       </div>
     </div>
   </section>

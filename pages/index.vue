@@ -1,5 +1,6 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { ref, onMounted, onBeforeMount } from "vue";
+
 import ForestCountry from "@/assets/images/forest-country-road-1.webp";
 import YellowBulldozer from "@/assets/images/yellow-bulldozer.webp";
 import Cargoes from "@/assets/images/cargoes.webp";
@@ -9,9 +10,11 @@ import Icon1 from "@/assets/images/icon-1.svg";
 import Icon2 from "@/assets/images/icon-2.svg";
 import Icon3 from "@/assets/images/icon-3.svg";
 
-import { Motion, useScroll } from "motion-v";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const currentAnimatingBlock = ref(null);
+onBeforeMount(() => {
+  useGSAP().registerPlugin(ScrollTrigger);
+});
 
 const serviceBlocks = [
   { id: 1, text: "Инвестиции в инженерные разработки" },
@@ -32,93 +35,6 @@ const serviceBlocks = [
     text: "Партнёры компании – крупнейшие игроки лизинга и государственные структуры отрасли связи",
   },
 ];
-
-const handleAnimationStart = (blockId) => {
-  if (
-    currentAnimatingBlock.value !== null &&
-    currentAnimatingBlock.value !== blockId
-  )
-    return;
-  currentAnimatingBlock.value = blockId;
-};
-
-const handleAnimationComplete = (blockId, index) => {
-  if (index === serviceBlocks.length - 1) {
-    currentAnimatingBlock.value = null;
-  } else {
-    currentAnimatingBlock.value = serviceBlocks[index + 1]?.id || null;
-  }
-};
-
-// import { gsap } from "gsap";
-// import { ScrollTrigger } from "gsap/ScrollTrigger";
-// import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-
-// gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
-
-// onMounted(() => {
-//   let isAnimating = false;
-//   const targetBlock = document.querySelector(".about-us__services");
-
-//   ScrollTrigger.create({
-//     trigger: targetBlock,
-//     start: "top center",
-//     end: "bottom center",
-//     onEnter: () => {
-//       gsap.to(window, {
-//         duration: 2, // <- вот это и задаёт замедление
-//         scrollTo: {
-//           offsetY: 10, // можно немного отступить
-//         },
-//         ease: "power2.out",
-//       });
-//     },
-//     once: true,
-//   });
-//   const serviceBlocks = gsap.utils.toArray(".service-block");
-
-//   const getScrollbarWidth = () => {
-//     return window.innerWidth - document.documentElement.clientWidth;
-//   };
-
-//   serviceBlocks.forEach((block) => {
-//     ScrollTrigger.create({
-//       trigger: block,
-//       start: "top 50%",
-//       once: true,
-//       onEnter: () => {
-//         if (isAnimating) return;
-
-//         isAnimating = true;
-
-//         const scrollbarWidth = getScrollbarWidth();
-//         document.body.style.overflow = "hidden";
-//         document.body.style.paddingRight = `${scrollbarWidth}px`;
-
-//         const tl = gsap.timeline();
-
-//         tl.to(block.querySelector(".about-us__service"), {
-//           opacity: 1,
-//           duration: 1,
-//         }).to(
-//           block.querySelector(".about-us__line"),
-//           {
-//             height: "100%",
-//             duration: 1,
-//             ease: "power1.out",
-//           },
-//           "<"
-//         );
-
-//         tl.eventCallback("onComplete", () => {
-//           document.body.style.overflow = "auto";
-//           document.body.style.paddingRight = "0";
-//           isAnimating = false;
-//         });
-//       },
-//     });
-//   });
-// });
 
 const activeWidget = ref(false);
 
@@ -204,16 +120,33 @@ const activatedWidget = () => {
 const closeWidget = () => {
   activeWidget.value = false;
 };
-const aboutUsScroll = ref(null);
-const scrollYProgress = ref(0);
+const aboutUsActiveIndex = ref(-1);
+const trustGlobeActiveIndex = ref(-1);
 onMounted(() => {
-  if (process.client) {
-    const { scrollYProgress: progress } = useScroll({
-      target: aboutUsScroll,
-      offset: ["start end", "end end"],
-    });
-    scrollYProgress.value = progress;
-  }
+  // ScrollTrigger.create({
+  //   trigger: "#aboutUsScroll",
+  //   start: "top top",
+  //   end: "+=3000",
+  //   scrub: true,
+  //   pin: true,
+  //   onUpdate: (self) => {
+  //     const progress = self.progress;
+  //     aboutUsActiveIndex.value = progress === 0 ? -1 : Math.floor(progress * 5);
+  //     useGSAP().to("#aboutUsLine", { scaleY: progress, duration: 0 });
+  //   },
+  // });
+  // ScrollTrigger.create({
+  //   trigger: "#trustGlobe",
+  //   start: "top top",
+  //   end: "+=4500",
+  //   scrub: true,
+  //   pin: true,
+  //   onUpdate: (self) => {
+  //     const progress = self.progress;
+  //     trustGlobeActiveIndex.value =
+  //       progress === 0 ? -1 : Math.floor(progress * 6);
+  //   },
+  // });
 });
 </script>
 <template>
@@ -273,7 +206,7 @@ onMounted(() => {
       </section>
       <InfoSlider :sliders="sliders" />
 
-      <section class="about-us">
+      <section class="about-us" id="aboutUsScroll">
         <div class="about-us__inner">
           <div class="about-us__info">
             <h2 class="about-us__title">Коротко о нас</h2>
@@ -283,38 +216,40 @@ onMounted(() => {
               навигационно-связных технологий и IT-инфраструктуры
             </p>
           </div>
-          <div class="about-us__services" ref="aboutUsScroll">
+          <div class="about-us__services">
+            <div class="about-us__line">
+              <div
+                id="aboutUsLine"
+                style="
+                  width: 2px;
+                  background-color: #000;
+                  height: 100%;
+                  transform-origin: top;
+                  transform: scaleY(0);
+                  position: absolute;
+                "
+              />
+              <div
+                style="
+                  width: 2px;
+                  background-color: #000;
+                  height: 100%;
+                  transform-origin: top;
+                  opacity: 0.2;
+                "
+              />
+            </div>
             <div
               v-for="(block, index) in serviceBlocks"
               :key="block.id"
               class="service-block"
             >
-              <Motion
-                class="about-us__line"
-                :initial="{ height: '0%' }"
-                :in-view="{ height: '100%' }"
-                :transition="{ duration: 1, ease: 'easeOut' }"
-                :in-view-options="{
-                  once: true,
-                  amount: 0.5,
-                  margin: '0px 0px -50% 0px',
-                }"
-              />
-              <Motion
+              <div
                 class="about-us__service"
-                :initial="{ opacity: 0.2 }"
-                :in-view="{ opacity: 1 }"
-                :transition="{ duration: 1 }"
-                :in-view-options="{
-                  once: true,
-                  amount: 0.5,
-                  margin: '0px 0px -50% 0px',
-                }"
-                @animate-start="handleAnimationStart(block.id)"
-                @animate-complete="handleAnimationComplete(block.id, index)"
+                :style="{ opacity: aboutUsActiveIndex >= index ? 1 : 0.2 }"
               >
                 {{ block.text }}
-              </Motion>
+              </div>
             </div>
           </div>
         </div>
@@ -342,13 +277,60 @@ onMounted(() => {
         </div>
       </section>
 
+      <!-- <section class="trust__info" id="trustGlobe">
+        <div class="trust__info-inner">
+          <div
+            class="trust__info-text"
+            style="
+              line-height: 1;
+              position: relative;
+              font-size: 6rem;
+              text-align: start;
+              max-width: 100%;
+              width: 100%;
+              display: flex;
+              flex-direction: column;
+              align-items: start;
+              gap: 10px;
+            "
+          >
+            <div
+              v-for="(item, index) in [
+                'Наши устройства',
+                'бесперебойно',
+                'работают по всему миру',
+              ]"
+              style="color: rgba(0, 0, 0, 0.2)"
+            >
+              <span
+                :style="{
+                  clipPath:
+                    trustGlobeActiveIndex >= index
+                      ? 'inset(0 0% -20% 0)'
+                      : 'inset(0 100% -20% 0)',
+                }"
+                style="
+                  position: absolute;
+                  color: #333343;
+                  transition: clip-path 0.3s ease-in-out;
+                "
+                class="text-reveal"
+              >
+                {{ item }}
+              </span>
+              {{ item }}
+            </div>
+          </div>
+        </div>
+      </section> -->
+
       <section class="trust__info">
         <div class="trust__info-inner">
           <h3 class="trust__info-text">
             С нами вы получаете высокотехнологичное оборудование и уверенность в
             том, что ваши активы всегда будут доступны и защищены
           </h3>
-          <NuxtLink
+          <NuxtLink to="/drop-message"
             ><Button green class="trust__info-btn"
               >оставить заявку</Button
             ></NuxtLink
@@ -548,15 +530,16 @@ onMounted(() => {
   &__line {
     position: absolute;
     top: 0;
-    left: -20px;
+    left: auto;
     width: 2px;
-    height: 0;
-    background-color: #333343;
+    height: 100%;
+    transform: translateX(-20px);
   }
   &__services {
     display: flex;
     flex-direction: column;
     max-width: 576px;
+    position: relative;
   }
   .service-block {
     position: relative;
@@ -571,6 +554,7 @@ onMounted(() => {
     font-size: 26px;
     line-height: 120%;
     opacity: 0.2;
+    transition: opacity 0.3s ease-in-out;
   }
 }
 
@@ -615,6 +599,12 @@ onMounted(() => {
   }
   &-btn {
     width: 320px;
+    height: 70px;
+    color: #333343;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: normal;
   }
   &-inner {
     display: flex;
@@ -632,6 +622,10 @@ onMounted(() => {
     max-width: 935px;
     text-align: center;
   }
+}
+
+.text-reveal {
+  clip-path: inset(0 100% -20% 0);
 }
 
 @media (min-width: 1350px) {
@@ -853,6 +847,11 @@ onMounted(() => {
     &-inner {
       gap: 40px 0;
     }
+    &-btn {
+      line-height: 89%;
+      height: 54px;
+      font-size: 16px;
+    }
   }
   .get-in-touch .title {
     margin-bottom: 20px;
@@ -868,6 +867,9 @@ onMounted(() => {
     }
     &__banner {
       width: 100%;
+      img {
+        width: 100%;
+      }
     }
     &__title {
       span {
@@ -889,6 +891,7 @@ onMounted(() => {
   .main__bg {
     border-bottom-right-radius: 32px;
     border-bottom-left-radius: 32px;
+    height: 830px;
   }
 }
 @media (max-width: 340px) {

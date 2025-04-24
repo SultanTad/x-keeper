@@ -55,6 +55,7 @@ import { Pagination, Mousewheel } from "swiper/modules";
 <style lang="scss">
 .swiperServices {
   padding-bottom: 50px;
+  padding-left: 16px;
 }
 .swiperServices .swiperServices-slide__img {
   width: 150px;
@@ -80,6 +81,7 @@ import { Pagination, Mousewheel } from "swiper/modules";
   bottom: 0;
   left: 500px;
   width: 271px;
+  height: 2px;
 }
 
 .swiperServices

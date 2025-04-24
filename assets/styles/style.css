@@ -197,10 +197,6 @@ select {
   vertical-align: middle;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 *,
 *::before,
 *::after {
@@ -223,8 +219,16 @@ img {
   position: relative;
 }
 
-@media (max-width: 380px) {
-  .container {
+.mini-container {
+  max-width: 902px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+@media (max-width: 480px) {
+  .container,
+  .mini-container {
     padding: 0 16px;
   }
 }

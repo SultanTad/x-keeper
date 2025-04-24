@@ -78,12 +78,12 @@ watch(
           </li>
         </ul>
         <div class="mobile__menu-btns">
-          <NuxtLink>
-            <Button green>личный кабинет</Button>
-          </NuxtLink>
           <NuxtLink to="/drop-message">
-            <Button greyFilled class="grey-btn" :link="'/drop-message'"
-              >оставить заявку</Button
+            <Button green>оставить заявку</Button>
+          </NuxtLink>
+          <NuxtLink>
+            <Button white class="grey-btn" :link="'/drop-message'"
+              >личный кабинет</Button
             >
           </NuxtLink>
         </div>
@@ -210,14 +210,15 @@ watch(
     font-size: 28px;
     line-height: 110%;
     margin-bottom: 30px;
+    color: #333343;
   }
   &-btns {
     margin-bottom: 30px;
     button {
       width: 100%;
+      height: 54px;
     }
     .grey-btn {
-      background: #d9d9d9;
       margin-top: 16px;
     }
   }
@@ -230,6 +231,7 @@ watch(
   .main-logo {
     width: 30px;
     height: 21px;
+    max-width: unset;
   }
   .nav {
     .menu__list,
