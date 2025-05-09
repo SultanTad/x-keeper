@@ -242,7 +242,12 @@ img {
   }
 }
 
-.bullet--1:hover ~ .bullet--0 {
-  transform: scaleX(1.1);
-  transform-origin: right; /* Увеличиваем ширину активной кнопки */
+.wrapper {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex-grow: 1;
 }

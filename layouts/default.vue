@@ -1,5 +1,7 @@
 <template>
-    <TheHeader/>
-    <slot/>
-    <TheFooter/>
+  <div class="wrapper">
+    <TheHeader />
+    <slot />
+    <TheFooter />
+  </div>
 </template>

@@ -1,6 +1,4 @@
 <script setup>
-import { ref, onMounted, onBeforeMount } from "vue";
-
 import ForestCountry from "@/assets/images/forest-country-road-1.webp";
 import YellowBulldozer from "@/assets/images/yellow-bulldozer.webp";
 import Cargoes from "@/assets/images/cargoes.webp";
@@ -9,6 +7,9 @@ import WhiteBlackBg from "@/assets/images/white-black-background.png";
 import Icon1 from "@/assets/images/icon-1.svg";
 import Icon2 from "@/assets/images/icon-2.svg";
 import Icon3 from "@/assets/images/icon-3.svg";
+import Circles from "@/assets/images/circles.svg";
+import Globe from "@/assets/images/globe.svg";
+import GlobeWithDots from "@/assets/images/globe-with-dots.svg";
 
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -120,33 +121,139 @@ const activatedWidget = () => {
 const closeWidget = () => {
   activeWidget.value = false;
 };
+
 const aboutUsActiveIndex = ref(-1);
 const trustGlobeActiveIndex = ref(-1);
 onMounted(() => {
-  // ScrollTrigger.create({
-  //   trigger: "#aboutUsScroll",
-  //   start: "top top",
-  //   end: "+=3000",
-  //   scrub: true,
-  //   pin: true,
-  //   onUpdate: (self) => {
-  //     const progress = self.progress;
-  //     aboutUsActiveIndex.value = progress === 0 ? -1 : Math.floor(progress * 5);
-  //     useGSAP().to("#aboutUsLine", { scaleY: progress, duration: 0 });
-  //   },
-  // });
-  // ScrollTrigger.create({
-  //   trigger: "#trustGlobe",
-  //   start: "top top",
-  //   end: "+=4500",
-  //   scrub: true,
-  //   pin: true,
-  //   onUpdate: (self) => {
-  //     const progress = self.progress;
-  //     trustGlobeActiveIndex.value =
-  //       progress === 0 ? -1 : Math.floor(progress * 6);
-  //   },
-  // });
+  let titles = 
+  ScrollTrigger.create({
+    trigger: "#aboutUsScroll",
+    start: "top top",
+    end: "+=3700",
+    pin: true,
+    once: true,
+    onUpdate: (self) => {
+      const progress = self.progress;
+
+      aboutUsActiveIndex.value = progress === 0 ? -1 : Math.floor(progress * 5);
+
+      useGSAP().to("#aboutUsLine", {
+        scaleY: progress,
+        duration: 0,
+      });
+
+      if (progress === 1) {
+        self.disable();
+
+        nextTick(() => {
+          ScrollTrigger.refresh();
+        });
+      }
+    },
+  });
+
+  ScrollTrigger.create({
+    trigger: ".number-company__list",
+    start: "top top",
+    end: "top bottom",
+    onUpdate: () => {
+      useGSAP().from(titles, {
+        y: 50,
+        opacity: 0,
+        duration: 1.5,
+        ease: "power3.out",
+        stagger: 0.1,
+      });
+      useGSAP().from(texts, {
+        y: 50,
+        opacity: 0,
+        duration: 1.5,
+        ease: "power3.out",
+        stagger: 0.1,
+      });
+    },
+  });
+
+  ScrollTrigger.create({
+    trigger: "#trustGlobe",
+    start: "top top",
+    end: "+=4500",
+    scrub: true,
+    pin: true,
+    onUpdate: (self) => {
+      const progress = self.progress;
+
+      trustGlobeActiveIndex.value =
+        progress === 0 ? -1 : Math.floor(progress * 6);
+
+      const circlesScaleFactor = 0.8 + Math.floor(progress * 6) * 0.4;
+      const opacityValue =
+        trustGlobeActiveIndex.value >= 3
+          ? 0
+          : progress > 0
+          ? Math.floor(progress * 6) / 6 + 0.5
+          : 0;
+      useGSAP().to("#trustGlobeCircles", {
+        scale: circlesScaleFactor,
+        duration: 0.3,
+        opacity: opacityValue,
+      });
+
+      if (trustGlobeActiveIndex.value >= 3) {
+        useGSAP().to(".trust-globe__text", {
+          scale: 0,
+        });
+
+        useGSAP().to("#trustGlobeEarth", {
+          scale: 1,
+          duration: 0.3,
+          opacity: 1,
+        });
+
+        if (trustGlobeActiveIndex.value >= 4) {
+          useGSAP().to("#trustGlobeEarthWithDots", {
+            duration: 0.3,
+            opacity: 1,
+          });
+        } else {
+          useGSAP().to("#trustGlobeEarthWithDots", {
+            duration: 0.3,
+            opacity: 0,
+          });
+        }
+
+        if (trustGlobeActiveIndex.value >= 5) {
+          useGSAP().to(".marquee", {
+            duration: 0.3,
+            opacity: 1,
+          });
+        } else {
+          useGSAP().to(".marquee", {
+            duration: 0.3,
+            opacity: 0,
+          });
+        }
+      } else {
+        useGSAP().to(".trust-globe__text", {
+          scale: 1,
+        });
+
+        useGSAP().to("#trustGlobeEarth", {
+          scale: 0,
+          duration: 0.3,
+          opacity: 0,
+        });
+      }
+
+      if (progress === 1) {
+        self.disable();
+
+        nextTick(() => {
+          ScrollTrigger.refresh();
+        });
+      }
+    },
+  });
 });
 </script>
 <template>
@@ -204,7 +311,19 @@ onMounted(() => {
           </div>
         </div>
       </section>
-      <InfoSlider :sliders="sliders" />
+
+      <section
+        :class="`info info-slider--${index}`"
+        v-for="(item, index) in sliders"
+        :key="index"
+      >
+        <div class="info__title-wrap">
+          <h2 class="info__title">
+            {{ item.title }}
+          </h2>
+        </div>
+        <TabInfo :slides="item.slides" :pagination="item.pagination" />
+      </section>
 
       <section class="about-us" id="aboutUsScroll">
         <div class="about-us__inner">
@@ -218,26 +337,8 @@ onMounted(() => {
           </div>
           <div class="about-us__services">
             <div class="about-us__line">
-              <div
-                id="aboutUsLine"
-                style="
-                  width: 2px;
-                  background-color: #000;
-                  height: 100%;
-                  transform-origin: top;
-                  transform: scaleY(0);
-                  position: absolute;
-                "
-              />
-              <div
-                style="
-                  width: 2px;
-                  background-color: #000;
-                  height: 100%;
-                  transform-origin: top;
-                  opacity: 0.2;
-                "
-              />
+              <div id="aboutUsLine" class="about-us__line-indicator" />
+              <div class="about-us__line-background" />
             </div>
             <div
               v-for="(block, index) in serviceBlocks"
@@ -277,52 +378,86 @@ onMounted(() => {
         </div>
       </section>
 
-      <!-- <section class="trust__info" id="trustGlobe">
+      <section class="trust__info" id="trustGlobe">
         <div class="trust__info-inner">
-          <div
-            class="trust__info-text"
-            style="
-              line-height: 1;
-              position: relative;
-              font-size: 6rem;
-              text-align: start;
-              max-width: 100%;
-              width: 100%;
-              display: flex;
-              flex-direction: column;
-              align-items: start;
-              gap: 10px;
-            "
-          >
-            <div
-              v-for="(item, index) in [
-                'Наши устройства',
-                'бесперебойно',
-                'работают по всему миру',
-              ]"
-              style="color: rgba(0, 0, 0, 0.2)"
-            >
-              <span
-                :style="{
-                  clipPath:
-                    trustGlobeActiveIndex >= index
-                      ? 'inset(0 0% -20% 0)'
-                      : 'inset(0 100% -20% 0)',
-                }"
-                style="
-                  position: absolute;
-                  color: #333343;
-                  transition: clip-path 0.3s ease-in-out;
-                "
-                class="text-reveal"
+          <div class="trust__info-text trust-globe__layout-container">
+            <div class="trust-globe__image-wrapper">
+              <img
+                id="trustGlobeCircles"
+                class="trust-globe__image--circles"
+                :src="Circles"
+                alt="circles"
+              />
+              <img
+                id="trustGlobeEarth"
+                class="trust-globe__image--earth"
+                :src="Globe"
+                alt="globe"
+              />
+              <img
+                id="trustGlobeEarthWithDots"
+                class="trust-globe__image--earth-dots"
+                :src="GlobeWithDots"
+                alt="globe"
+              />
+            </div>
+            <div class="marquee">
+              <ul>
+                <li
+                  v-for="country in [
+                    'Китай',
+                    'Россия',
+                    'Белоруссия',
+                    'Сингапур',
+                    'Турция',
+                  ]"
+                  class="minus"
+                >
+                  <span>{{ country }} /</span>
+                </li>
+              </ul>
+
+              <ul aria-hidden="true">
+                <li
+                  v-for="country in [
+                    'Китай',
+                    'Россия',
+                    'Белоруссия',
+                    'Сингапур',
+                    'Турция',
+                  ]"
+                  class="minus"
+                >
+                  <span>{{ country }} /</span>
+                </li>
+              </ul>
+            </div>
+            <div class="trust-globe__text trust-globe__text--full-width">
+              <div
+                v-for="(item, index) in [
+                  'Наши устройства',
+                  'бесперебойно',
+                  'работают по всему миру',
+                ]"
+                class="trust-globe__text-line"
               >
+                <span
+                  :style="{
+                    clipPath:
+                      trustGlobeActiveIndex >= index
+                        ? 'inset(0 0% -20% 0)'
+                        : 'inset(0 100% -20% 0)',
+                  }"
+                  class="text-reveal"
+                >
+                  {{ item }}
+                </span>
                 {{ item }}
-              </span>
-              {{ item }}
+              </div>
             </div>
           </div>
         </div>
-      </section> -->
+      </section>
 
       <section class="trust__info">
         <div class="trust__info-inner">
@@ -330,7 +465,7 @@ onMounted(() => {
             С нами вы получаете высокотехнологичное оборудование и уверенность в
             том, что ваши активы всегда будут доступны и защищены
           </h3>
-          <NuxtLink to="/drop-message"
+          <NuxtLink
             ><Button green class="trust__info-btn"
               >оставить заявку</Button
             ></NuxtLink
@@ -342,6 +477,10 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
+body {
+  overflow-x: hidden;
+}
+
 .main__bg {
   background-color: #ebecf3;
   height: 650px;
@@ -352,6 +491,7 @@ onMounted(() => {
   position: absolute;
   z-index: -1;
 }
+
 .widget {
   position: fixed;
   bottom: 16px;
@@ -366,6 +506,7 @@ onMounted(() => {
   justify-content: center;
   cursor: pointer;
 }
+
 .get-in-touch {
   position: fixed;
   bottom: 0;
@@ -377,255 +518,399 @@ onMounted(() => {
   border-radius: 34px;
   border: 2px solid #fff;
   display: none;
-  &.open__widget {
-    display: block;
-  }
-  .title {
-    text-align: center;
-    padding-top: 20px;
-    font-family: "VelaSans-ExtraBold";
-    font-weight: 800;
-    margin-bottom: 43px;
-    font-size: 26px;
-    line-height: 120%;
-  }
-  .icon-wrap {
-    background-color: #fff;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    position: absolute;
-    right: 18px;
-    top: 17px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-  .contact-info {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-    padding: 0 18px 18px 18px;
-    p {
-      background-color: #fff;
-      border-radius: 132px;
-      padding: 17px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: "VelaSans-SemiBold";
-      font-weight: 600;
-      font-size: 16px;
-      img {
-        margin-left: 6px;
-      }
-    }
-  }
 }
+
+.get-in-touch.open__widget {
+  display: block;
+}
+
+.get-in-touch .title {
+  text-align: center;
+  padding-top: 20px;
+  font-family: "VelaSans-ExtraBold";
+  font-weight: 800;
+  margin-bottom: 43px;
+  font-size: 26px;
+  line-height: 120%;
+}
+
+.get-in-touch .icon-wrap {
+  background-color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  position: absolute;
+  right: 18px;
+  top: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.get-in-touch .contact-info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  padding: 0 18px 18px 18px;
+}
+
+.get-in-touch .contact-info p {
+  background-color: #fff;
+  border-radius: 132px;
+  padding: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "VelaSans-SemiBold";
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.get-in-touch .contact-info p img {
+  margin-left: 6px;
+}
+
 .promo {
   padding-top: 134px;
   padding-bottom: 54px;
   color: #333343;
-  &__inner {
-    background-color: #fff;
-    display: flex;
-    justify-content: space-between;
-    border-radius: 80px;
-  }
-  &__content {
-    display: flex;
-    flex-direction: column;
-    padding-left: 36px;
-    padding-top: 40px;
-  }
-  &__banner {
-    display: flex;
-    align-items: center;
-    img {
-      height: 460px;
-      border-radius: 80px;
-      object-fit: cover;
-    }
-  }
-  &__title {
-    font-family: "VelaSans-Light";
-    font-size: 50px;
-    line-height: 120%;
-    margin-bottom: 40px;
-    font-weight: 300;
-    span {
-      display: block;
-      font-family: "VelaSans-ExtraBold";
-      font-size: 22px;
-      line-height: 100%;
-      font-weight: 800;
-    }
-  }
-  &__sub-title {
-    font-family: "VelaSans-bold";
-    font-size: 30px;
-    line-height: 110.00000000000001%;
-    max-width: 481px;
-    margin-bottom: 18px;
-  }
-  &__text {
-    font-family: "VelaSans-Medium";
-    font-weight: 500;
-    font-size: 17px;
-    line-height: normal;
-    margin-bottom: 80px;
-    max-width: 516px;
-  }
-  &__btns {
-    display: flex;
-    gap: 0 10px;
-    align-items: center;
-    &.mobile {
-      display: none;
-    }
-  }
+}
+
+.promo__inner {
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 80px;
+}
+
+.promo__content {
+  display: flex;
+  flex-direction: column;
+  padding-left: 36px;
+  padding-top: 40px;
+}
+
+.promo__banner {
+  display: flex;
+  align-items: center;
+}
+
+.promo__banner img {
+  height: 460px;
+  border-radius: 80px;
+  object-fit: cover;
+}
+
+.promo__title {
+  font-family: "VelaSans-Light";
+  font-size: 50px;
+  line-height: 120%;
+  margin-bottom: 40px;
+  font-weight: 300;
+}
+
+.promo__title span {
+  display: block;
+  font-family: "VelaSans-ExtraBold";
+  font-size: 22px;
+  line-height: 100%;
+  font-weight: 800;
+}
+
+.promo__sub-title {
+  font-family: "VelaSans-bold";
+  font-size: 30px;
+  line-height: 110.00000000000001%;
+  max-width: 481px;
+  margin-bottom: 18px;
+}
+
+.promo__text {
+  font-family: "VelaSans-Medium";
+  font-weight: 500;
+  font-size: 17px;
+  line-height: normal;
+  margin-bottom: 80px;
+  max-width: 516px;
+}
+
+.promo__btns {
+  display: flex;
+  gap: 0 10px;
+  align-items: center;
+}
+
+.promo__btns.mobile {
+  display: none;
 }
 
 .info {
   padding-top: 200px;
-  &__title-wrap {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  &__title {
-    font-family: "VelaSans-ExtraBold";
-    font-size: 36px;
-    font-weight: 800;
-    line-height: 125%;
-    color: #333343;
-    margin-bottom: 50px;
-    text-align: center;
-    max-width: 983px;
-  }
+}
+
+.info__title-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.info__title {
+  font-family: "VelaSans-ExtraBold";
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 125%;
+  color: #333343;
+  margin-bottom: 50px;
+  text-align: center;
+  max-width: 983px;
 }
 
 .about-us {
   padding-top: 200px;
   color: #333343;
-  &__inner {
-    display: flex;
-    justify-content: space-between;
-  }
-  &__title {
-    font-family: "VelaSans-ExtraBold";
-    font-weight: 800;
-    font-size: 36px;
-    line-height: 130%;
-    margin-bottom: 32px;
-  }
-  &__text {
-    font-family: "VelaSans-Light";
-    font-size: 32px;
-    line-height: 125%;
-    max-width: 588px;
-    font-weight: 300;
-  }
-  &__line {
-    position: absolute;
-    top: 0;
-    left: auto;
-    width: 2px;
-    height: 100%;
-    transform: translateX(-20px);
-  }
-  &__services {
-    display: flex;
-    flex-direction: column;
-    max-width: 576px;
-    position: relative;
-  }
-  .service-block {
-    position: relative;
-    padding-bottom: 45px;
-    &:last-child {
-      padding-bottom: 0;
-    }
-  }
-  &__service {
-    font-family: "VelaSans-ExtraBold";
-    font-weight: 800;
-    font-size: 26px;
-    line-height: 120%;
-    opacity: 0.2;
-    transition: opacity 0.3s ease-in-out;
-  }
+  max-height: 100vh;
+}
+
+.about-us__inner {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+}
+
+.about-us__title {
+  font-family: "VelaSans-ExtraBold";
+  font-weight: 800;
+  font-size: 36px;
+  line-height: 130%;
+  margin-bottom: 32px;
+}
+
+.about-us__text {
+  font-family: "VelaSans-Light";
+  font-size: 32px;
+  line-height: 125%;
+  max-width: 588px;
+  font-weight: 300;
+}
+
+.about-us__line {
+  position: absolute;
+  top: 0;
+  left: auto;
+  width: 2px;
+  height: 100%;
+  transform: translateX(-50px);
+}
+
+.about-us__line-indicator {
+  width: 2px;
+  background-color: #000;
+  height: 100%;
+  transform-origin: top;
+  transform: scaleY(0);
+  position: absolute;
+}
+
+.about-us__line-background {
+  width: 2px;
+  background-color: #000;
+  height: 100%;
+  transform-origin: top;
+  opacity: 0.2;
+}
+
+.about-us__services {
+  display: flex;
+  flex-direction: column;
+  max-width: 576px;
+}
+
+.about-us .service-block {
+  position: relative;
+  padding-bottom: 45px;
+}
+
+.about-us .service-block:last-child {
+  padding-bottom: 0;
+}
+
+.about-us__service {
+  font-family: "VelaSans-ExtraBold";
+  font-weight: 800;
+  font-size: 26px;
+  line-height: 120%;
+  opacity: 0.2;
+  transition: opacity 0.3s ease-in-out;
 }
 
 .number-company {
   padding-top: 200px;
   color: #333343;
-  &__title {
-    font-family: "VelaSans-Regular";
-    font-weight: 400;
-    font-size: 90px;
-    line-height: normal;
-  }
-  &__list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    margin-top: 50px;
-  }
-  &__item {
-    border: 1px solid rgba(51, 51, 67, 0.4);
+}
 
-    border-radius: 80px;
-    padding: 25px 10px 37px 32px;
-  }
-  .item__title {
-    font-family: "VelaSans-Light";
-    font-weight: 300;
-    font-size: 90px;
-    line-height: 95%;
-    margin-bottom: 28px;
-  }
-  .item__text {
-    font-family: "VelaSans-Regular";
-    font-size: 26px;
-    line-height: 100%;
-  }
+.number-company__title {
+  font-family: "VelaSans-Regular";
+  font-weight: 400;
+  font-size: 90px;
+  line-height: normal;
+}
+
+.number-company__list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin-top: 50px;
+}
+
+.number-company__item {
+  border: 1px solid rgba(51, 51, 67, 0.4);
+  border-radius: 80px;
+  padding: 25px 10px 37px 32px;
+}
+
+.number-company .item__title {
+  font-family: "VelaSans-Light";
+  font-weight: 300;
+  font-size: 90px;
+  line-height: 95%;
+  margin-bottom: 28px;
+}
+
+.number-company .item__text {
+  font-family: "VelaSans-Regular";
+  font-size: 26px;
+  line-height: 100%;
 }
 
 .trust__info {
   padding-top: 100px;
-  button {
-    cursor: pointer;
-  }
-  &-btn {
-    width: 320px;
-    height: 70px;
-    color: #333343;
-    text-align: center;
-    font-size: 22px;
-    font-weight: 700;
-    line-height: normal;
-  }
-  &-inner {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 70px 0;
-  }
-  &-text {
-    font-family: "VelaSans-Medium";
-    font-weight: 500;
-    font-size: 26px;
-    line-height: normal;
-    color: #333343;
-    max-width: 935px;
-    text-align: center;
-  }
+}
+
+.trust__info button {
+  cursor: pointer;
+}
+
+.trust__info-btn {
+  width: 320px;
+}
+
+.trust__info-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 70px 0;
+}
+
+.trust__info-text {
+  font-family: "VelaSans-Medium";
+  font-weight: 500;
+  font-size: 26px;
+  line-height: normal;
+  color: #333343;
+  max-width: 935px;
+  text-align: center;
+}
+
+.trust-globe__layout-container {
+  height: calc(100svh - 146px * 2);
+  line-height: 1;
+  position: relative;
+  font-size: 6rem;
+  text-align: start;
+  max-width: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: start;
+  gap: 10px;
+}
+
+.trust-globe__image-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.trust-globe__image--circles {
+  position: absolute;
+  opacity: 0;
+  transform: scale(0);
+}
+
+.trust-globe__image--earth {
+  position: absolute;
+  opacity: 0;
+  transform: scale(0);
+}
+
+.trust-globe__image--earth-dots {
+  position: absolute;
+  opacity: 0;
+}
+
+.trust-globe__text--full-width {
+  width: 100%;
+}
+
+.trust-globe__text-line {
+  color: rgba(0, 0, 0, 0.2);
+  position: relative;
 }
 
 .text-reveal {
   clip-path: inset(0 100% -20% 0);
+  position: absolute;
+  color: #333343;
+  transition: clip-path 0.3s ease-in-out;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+}
+
+.marquee {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  width: 100%;
+  font-size: 5rem;
+  padding-block: 8px;
+  overflow: hidden;
+  user-select: none;
+  --gap: 20px;
+  display: flex;
+  gap: var(--gap);
+}
+
+.marquee ul {
+  list-style: none;
+  flex-shrink: 0;
+  min-width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--gap);
+  transform: translateX(calc(-100% - var(--gap)));
+  animation: scroll 20s linear infinite;
+}
+
+.marquee:hover ul {
+  animation-play-state: paused;
+}
+
+@keyframes scroll {
+  to {
+    transform: translateX(calc(0% - var(--gap)));
+  }
 }
 
 @media (min-width: 1350px) {
@@ -633,107 +918,136 @@ onMounted(() => {
     right: calc((100vw - 1352px) / 2 + 3px);
   }
 }
+
 @media (min-width: 1000px) {
-  .widget {
-    &:hover img {
-      animation: pulse 0.3s ease-in-out;
-    }
+  .widget:hover img {
+    animation: pulse 0.3s ease-in-out;
   }
-  .icon-wrap {
-    &:hover {
-      background-color: #d9dae1;
-    }
+
+  .icon-wrap:hover {
+    background-color: #d9dae1;
   }
+
   @keyframes pulse {
     0% {
       transform: scale(1);
     }
+
     50% {
       transform: scale(1.1);
     }
+
     100% {
       transform: scale(1);
     }
   }
 }
+
 @media (min-width: 1200px) {
   .main__bg {
     height: 846px;
   }
 
-  .promo {
-    &__banner {
-      img {
-        height: unset;
-      }
-    }
-    &__content {
-      padding-left: 60px;
-      padding-top: 60px;
-      padding-bottom: 60px;
-    }
-    &__title {
-      margin-bottom: 87px;
-      font-size: 70px;
-    }
-    &__sub-title {
-      font-size: 38px;
-    }
-    &__text {
-      margin-bottom: 108px;
-      font-size: 20px;
-    }
+  .promo__banner img {
+    height: unset;
   }
-  .about-us {
-    .service-block {
-      padding-bottom: 74px;
-      &:last-child {
-        padding-bottom: 0;
-      }
-    }
+
+  .promo__content {
+    padding-left: 60px;
+    padding-top: 60px;
+    padding-bottom: 60px;
   }
-  .number-company {
-    &__list {
-      margin-top: 72px;
-    }
-    &__item {
-      padding: 40px 10px 50px 52px;
-    }
-    .item__title {
-      font-size: 140px;
-    }
+
+  .promo__title {
+    margin-bottom: 87px;
+    font-size: 70px;
   }
+
+  .promo__sub-title {
+    font-size: 38px;
+  }
+
+  .promo__text {
+    margin-bottom: 108px;
+    font-size: 20px;
+  }
+
+  .about-us .service-block {
+    padding-bottom: 74px;
+  }
+
+  .about-us .service-block:last-child {
+    padding-bottom: 0;
+  }
+
+  .number-company__list {
+    margin-top: 72px;
+  }
+
+  .number-company__item {
+    padding: 40px 10px 50px 52px;
+  }
+
+  .number-company .item__title {
+    font-size: 140px;
+  }
+
   .trust__info {
     padding-top: 146px;
-  }
-  .swiperInfo .swiper-slide {
-    height: 754px;
   }
 }
 
 @media (max-width: 1060px) {
   .about-us {
     padding-top: 90px;
-    &__inner {
-      flex-direction: column;
-      justify-content: unset;
-    }
-    &__info {
-      margin-bottom: 50px;
-    }
+  }
+
+  .about-us__inner {
+    flex-direction: column;
+    justify-content: unset;
+  }
+
+  .about-us__info {
+    margin-bottom: 50px;
+  }
+
+  .about-us__line {
+    left: 0;
+    transform: translateX(0);
+    height: auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .about-us__line-indicator,
+  .about-us__line-background {
+    position: relative;
+    height: 100px;
+    width: 2px;
+    display: inline-block;
+  }
+
+  .about-us__line-indicator {
+    transform: scaleY(0);
+    transform-origin: top;
   }
 }
 
 @media (max-width: 860px) {
   .number-company {
     padding-top: 90px;
-    &__list {
-      grid-template-columns: 1fr;
-      gap: 30px 0;
-    }
-    &__item {
-      border-radius: 32px;
-    }
+  }
+
+  .number-company__list {
+    grid-template-columns: 1fr;
+    gap: 30px 0;
+  }
+
+  .number-company__item {
+    border-radius: 32px;
   }
 }
 
@@ -741,65 +1055,78 @@ onMounted(() => {
   .promo__btns {
     display: none;
   }
+
   .main__bg {
     height: 870px;
   }
+
   .promo {
     padding-top: 62px;
-    &__btns {
-      &.mobile {
-        display: flex;
-        flex-direction: column;
-        margin-top: 30px;
-        gap: 16px 0;
-        width: 100%;
-        a {
-          width: 100%;
-          button {
-            width: 100%;
-          }
-        }
-      }
-    }
-    &__inner {
-      flex-direction: column;
-      align-items: center;
-      background: unset;
-    }
-    &__title {
-      margin-bottom: 31px;
-    }
-    &__sub-title {
-      margin-bottom: 10px;
-    }
-    &__text {
-      margin-bottom: 29px;
-    }
-    &__content {
-      padding-top: unset;
-      padding-left: unset;
-      text-align: center;
-    }
-    &__banner {
-      img {
-        height: 341px;
-      }
-    }
   }
+
+  .promo__btns.mobile {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    gap: 16px 0;
+    width: 100%;
+  }
+
+  .promo__btns.mobile a {
+    width: 100%;
+  }
+
+  .promo__btns.mobile a button {
+    width: 100%;
+  }
+
+  .promo__inner {
+    flex-direction: column;
+    align-items: center;
+    background: unset;
+  }
+
+  .promo__title {
+    margin-bottom: 31px;
+  }
+
+  .promo__sub-title {
+    margin-bottom: 10px;
+  }
+
+  .promo__text {
+    margin-bottom: 29px;
+  }
+
+  .promo__content {
+    padding-top: unset;
+    padding-left: unset;
+    text-align: center;
+  }
+
+  .promo__banner img {
+    height: 341px;
+  }
+
   .info {
     padding-top: 100px;
-    &__title {
-      font-size: 30px;
-      margin-bottom: 30px;
-    }
+  }
+
+  .info__title {
+    font-size: 30px;
+    margin-bottom: 30px;
+  }
+
+  .trust-globe__layout-container {
+    height: auto;
+    min-height: 60svh;
+    font-size: 4rem;
   }
 }
 
 @media (max-width: 700px) {
-  .info {
-    &__title {
-      font-size: 25px;
-    }
+  .info__title {
+    font-size: 25px;
   }
 }
 
@@ -807,99 +1134,120 @@ onMounted(() => {
   .widget {
     width: 58px;
     height: 58px;
-    img {
-      width: 28px;
-      height: 28px;
-    }
   }
+
+  .widget img {
+    width: 28px;
+    height: 28px;
+  }
+
   .info {
     padding-top: 90px;
-    &__title {
-      font-size: 16px;
-    }
   }
-  .about-us {
-    &__text {
-      font-size: 18px;
-    }
-    &__services {
-      gap: 30px 0;
-    }
-    &__service {
-      font-size: 20px;
-    }
+
+  .info__title {
+    font-size: 16px;
   }
-  .number-company {
-    &__title {
-      font-size: 44px;
-    }
-    &__list {
-      margin-top: 30px;
-    }
+
+  .about-us__text {
+    font-size: 18px;
   }
+
+  .about-us__services {
+    gap: 30px 0;
+    max-width: 100%;
+  }
+
+  .about-us__service {
+    font-size: 20px;
+  }
+
+  .about-us__line {
+    display: none;
+  }
+
+  .number-company__title {
+    font-size: 44px;
+  }
+
+  .number-company__list {
+    margin-top: 30px;
+  }
+
   .trust__info {
     padding-top: 50px;
-    &-text {
-      font-size: 16px;
-      line-height: 120%;
-      max-width: 312px;
-    }
-    &-inner {
-      gap: 40px 0;
-    }
-    &-btn {
-      line-height: 89%;
-      height: 54px;
-      font-size: 16px;
-    }
   }
+
+  .trust__info-text {
+    font-size: 16px;
+    line-height: 120%;
+    max-width: 312px;
+  }
+
+  .trust__info-inner {
+    gap: 40px 0;
+  }
+
   .get-in-touch .title {
     margin-bottom: 20px;
   }
+
   .get-in-touch .contact-info p {
     font-size: 11px;
   }
+
   .promo {
     padding-bottom: unset;
-    &__content {
-      width: 100%;
-      text-align: left;
-    }
-    &__banner {
-      width: 100%;
-      img {
-        width: 100%;
-      }
-    }
-    &__title {
-      span {
-        font-size: 18px;
-      }
-    }
-    &__sub-title {
-      font-size: 24px;
-    }
-    &__text {
-      font-size: 16px;
-    }
-    &__banner {
-      img {
-        border-radius: 32px;
-      }
-    }
   }
+
+  .promo__content {
+    width: 100%;
+    text-align: left;
+  }
+
+  .promo__banner {
+    width: 100%;
+  }
+
+  .promo__title span {
+    font-size: 18px;
+  }
+
+  .promo__sub-title {
+    font-size: 24px;
+  }
+
+  .promo__text {
+    font-size: 16px;
+  }
+
+  .promo__banner img {
+    border-radius: 32px;
+  }
+
   .main__bg {
     border-bottom-right-radius: 32px;
     border-bottom-left-radius: 32px;
-    height: 830px;
+  }
+
+  .trust-globe__layout-container {
+    font-size: 2.5rem;
+    min-height: 50svh;
+    gap: 5px;
+  }
+
+  .marquee {
+    font-size: 2.5rem;
   }
 }
+
 @media (max-width: 340px) {
   .trust__info {
     padding-top: 50px;
-    &-btn {
-      width: 280px;
-    }
+  }
+
+  .trust__info-btn {
+    width: 280px;
   }
 }
 </style>
