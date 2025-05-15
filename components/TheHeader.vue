@@ -36,11 +36,6 @@ watch(
   <header class="header">
     <div class="container">
       <nav class="nav">
-        <img
-          class="main-logo-invisible"
-          src="../assets/images/logo.svg"
-          alt="Logo"
-        />
         <NuxtLink to="/"
           ><img class="main-logo" src="../assets/images/logo.svg" alt="Logo"
         /></NuxtLink>
@@ -96,10 +91,7 @@ watch(
 .main-logo {
   position: relative;
   z-index: 1000;
-}
-.main-logo-invisible {
   opacity: 0;
-  position: absolute;
 }
 .header {
   position: fixed;
@@ -108,7 +100,7 @@ watch(
   display: flex;
   align-items: center;
   height: 80px;
-  z-index: 3;
+  z-index: 9999;
   background: transparent;
 }
 .nav {
@@ -119,6 +111,7 @@ watch(
     justify-content: space-between;
     width: 100%;
     align-items: center;
+    transform: translateY(-100px);
   }
   .menu__list {
     display: flex;

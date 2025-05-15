@@ -1,4 +1,5 @@
 <script setup>
+import { defineProps } from "vue";
 defineProps({
   pagination: Array,
   activeTab: Number,

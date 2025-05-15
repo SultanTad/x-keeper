@@ -1,4 +1,5 @@
 <script setup>
+import { ref, onMounted, onBeforeMount } from "vue";
 import ForestCountry from "@/assets/images/forest-country-road-1.webp";
 import YellowBulldozer from "@/assets/images/yellow-bulldozer.webp";
 import Cargoes from "@/assets/images/cargoes.webp";
@@ -13,9 +14,17 @@ import GlobeWithDots from "@/assets/images/globe-with-dots.svg";
 
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-onBeforeMount(() => {
-  useGSAP().registerPlugin(ScrollTrigger);
-});
+const aboutUsActiveIndex = ref(-1);
+const trustGlobeActiveIndex = ref(-1);
+const numberCompanyRef = ref(null);
+
+const windowWidth = ref(0);
+
+const updateWidth = () => {
+  if (typeof window !== "undefined") {
+    windowWidth.value = window.innerWidth;
+  }
+};
 
 const serviceBlocks = [
   { id: 1, text: "Инвестиции в инженерные разработки" },
@@ -122,62 +131,98 @@ const closeWidget = () => {
   activeWidget.value = false;
 };
 
-const aboutUsActiveIndex = ref(-1);
-const trustGlobeActiveIndex = ref(-1);
+onBeforeMount(() => {
+  useGSAP().registerPlugin(ScrollTrigger);
+  updateWidth();
+  window.addEventListener("resize", updateWidth);
+});
+
 onMounted(() => {
-  let titles = 
-  ScrollTrigger.create({
-    trigger: "#aboutUsScroll",
-    start: "top top",
-    end: "+=3700",
-    pin: true,
-    once: true,
-    onUpdate: (self) => {
-      const progress = self.progress;
+  const titles = numberCompanyRef.value.querySelectorAll(".item__title");
+  const texts = numberCompanyRef.value.querySelectorAll(".item__text");
+  const tabInfos = document.querySelectorAll(".tabInfo");
 
-      aboutUsActiveIndex.value = progress === 0 ? -1 : Math.floor(progress * 5);
+  if (windowWidth.value > 1180) {
+    ScrollTrigger.create({
+      trigger: "#aboutUsScroll",
+      start: "top top",
+      end: "+=2700",
+      pin: true,
+      once: true,
+      onUpdate: (self) => {
+        const progress = self.progress;
 
-      useGSAP().to("#aboutUsLine", {
-        scaleY: progress,
-        duration: 0,
-      });
+        aboutUsActiveIndex.value =
+          progress === 0 ? -1 : Math.floor(progress * 5);
 
-      if (progress === 1) {
-        self.disable();
-
-        nextTick(() => {
-          ScrollTrigger.refresh();
+        useGSAP().to("#aboutUsLine", {
+          scaleY: progress,
+          duration: 0,
         });
-      }
-    },
-  });
 
-  ScrollTrigger.create({
-    trigger: ".number-company__list",
-    start: "top top",
-    end: "top bottom",
-    onUpdate: () => {
-      useGSAP().from(titles, {
-        y: 50,
-        opacity: 0,
-        duration: 1.5,
-        ease: "power3.out",
-        stagger: 0.1,
+        if (progress === 1) {
+          self.disable();
+
+          nextTick(() => {
+            ScrollTrigger.refresh();
+          });
+        }
+      },
+    });
+  }
+  if (windowWidth.value < 1180) {
+    ScrollTrigger.create({
+      trigger: "#aboutUsScroll",
+      start: "top top",
+      end: "+=700",
+      once: true,
+      onUpdate: (self) => {
+        const progress = self.progress;
+
+        aboutUsActiveIndex.value =
+          progress === 0 ? -1 : Math.floor(progress * 5);
+
+        useGSAP().to("#aboutUsLine", {
+          scaleY: progress,
+          duration: 0.5,
+        });
+
+        if (progress === 1) {
+          self.disable();
+
+          nextTick(() => {
+            ScrollTrigger.refresh();
+          });
+        }
+      },
+    });
+  }
+  if (windowWidth.value > 1200) {
+    tabInfos.forEach((tab) => {
+      ScrollTrigger.create({
+        trigger: tab,
+        start: "top 80%",
+        end: "top 80%",
+        once: true,
+        onUpdate: () => {
+          useGSAP().fromTo(
+            tab,
+            { scale: 1.2 },
+            {
+              scale: 1,
+              duration: 0.6,
+              ease: "power2.out",
+            }
+          );
+        },
       });
-      useGSAP().from(texts, {
-        y: 50,
-        opacity: 0,
-        duration: 1.5,
-        ease: "power3.out",
-        stagger: 0.1,
-      });
-    },
-  });
+    });
+  }
 
   ScrollTrigger.create({
     trigger: "#trustGlobe",
     start: "top top",
-    end: "+=4500",
+    end: "+=3000",
     scrub: true,
     pin: true,
     onUpdate: (self) => {
@@ -336,102 +381,115 @@ onMounted(() => {
             </p>
           </div>
           <div class="about-us__services">
-            <div class="about-us__line">
-              <div id="aboutUsLine" class="about-us__line-indicator" />
-              <div class="about-us__line-background" />
-            </div>
-            <div
-              v-for="(block, index) in serviceBlocks"
-              :key="block.id"
-              class="service-block"
-            >
-              <div
-                class="about-us__service"
-                :style="{ opacity: aboutUsActiveIndex >= index ? 1 : 0.2 }"
-              >
-                {{ block.text }}
+            <div class="about-us__animation-wrap">
+              <div class="about-us__line">
+                <div id="aboutUsLine" class="about-us__line-indicator" />
+                <div class="about-us__line-background" />
+              </div>
+              <div class="services-wrap">
+                <div
+                  v-for="(block, index) in serviceBlocks"
+                  :key="block.id"
+                  class="service-block"
+                >
+                  <div
+                    class="about-us__service"
+                    :style="{ opacity: aboutUsActiveIndex >= index ? 1 : 0.2 }"
+                  >
+                    {{ block.text }}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="number-company">
+      <section class="number-company" ref="numberCompanyRef">
         <h2 class="number-company__title">Цифры компании</h2>
         <div class="number-company__list">
-          <div class="number-company__item">
-            <h3 class="item__title">19</h3>
-            <p class="item__text">лет в бизнесе</p>
+          <CompanyItem :number="19" text="лет в бизнесе" />
+          <CompanyItem :number="11" text="запатентованных технологий" />
+          <CompanyItem :number="1.5" titleText="М+" text="активных устройств" />
+          <CompanyItem
+            :number="120"
+            titleText="k"
+            text="клиентов по всему миру"
+          />
+          <!-- <div class="number-company__item">
+            <h3 class="item__title">{{ businessCounter }}</h3>
+            <p class="item__text"></p>
           </div>
           <div class="number-company__item">
-            <h3 class="item__title">11</h3>
-            <p class="item__text">запатентованных технологий</p>
+            <h3 class="item__title">{{ technologiesCounter }}</h3>
+            <p class="item__text"></p>
           </div>
           <div class="number-company__item">
-            <h3 class="item__title">1.5М+</h3>
-            <p class="item__text">активных устройств</p>
+            <h3 class="item__title">{{ devicesCounter }}</h3>
+            <p class="item__text"></p>
           </div>
           <div class="number-company__item">
-            <h3 class="item__title">120k</h3>
-            <p class="item__text">клиентов по всему миру</p>
-          </div>
+            <h3 class="item__title">{{ clientsCounter }}</h3>
+            <p class="item__text"></p>
+          </div> -->
         </div>
       </section>
+    </div>
+    <section class="trust__info" id="trustGlobe">
+      <div class="trust__info-inner">
+        <div class="trust__info-text trust-globe__layout-container">
+          <div class="trust-globe__image-wrapper">
+            <img
+              id="trustGlobeCircles"
+              class="trust-globe__image--circles"
+              :src="Circles"
+              alt="circles"
+            />
+            <img
+              id="trustGlobeEarth"
+              class="trust-globe__image--earth"
+              :src="Globe"
+              alt="globe"
+            />
+            <img
+              id="trustGlobeEarthWithDots"
+              class="trust-globe__image--earth-dots"
+              :src="GlobeWithDots"
+              alt="globe"
+            />
+          </div>
+          <div class="marquee">
+            <ul>
+              <li
+                v-for="country in [
+                  'Китай',
+                  'Россия',
+                  'Белоруссия',
+                  'Сингапур',
+                  'Турция',
+                ]"
+                class="minus"
+              >
+                <span>{{ country }} /</span>
+              </li>
+            </ul>
 
-      <section class="trust__info" id="trustGlobe">
-        <div class="trust__info-inner">
-          <div class="trust__info-text trust-globe__layout-container">
-            <div class="trust-globe__image-wrapper">
-              <img
-                id="trustGlobeCircles"
-                class="trust-globe__image--circles"
-                :src="Circles"
-                alt="circles"
-              />
-              <img
-                id="trustGlobeEarth"
-                class="trust-globe__image--earth"
-                :src="Globe"
-                alt="globe"
-              />
-              <img
-                id="trustGlobeEarthWithDots"
-                class="trust-globe__image--earth-dots"
-                :src="GlobeWithDots"
-                alt="globe"
-              />
-            </div>
-            <div class="marquee">
-              <ul>
-                <li
-                  v-for="country in [
-                    'Китай',
-                    'Россия',
-                    'Белоруссия',
-                    'Сингапур',
-                    'Турция',
-                  ]"
-                  class="minus"
-                >
-                  <span>{{ country }} /</span>
-                </li>
-              </ul>
-
-              <ul aria-hidden="true">
-                <li
-                  v-for="country in [
-                    'Китай',
-                    'Россия',
-                    'Белоруссия',
-                    'Сингапур',
-                    'Турция',
-                  ]"
-                  class="minus"
-                >
-                  <span>{{ country }} /</span>
-                </li>
-              </ul>
-            </div>
+            <ul aria-hidden="true">
+              <li
+                v-for="country in [
+                  'Китай',
+                  'Россия',
+                  'Белоруссия',
+                  'Сингапур',
+                  'Турция',
+                ]"
+                class="minus"
+              >
+                <span>{{ country }} /</span>
+              </li>
+            </ul>
+          </div>
+          <div class="container">
             <div class="trust-globe__text trust-globe__text--full-width">
               <div
                 v-for="(item, index) in [
@@ -457,8 +515,9 @@ onMounted(() => {
             </div>
           </div>
         </div>
-      </section>
-
+      </div>
+    </section>
+    <div class="container">
       <section class="trust__info">
         <div class="trust__info-inner">
           <h3 class="trust__info-text">
@@ -669,7 +728,10 @@ body {
 .about-us {
   padding-top: 200px;
   color: #333343;
-  max-height: 100vh;
+  &__animation-wrap {
+    display: flex;
+    position: relative;
+  }
 }
 
 .about-us__inner {
@@ -705,7 +767,7 @@ body {
 
 .about-us__line-indicator {
   width: 2px;
-  background-color: #000;
+  background-color: #333343;
   height: 100%;
   transform-origin: top;
   transform: scaleY(0);
@@ -766,6 +828,7 @@ body {
   border: 1px solid rgba(51, 51, 67, 0.4);
   border-radius: 80px;
   padding: 25px 10px 37px 32px;
+  overflow: hidden;
 }
 
 .number-company .item__title {
@@ -774,12 +837,16 @@ body {
   font-size: 90px;
   line-height: 95%;
   margin-bottom: 28px;
+  opacity: 0;
+  transform: translateY(350px);
 }
 
 .number-company .item__text {
   font-family: "VelaSans-Regular";
   font-size: 26px;
   line-height: 100%;
+  opacity: 0;
+  transform: translateY(350px);
 }
 
 .trust__info {
@@ -869,7 +936,7 @@ body {
   clip-path: inset(0 100% -20% 0);
   position: absolute;
   color: #333343;
-  transition: clip-path 0.3s ease-in-out;
+  transition: clip-path 1s ease-in-out;
   top: 0;
   left: 0;
   white-space: nowrap;
@@ -943,7 +1010,7 @@ body {
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1550px) {
   .main__bg {
     height: 846px;
   }
@@ -997,14 +1064,34 @@ body {
   }
 }
 
-@media (max-width: 1060px) {
-  .about-us {
-    padding-top: 90px;
+@media (max-width: 1220px) {
+  #trustGlobe {
+    display: none;
   }
+}
 
+@media (max-width: 1180px) {
   .about-us__inner {
     flex-direction: column;
     justify-content: unset;
+  }
+  .about-us__services {
+    display: flex;
+  }
+  .about-us__line {
+    left: 50px;
+  }
+  .services-wrap {
+    padding-left: 10px;
+  }
+  .number-company {
+    padding-top: 90px;
+  }
+}
+
+@media (max-width: 1060px) {
+  .about-us {
+    padding-top: 90px;
   }
 
   .about-us__info {
@@ -1015,17 +1102,14 @@ body {
     left: 0;
     transform: translateX(0);
     height: auto;
-    width: 100%;
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
     position: relative;
   }
 
   .about-us__line-indicator,
   .about-us__line-background {
     position: relative;
-    height: 100px;
     width: 2px;
     display: inline-block;
   }
@@ -1037,10 +1121,6 @@ body {
 }
 
 @media (max-width: 860px) {
-  .number-company {
-    padding-top: 90px;
-  }
-
   .number-company__list {
     grid-template-columns: 1fr;
     gap: 30px 0;
@@ -1160,10 +1240,6 @@ body {
 
   .about-us__service {
     font-size: 20px;
-  }
-
-  .about-us__line {
-    display: none;
   }
 
   .number-company__title {

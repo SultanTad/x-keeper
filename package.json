@@ -9,6 +9,13 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true,
+      "vue/setup-compiler-macros": true
+    }
+  },
   "dependencies": {
     "v-gsap-nuxt": "^1.3.20",
     "nuxt": "^3.16.1",

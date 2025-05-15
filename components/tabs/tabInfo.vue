@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch, nextTick, onMounted, defineProps } from "vue";
+
 defineProps({
   slides: Array,
   pagination: Array,
@@ -79,41 +80,46 @@ onMounted(async () => {
       @mouse-leave-tab="handleMouseLeave"
       ref="tabPaginationRef"
     />
-    <div
-      class="tabInfo__content"
-      v-for="(slide, index) in slides"
-      :key="index"
-      :style="{ backgroundImage: `url(${slide.img})` }"
-      :class="{ 'tabInfo__content--active': index === activeTab }"
-      v-show="index === activeTab"
-    >
-      <div class="tabInfo__content-inner">
-        <img class="tabInfo__content-icon" :src="slide.icon" alt="" />
-        <h3 class="tabInfo__content-title">{{ slide.title }}</h3>
-        <p class="tabInfo__content-text">{{ slide.text }}</p>
+    <TransitionGroup tag="div" name="tab">
+      <div
+        class="tabInfo__content"
+        v-for="(slide, index) in slides"
+        :key="slide"
+        :style="{ backgroundImage: `url(${slide.img})` }"
+        :class="{ 'tabInfo__content--active': index === activeTab }"
+        v-show="index === activeTab"
+      >
+        <div class="tabInfo__content-inner">
+          <img class="tabInfo__content-icon" :src="slide.icon" alt="" />
+          <h3 class="tabInfo__content-title">{{ slide.title }}</h3>
+          <p class="tabInfo__content-text">{{ slide.text }}</p>
+        </div>
       </div>
-    </div>
+    </TransitionGroup>
   </div>
 </template>
 
 <style lang="scss">
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 2s ease;
+.tab-move,
+.tab-enter-active,
+.tab-leave-active {
+  transition: transform 0.5s ease;
 }
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
+.tab-enter-from,
+.tab-leave-to {
+  transform: scale(1.1);
+}
+.tab-leave-active {
+  position: absolute;
 }
 .tabInfo {
   border-radius: 80px;
+  height: 500px;
   position: relative;
+  overflow: hidden;
   &__content {
-    height: 500px;
     position: absolute;
-    top: 0;
-    left: 0;
+    height: 500px;
     width: 100%;
     border-radius: 80px;
     background-size: cover;
@@ -123,6 +129,7 @@ onMounted(async () => {
     display: flex;
     flex-direction: column;
     justify-content: end;
+    overflow: hidden;
     &-inner {
       padding-bottom: 60px;
       padding-left: 60px;
@@ -150,11 +157,17 @@ onMounted(async () => {
   }
 }
 
-@media (min-width: 1250px) {
+@media (min-width: 1550px) {
   .tabInfo__content {
     &--active {
       height: 725px;
     }
+  }
+}
+
+@media (min-width: 1200px) {
+  .tabInfo {
+    scale: 1.2;
   }
 }
 

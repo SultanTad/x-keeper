@@ -121,7 +121,8 @@ const slidesPerView = computed(() => {
 .swiperSolution .swiper-pagination {
   top: unset;
   bottom: 0;
-  left: 500px;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 271px;
 }
 
