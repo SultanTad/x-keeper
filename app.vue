@@ -1,5 +1,5 @@
 <template>
-  <!-- <div class="loading" v-if="isHomePage">
+  <div class="loading" v-if="isHomePage && !animationPlayed">
     <svg
       id="loading-logo"
       width="52"
@@ -29,7 +29,7 @@
     <div class="loading-line-container">
       <div id="loading-line"></div>
     </div>
-  </div> -->
+  </div>
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
@@ -42,101 +42,127 @@ import { useRoute } from "vue-router";
 
 const nuxtApp = useNuxtApp();
 const route = useRoute();
+const isHomePage = ref(false)
 
-const isHomePage = computed(() => route.path === "/");
-console.log(isHomePage.value);
+isHomePage.value = computed(() => route.path === "/");
+const animationPlayed = ref(false);
+const disableScroll = () => {
+  if (process.client) {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollTop}px`;
+    document.body.style.width = "100%";
+  }
+};
+
+const enableScroll = () => {
+  if (process.client) {
+    const scrollTop = parseInt(document.body.style.top || "0", 10);
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.width = "";
+    window.scrollTo(0, -scrollTop);
+  }
+};
 
 nuxtApp.hook("page:finish", () => {
-  // if (isHomePage.value) {
-  //   const mainLogo = document.querySelector(".main-logo");
-  //   const loadingLogo = document.querySelector("#loading-logo");
-  //   const loadingLineContainer = document.querySelector(
-  //     ".loading-line-container"
-  //   );
-  //   const loadingLine = document.querySelector("#loading-line");
-  //   const loadingText = document.querySelector("#loading-text");
-  //   const navInner = document.querySelector(".nav__inner");
-  //   const loading = document.querySelector(".loading");
+  if (isHomePage.value && !animationPlayed.value) {
+    animationPlayed.value = false;
+    disableScroll();
+    const mainLogo = document.querySelector(".main-logo");
+    const loadingLogo = document.querySelector("#loading-logo");
+    const loadingLineContainer = document.querySelector(
+      ".loading-line-container"
+    );
+    const loadingLine = document.querySelector("#loading-line");
+    const loadingText = document.querySelector("#loading-text");
+    const navInner = document.querySelector(".nav__inner");
+    const loading = document.querySelector(".loading");
 
-  //   if (loadingLogo && loadingLine && loading) {
-  //     const mainLogoBounds = mainLogo.getBoundingClientRect();
-  //     const tl = gsap.timeline();
+    if (loadingLogo && loadingLine && loading) {
+      const mainLogoBounds = mainLogo.getBoundingClientRect();
+      const tl = gsap.timeline({
+        onComplete: () => {
+          enableScroll();
+          animationPlayed.value = true;
+        },
+      });
 
-  //     tl.to(
-  //       "#loading-line",
-  //       {
-  //         width: "357px",
-  //         duration: 2.5,
-  //         ease: "none",
-  //         transformOrigin: "left",
-  //       },
-  //       0
-  //     )
-  //       .to(
-  //         loadingLogo,
-  //         {
-  //           top: mainLogoBounds.y,
-  //           left: mainLogoBounds.x,
-  //           x: 0,
-  //           y: 0,
-  //           scale: 1,
-  //           duration: 2,
-  //           onComplete: () => {
-  //             loadingLogo.remove();
-  //           },
-  //         },
-  //         2.5
-  //       )
-  //       .to(
-  //         mainLogo,
-  //         {
-  //           opacity: 1,
-  //           duration: 0,
-  //         },
-  //         4.5
-  //       )
-  //       .to(
-  //         loading,
-  //         {
-  //           y: "-100%",
-  //           delay: 1,
-  //         },
-  //         5
-  //       )
-  //       .to(
-  //         navInner,
-  //         {
-  //           y: 0,
-  //           delay: 0.4,
-  //         },
-  //         4.5
-  //       )
-  //       .to(
-  //         "#loading-text",
-  //         {
-  //           opacity: 0,
-  //           scale: 1.1,
-  //           delay: 0.5,
-  //           onComplete: () => {
-  //             loadingText.remove();
-  //           },
-  //         },
-  //         2.6
-  //       )
-  //       .to(
-  //         "#loading-line",
-  //         {
-  //           opacity: 0,
-  //           delay: 0.3,
-  //           onComplete: () => {
-  //             loadingLine.remove();
-  //             loadingLineContainer.remove();
-  //           },
-  //         },
-  //         3.2
-  //       );
-  //   }
-  // }
+      tl.to(
+        "#loading-line",
+        {
+          width: "357px",
+          duration: 2.5,
+          ease: "none",
+          transformOrigin: "left",
+        },
+        0
+      )
+        .to(
+          loadingLogo,
+          {
+            top: mainLogoBounds.y,
+            left: mainLogoBounds.x,
+            x: 0,
+            y: 0,
+            scale: 1,
+            duration: 2,
+            onComplete: () => {
+              loadingLogo.remove();
+            },
+          },
+          2.5
+        )
+        .to(
+          mainLogo,
+          {
+            opacity: 1,
+            duration: 0,
+          },
+          4.5
+        )
+        .to(
+          loading,
+          {
+            y: "-100%",
+            delay: 1,
+          },
+          5
+        )
+        .to(
+          navInner,
+          {
+            y: 0,
+            delay: 0.4,
+          },
+          4.5
+        )
+        .to(
+          "#loading-text",
+          {
+            opacity: 0,
+            scale: 1.1,
+            delay: 0.5,
+            onComplete: () => {
+              loadingText.remove();
+            },
+          },
+          2.6
+        )
+        .to(
+          "#loading-line",
+          {
+            opacity: 0,
+            delay: 0.3,
+            onComplete: () => {
+              loadingLine.remove();
+              loadingLineContainer.remove();
+            },
+          },
+          3.2
+        );
+    }
+  }
 });
 </script>
 

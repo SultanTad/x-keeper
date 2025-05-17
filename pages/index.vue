@@ -16,7 +16,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const aboutUsActiveIndex = ref(-1);
 const trustGlobeActiveIndex = ref(-1);
-const numberCompanyRef = ref(null);
+
 
 const windowWidth = ref(0);
 
@@ -138,8 +138,7 @@ onBeforeMount(() => {
 });
 
 onMounted(() => {
-  const titles = numberCompanyRef.value.querySelectorAll(".item__title");
-  const texts = numberCompanyRef.value.querySelectorAll(".item__text");
+  
   const tabInfos = document.querySelectorAll(".tabInfo");
 
   if (windowWidth.value > 1180) {
@@ -405,33 +404,18 @@ onMounted(() => {
         </div>
       </section>
 
-      <section class="number-company" ref="numberCompanyRef">
+      <section class="number-company">
         <h2 class="number-company__title">Цифры компании</h2>
         <div class="number-company__list">
-          <CompanyItem :number="19" text="лет в бизнесе" />
-          <CompanyItem :number="11" text="запатентованных технологий" />
-          <CompanyItem :number="1.5" titleText="М+" text="активных устройств" />
+          <CompanyItem :number="19" text="лет в бизнесе" :decimals="0" />
+          <CompanyItem :number="11" text="запатентованных технологий" :decimals="0" />
+          <CompanyItem :number="1.5" titleText="М+" text="активных устройств" :decimals="1" />
           <CompanyItem
             :number="120"
             titleText="k"
             text="клиентов по всему миру"
+            :decimals="0"
           />
-          <!-- <div class="number-company__item">
-            <h3 class="item__title">{{ businessCounter }}</h3>
-            <p class="item__text"></p>
-          </div>
-          <div class="number-company__item">
-            <h3 class="item__title">{{ technologiesCounter }}</h3>
-            <p class="item__text"></p>
-          </div>
-          <div class="number-company__item">
-            <h3 class="item__title">{{ devicesCounter }}</h3>
-            <p class="item__text"></p>
-          </div>
-          <div class="number-company__item">
-            <h3 class="item__title">{{ clientsCounter }}</h3>
-            <p class="item__text"></p>
-          </div> -->
         </div>
       </section>
     </div>
@@ -936,7 +920,7 @@ body {
   clip-path: inset(0 100% -20% 0);
   position: absolute;
   color: #333343;
-  transition: clip-path 1s ease-in-out;
+  transition: clip-path 0.5s ease-in-out;
   top: 0;
   left: 0;
   white-space: nowrap;

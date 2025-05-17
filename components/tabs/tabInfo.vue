@@ -46,7 +46,7 @@ function updateBackgroundPosition() {
   for (let i = 0; i < activeTab.value; i++) {
     translateX += bullets[i].offsetWidth + 5;
   }
-  translateX += 5;
+  // translateX += 5;
   pagination.style.setProperty("--translate-x", `${translateX}px`);
 }
 
@@ -80,14 +80,12 @@ onMounted(async () => {
       @mouse-leave-tab="handleMouseLeave"
       ref="tabPaginationRef"
     />
-    <TransitionGroup tag="div" name="tab">
       <div
         class="tabInfo__content"
         v-for="(slide, index) in slides"
         :key="slide"
         :style="{ backgroundImage: `url(${slide.img})` }"
         :class="{ 'tabInfo__content--active': index === activeTab }"
-        v-show="index === activeTab"
       >
         <div class="tabInfo__content-inner">
           <img class="tabInfo__content-icon" :src="slide.icon" alt="" />
@@ -95,23 +93,10 @@ onMounted(async () => {
           <p class="tabInfo__content-text">{{ slide.text }}</p>
         </div>
       </div>
-    </TransitionGroup>
   </div>
 </template>
 
 <style lang="scss">
-.tab-move,
-.tab-enter-active,
-.tab-leave-active {
-  transition: transform 0.5s ease;
-}
-.tab-enter-from,
-.tab-leave-to {
-  transform: scale(1.1);
-}
-.tab-leave-active {
-  position: absolute;
-}
 .tabInfo {
   border-radius: 80px;
   height: 500px;
@@ -130,6 +115,15 @@ onMounted(async () => {
     flex-direction: column;
     justify-content: end;
     overflow: hidden;
+    visibility: hidden;
+    opacity: 0;
+    transform: scale(1.1);
+    &--active {
+      visibility: visible;
+      opacity: 1;
+      transform: scale(1);
+      transition: transform .8s, opacity .8s;
+    }
     &-inner {
       padding-bottom: 60px;
       padding-left: 60px;
@@ -182,54 +176,54 @@ onMounted(async () => {
   }
 }
 @media (max-width: 700px) {
-  .info-bullet {
+  .tabInfo__bullet {
     font-size: 15px;
   }
-  .info-slide {
-    &__icon {
+  .tabInfo__content {
+    &-icon {
       width: 45px;
       height: 45px;
     }
-    &__title {
+    &-title {
       font-size: 35px;
     }
-    &__text {
+    &-text {
       font-size: 16px;
     }
   }
 }
 
 @media (max-width: 600px) {
-  .info-bullet {
+  .tabInfo__bullet {
     padding: 10px 16px;
   }
   .info-slider--0 {
-    .swiperInfo .swiper-slide {
+    .tabInfo__content{
       background-position: right;
     }
   }
 }
 
 @media (max-width: 480px) {
-  .swiperInfo {
+  .tabInfo {
     border-radius: 32px;
   }
-  .info-bullet {
+  .tabInfo__bullet {
     font-size: 12px;
   }
-  .swiperInfo .swiper-pagination {
+  .tabInfo__pagination {
     height: 40px;
   }
-  .swiperInfo .swiper-slide {
+  .tabInfo__content {
     height: 518px;
     border-radius: 32px;
   }
-  .info-slide {
-    &__inner {
+  .tabInfo__content {
+    &-inner {
       padding-left: 22px;
       padding-bottom: 22px;
     }
-    &__title {
+    &-title {
       font-size: 26px;
     }
   }
@@ -237,7 +231,7 @@ onMounted(async () => {
 
 @media (max-width: 440px) {
   .info-slider--1 {
-    .swiperInfo .swiper-pagination {
+    .tabInfo__pagination {
       width: 210px;
     }
   }

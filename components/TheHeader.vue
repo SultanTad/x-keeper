@@ -1,6 +1,7 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onBeforeMount, onMounted } from "vue";
 import { useRoute } from "vue-router";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const openBurger = ref(false);
 const openMenu = ref(false);
@@ -24,6 +25,26 @@ const closeMenu = () => {
   }
 };
 
+onBeforeMount(() => {
+  useGSAP().registerPlugin(ScrollTrigger);
+});
+
+onMounted(() => {
+  ScrollTrigger.create({
+    trigger: "body",
+    start: "top top",
+    end: "50px top",
+    scrub: true,
+    onUpdate: () => {
+      useGSAP().to(".header", {
+        background: "rgba(255, 255, 255, 0.70)",
+        backdropFilter: "blur(27px)",
+        ease: "none",
+      });
+    },
+  });
+});
+
 watch(
   () => route.path,
   () => {
@@ -36,10 +57,34 @@ watch(
   <header class="header">
     <div class="container">
       <nav class="nav">
-        <NuxtLink to="/"
+        <NuxtLink to="/" v-if="route.path === '/'"
           ><img class="main-logo" src="../assets/images/logo.svg" alt="Logo"
         /></NuxtLink>
-        <div class="nav__inner">
+        <NuxtLink to="/" v-if="route.path !== '/'"
+          ><img
+            class="main-logo-no-animation"
+            src="../assets/images/logo.svg"
+            alt="Logo"
+        /></NuxtLink>
+        <div class="nav__inner" v-if="route.path === '/'">
+          <ul class="menu__list">
+            <li class="menu__item">
+              <NuxtLink to="/products">Продукция</NuxtLink>
+            </li>
+            <li class="menu__item">
+              <NuxtLink to="/business-solutions">Решения для бизнеса</NuxtLink>
+            </li>
+          </ul>
+          <div class="nav__btns">
+            <NuxtLink>
+              <Button white>личный кабинет</Button>
+            </NuxtLink>
+            <NuxtLink to="/drop-message">
+              <Button green :link="'/drop-message'">оставить заявку</Button>
+            </NuxtLink>
+          </div>
+        </div>
+        <div class="nav__inner-no-animation" v-if="route.path !== '/'">
           <ul class="menu__list">
             <li class="menu__item">
               <NuxtLink to="/products">Продукция</NuxtLink>
@@ -89,9 +134,12 @@ watch(
 
 <style lang="scss">
 .main-logo {
+  opacity: 0;
+}
+.main-logo,
+.main-logo-no-animation {
   position: relative;
   z-index: 1000;
-  opacity: 0;
 }
 .header {
   position: fixed;
@@ -107,11 +155,14 @@ watch(
   display: flex;
   align-items: center;
   &__inner {
+    transform: translateY(-100px);
+  }
+  &__inner,
+  .nav__inner-no-animation {
     display: flex;
     justify-content: space-between;
     width: 100%;
     align-items: center;
-    transform: translateY(-100px);
   }
   .menu__list {
     display: flex;
@@ -221,7 +272,8 @@ watch(
   .header {
     height: 50px;
   }
-  .main-logo {
+  .main-logo,
+  .main-logo-no-animation {
     width: 30px;
     height: 21px;
     max-width: unset;
