@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, onBeforeMount } from "vue";
+import { useRoute } from "vue-router";
 import ForestCountry from "@/assets/images/forest-country-road-1.webp";
 import YellowBulldozer from "@/assets/images/yellow-bulldozer.webp";
 import Cargoes from "@/assets/images/cargoes.webp";
@@ -16,7 +17,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const aboutUsActiveIndex = ref(-1);
 const trustGlobeActiveIndex = ref(-1);
-
+const route = useRoute();
 
 const windowWidth = ref(0);
 
@@ -137,8 +138,23 @@ onBeforeMount(() => {
   window.addEventListener("resize", updateWidth);
 });
 
-onMounted(() => {
-  
+watch(
+  () => route.path,
+  () => {
+    nextTick(() => {
+      if (process.client) {
+        ScrollTrigger.refresh();
+      }
+    });
+  }
+);
+
+onMounted(async () => {
+  await nextTick(() => {
+    if (process.client) {
+      ScrollTrigger.refresh();
+    }
+  });
   const tabInfos = document.querySelectorAll(".tabInfo");
 
   if (windowWidth.value > 1180) {
@@ -299,6 +315,9 @@ onMounted(() => {
     },
   });
 });
+onUnmounted(() => {
+  ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+});
 </script>
 <template>
   <main class="main">
@@ -408,8 +427,17 @@ onMounted(() => {
         <h2 class="number-company__title">Цифры компании</h2>
         <div class="number-company__list">
           <CompanyItem :number="19" text="лет в бизнесе" :decimals="0" />
-          <CompanyItem :number="11" text="запатентованных технологий" :decimals="0" />
-          <CompanyItem :number="1.5" titleText="М+" text="активных устройств" :decimals="1" />
+          <CompanyItem
+            :number="11"
+            text="запатентованных технологий"
+            :decimals="0"
+          />
+          <CompanyItem
+            :number="1.5"
+            titleText="М+"
+            text="активных устройств"
+            :decimals="1"
+          />
           <CompanyItem
             :number="120"
             titleText="k"

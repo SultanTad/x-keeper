@@ -39,19 +39,25 @@
 import { gsap } from "gsap";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const nuxtApp = useNuxtApp();
 const route = useRoute();
-const isHomePage = ref(false)
+const isHomePage = ref(false);
+const animationPlayed = ref(false);
+
+onBeforeMount(() => {
+  useGSAP().registerPlugin(ScrollTrigger);
+});
 
 isHomePage.value = computed(() => route.path === "/");
-const animationPlayed = ref(false);
 const disableScroll = () => {
   if (process.client) {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     document.body.style.position = "fixed";
     document.body.style.top = `-${scrollTop}px`;
     document.body.style.width = "100%";
+    ScrollTrigger.refresh();
   }
 };
 
@@ -63,6 +69,7 @@ const enableScroll = () => {
     document.body.style.width = "";
     window.scrollTo(0, -scrollTop);
   }
+  ScrollTrigger.refresh();
 };
 
 nuxtApp.hook("page:finish", () => {

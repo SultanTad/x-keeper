@@ -9,6 +9,7 @@ defineProps({
 const activeTab = ref(0);
 const tabPaginationRef = ref(null);
 const hoverIndex = ref(null);
+const windowWidth = ref(0);
 
 const setActiveTab = (index) => {
   activeTab.value = index;
@@ -35,6 +36,12 @@ const handleMouseLeave = () => {
   pagination.style.setProperty("--transform-origin", "center");
 };
 
+const updateWidth = () => {
+  if (typeof window !== "undefined") {
+    windowWidth.value = window.innerWidth;
+  }
+};
+
 function updateBackgroundPosition() {
   const pagination = tabPaginationRef.value.$el;
   const bullets = pagination.querySelectorAll(".tabInfo__bullet");
@@ -46,7 +53,7 @@ function updateBackgroundPosition() {
   for (let i = 0; i < activeTab.value; i++) {
     translateX += bullets[i].offsetWidth + 5;
   }
-  // translateX += 5;
+  
   pagination.style.setProperty("--translate-x", `${translateX}px`);
 }
 
@@ -65,6 +72,10 @@ watch(activeTab, async (newTab) => {
   translateX += 5;
   pagination.style.setProperty("--translate-x", `${translateX}px`);
 });
+onBeforeMount(() => {
+  updateWidth();
+  window.addEventListener("resize", updateWidth);
+});
 onMounted(async () => {
   await nextTick();
   updateBackgroundPosition();
@@ -80,19 +91,19 @@ onMounted(async () => {
       @mouse-leave-tab="handleMouseLeave"
       ref="tabPaginationRef"
     />
-      <div
-        class="tabInfo__content"
-        v-for="(slide, index) in slides"
-        :key="slide"
-        :style="{ backgroundImage: `url(${slide.img})` }"
-        :class="{ 'tabInfo__content--active': index === activeTab }"
-      >
-        <div class="tabInfo__content-inner">
-          <img class="tabInfo__content-icon" :src="slide.icon" alt="" />
-          <h3 class="tabInfo__content-title">{{ slide.title }}</h3>
-          <p class="tabInfo__content-text">{{ slide.text }}</p>
-        </div>
+    <div
+      class="tabInfo__content"
+      v-for="(slide, index) in slides"
+      :key="slide"
+      :style="{ backgroundImage: `url(${slide.img})` }"
+      :class="{ 'tabInfo__content--active': index === activeTab }"
+    >
+      <div class="tabInfo__content-inner">
+        <img class="tabInfo__content-icon" :src="slide.icon" alt="" />
+        <h3 class="tabInfo__content-title">{{ slide.title }}</h3>
+        <p class="tabInfo__content-text">{{ slide.text }}</p>
       </div>
+    </div>
   </div>
 </template>
 
@@ -122,7 +133,7 @@ onMounted(async () => {
       visibility: visible;
       opacity: 1;
       transform: scale(1);
-      transition: transform .8s, opacity .8s;
+      transition: transform 0.8s, opacity 0.8s;
     }
     &-inner {
       padding-bottom: 60px;
@@ -198,7 +209,7 @@ onMounted(async () => {
     padding: 10px 16px;
   }
   .info-slider--0 {
-    .tabInfo__content{
+    .tabInfo__content {
       background-position: right;
     }
   }

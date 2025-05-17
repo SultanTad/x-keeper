@@ -9,21 +9,22 @@ const props = defineProps({
   decimals: Number,
 });
 
-
-
 const animatedNumber = ref(1);
 
 onMounted(async () => {
-  await nextTick();
-  const item = document.querySelector("#item");
+  await nextTick(() => {
+    if (process.client) {
+      ScrollTrigger.refresh();
+    }
+  });
 
   ScrollTrigger.create({
-    trigger: item,
+    trigger: ".number-company__item",
     start: "top 75%",
     onEnter: (self) => {
-      useGSAP().to(item, {
+      useGSAP().to(".number-company__item > *", {
         y: 0,
-        opacity: 1.25,
+        opacity: 1,
         duration: 1.25,
         onComplete: () => {
           animatedNumber.value = props.number;
@@ -32,9 +33,12 @@ onMounted(async () => {
     },
   });
 });
+onUnmounted(() => {
+  ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+});
 </script>
 <template>
-  <div id="item" class="number-company__item">
+  <div class="number-company__item">
     <h3 class="item__title">
       <vue3-autocounter
         ref="counter"
