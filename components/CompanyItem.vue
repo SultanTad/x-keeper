@@ -11,12 +11,12 @@ const props = defineProps({
 
 const animatedNumber = ref(1);
 
+onBeforeMount(() => {
+  useGSAP().registerPlugin(ScrollTrigger);
+});
+
 onMounted(async () => {
-  await nextTick(() => {
-    if (process.client) {
-      ScrollTrigger.refresh();
-    }
-  });
+  await nextTick();
 
   ScrollTrigger.create({
     trigger: ".number-company__item",
@@ -32,9 +32,10 @@ onMounted(async () => {
       });
     },
   });
+  ScrollTrigger.refresh();
 });
 onUnmounted(() => {
-  ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+  ScrollTrigger.getAll().forEach((trigger) => console.log(trigger));
 });
 </script>
 <template>

@@ -50,10 +50,18 @@ function updateBackgroundPosition() {
   pagination.style.setProperty("--bullet-width", `${activeBulletWidth}px`);
 
   let translateX = 0;
-  for (let i = 0; i < activeTab.value; i++) {
-    translateX += bullets[i].offsetWidth + 5;
+  if (windowWidth.value > 860) {
+    for (let i = 0; i < activeTab.value; i++) {
+      translateX += bullets[i].offsetWidth + 5;
+    }
   }
-  
+  if (windowWidth.value < 860) {
+    for (let i = 0; i < activeTab.value; i++) {
+      translateX += bullets[i].offsetWidth;
+    }
+  }
+  translateX += 5;
+
   pagination.style.setProperty("--translate-x", `${translateX}px`);
 }
 
@@ -69,7 +77,9 @@ watch(activeTab, async (newTab) => {
   for (let i = 0; i < newTab; i++) {
     translateX += bullets[i].offsetWidth;
   }
-  translateX += 5;
+  if (windowWidth.value > 860) {
+    translateX += 5;
+  }
   pagination.style.setProperty("--translate-x", `${translateX}px`);
 });
 onBeforeMount(() => {
@@ -226,7 +236,6 @@ onMounted(async () => {
     height: 40px;
   }
   .tabInfo__content {
-    height: 518px;
     border-radius: 32px;
   }
   .tabInfo__content {

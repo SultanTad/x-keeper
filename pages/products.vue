@@ -497,7 +497,7 @@ onUnmounted(() => {
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1550px) {
   .products__hero {
     padding-top: 220px;
     &-title {

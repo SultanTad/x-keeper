@@ -8,6 +8,6 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
   ],
-  modules: ["v-gsap-nuxt"],
+  modules: ["v-gsap-nuxt", "@pinia/nuxt"],
   css: ["~/assets/styles/style.css"],
 });

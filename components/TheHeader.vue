@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 const openBurger = ref(false);
 const openMenu = ref(false);
 const route = useRoute();
+const activeHeader = ref(false);
 
 const activatedBurgerMenu = () => {
   if (document.body.style.overflow === "hidden") {
@@ -30,6 +31,7 @@ onBeforeMount(() => {
 });
 
 onMounted(() => {
+  activeHeader.value = false;
   ScrollTrigger.create({
     trigger: "body",
     start: "top top",
@@ -44,11 +46,15 @@ onMounted(() => {
     },
   });
 });
+onUnmounted(() => {
+  ScrollTrigger.killAll();
+});
 
 watch(
   () => route.path,
   () => {
     closeMenu();
+    activeHeader.value = true;
   }
 );
 </script>
@@ -58,7 +64,11 @@ watch(
     <div class="container">
       <nav class="nav">
         <NuxtLink to="/" v-if="route.path === '/'"
-          ><img class="main-logo" src="../assets/images/logo.svg" alt="Logo"
+          ><img
+            class="main-logo"
+            :class="{ after_animation: activeHeader }"
+            src="../assets/images/logo.svg"
+            alt="Logo"
         /></NuxtLink>
         <NuxtLink to="/" v-if="route.path !== '/'"
           ><img
@@ -66,7 +76,11 @@ watch(
             src="../assets/images/logo.svg"
             alt="Logo"
         /></NuxtLink>
-        <div class="nav__inner" v-if="route.path === '/'">
+        <div
+          class="nav__inner"
+          :class="{ after_animation: activeHeader }"
+          v-if="route.path === '/'"
+        >
           <ul class="menu__list">
             <li class="menu__item">
               <NuxtLink to="/products">Продукция</NuxtLink>
@@ -135,9 +149,13 @@ watch(
 <style lang="scss">
 .main-logo {
   opacity: 0;
+  &.after_animation {
+    opacity: 1;
+  }
 }
 .main-logo,
-.main-logo-no-animation {
+.main-logo-no-animation,
+.main-logo-after-animation {
   position: relative;
   z-index: 1000;
 }
@@ -156,6 +174,9 @@ watch(
   align-items: center;
   &__inner {
     transform: translateY(-100px);
+    &.after_animation {
+      transform: translateY(0);
+    }
   }
   &__inner,
   .nav__inner-no-animation {

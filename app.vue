@@ -50,7 +50,15 @@ onBeforeMount(() => {
   useGSAP().registerPlugin(ScrollTrigger);
 });
 
-isHomePage.value = computed(() => route.path === "/");
+watch(
+  () => route.path,
+  (newPath) => {
+    isHomePage.value = newPath === "/";
+  },
+  { immediate: true } // Выполняется сразу при инициализации
+);
+console.log(isHomePage.value);
+
 const disableScroll = () => {
   if (process.client) {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
