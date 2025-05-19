@@ -1,5 +1,5 @@
 <template>
-  <div class="loading" v-if="isHomePage && !animationPlayed">
+  <div class="loading" v-if="route.path === '/' && !animationPlayed">
     <svg
       id="loading-logo"
       width="52"
@@ -37,53 +37,13 @@
 
 <script setup>
 import { gsap } from "gsap";
-import { computed } from "vue";
 import { useRoute } from "vue-router";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const nuxtApp = useNuxtApp();
 const route = useRoute();
-const isHomePage = ref(false);
 const animationPlayed = ref(false);
 
-onBeforeMount(() => {
-  useGSAP().registerPlugin(ScrollTrigger);
-});
-
-watch(
-  () => route.path,
-  (newPath) => {
-    isHomePage.value = newPath === "/";
-  },
-  { immediate: true } // Выполняется сразу при инициализации
-);
-console.log(isHomePage.value);
-
-const disableScroll = () => {
-  if (process.client) {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${scrollTop}px`;
-    document.body.style.width = "100%";
-    ScrollTrigger.refresh();
-  }
-};
-
-const enableScroll = () => {
-  if (process.client) {
-    const scrollTop = parseInt(document.body.style.top || "0", 10);
-    document.body.style.position = "";
-    document.body.style.top = "";
-    document.body.style.width = "";
-    window.scrollTo(0, -scrollTop);
-  }
-  ScrollTrigger.refresh();
-};
-
-nuxtApp.hook("page:finish", () => {
-  if (isHomePage.value && !animationPlayed.value) {
-    animationPlayed.value = false;
-    disableScroll();
+onMounted(() => {
+  if (route.path === "/" && !animationPlayed.value) {
     const mainLogo = document.querySelector(".main-logo");
     const loadingLogo = document.querySelector("#loading-logo");
     const loadingLineContainer = document.querySelector(
@@ -98,7 +58,6 @@ nuxtApp.hook("page:finish", () => {
       const mainLogoBounds = mainLogo.getBoundingClientRect();
       const tl = gsap.timeline({
         onComplete: () => {
-          enableScroll();
           animationPlayed.value = true;
         },
       });
@@ -187,7 +146,7 @@ nuxtApp.hook("page:finish", () => {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  position: absolute;
+  position: fixed;
   inset: 0;
   z-index: 9999;
   background-color: white;

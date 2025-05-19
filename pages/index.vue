@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onBeforeMount } from "vue";
 import { useRoute } from "vue-router";
+import { useEventBus } from "@vueuse/core";
 import ForestCountry from "@/assets/images/forest-country-road-1.webp";
 import YellowBulldozer from "@/assets/images/yellow-bulldozer.webp";
 import Cargoes from "@/assets/images/cargoes.webp";
@@ -18,6 +19,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 const aboutUsActiveIndex = ref(-1);
 const trustGlobeActiveIndex = ref(-1);
 const route = useRoute();
+const bus = useEventBus("scrollTriggerReady");
 
 const windowWidth = ref(0);
 
@@ -177,7 +179,7 @@ onMounted(async () => {
 
         if (progress === 1) {
           self.disable();
-
+          bus.emit();
           nextTick(() => {
             ScrollTrigger.refresh();
           });

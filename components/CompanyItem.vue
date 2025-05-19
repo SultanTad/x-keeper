@@ -1,6 +1,7 @@
 <script setup>
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Vue3Autocounter from "vue3-autocounter";
+import { useEventBus } from "@vueuse/core";
 
 const props = defineProps({
   number: Number,
@@ -10,6 +11,7 @@ const props = defineProps({
 });
 
 const animatedNumber = ref(1);
+const bus = useEventBus("scrollTriggerReady");
 
 onBeforeMount(() => {
   useGSAP().registerPlugin(ScrollTrigger);
@@ -17,25 +19,27 @@ onBeforeMount(() => {
 
 onMounted(async () => {
   await nextTick();
-
-  ScrollTrigger.create({
-    trigger: ".number-company__item",
-    start: "top 75%",
-    onEnter: (self) => {
-      useGSAP().to(".number-company__item > *", {
-        y: 0,
-        opacity: 1,
-        duration: 1.25,
-        onComplete: () => {
-          animatedNumber.value = props.number;
-        },
-      });
-    },
+  bus.on(() => {
+    ScrollTrigger.create({
+      trigger: ".number-company__title",
+      start: "top top",
+      end: "+=600",
+      onEnter: (self) => {
+        console.log("start");
+        useGSAP().to(".number-company__item > *", {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          onComplete: () => {
+            animatedNumber.value = props.number;
+          },
+        });
+      },
+    });
   });
-  ScrollTrigger.refresh();
 });
 onUnmounted(() => {
-  ScrollTrigger.getAll().forEach((trigger) => console.log(trigger));
+  ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
 });
 </script>
 <template>

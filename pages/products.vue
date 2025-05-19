@@ -219,7 +219,6 @@ onUnmounted(() => {
     <section class="profile">
       <div
         class="profile__bg"
-        :style="{ backgroundImage: `url(${profileBg})` }"
       >
         <NuxtLink
           ><Button green class="btn--profile"
@@ -378,6 +377,7 @@ onUnmounted(() => {
     display: flex;
     align-items: center;
     justify-content: center;
+    background-image: url("../assets/images/desk-with-computer.png");
     .btn--profile {
       width: 320px;
       height: 70px;
@@ -536,6 +536,12 @@ onUnmounted(() => {
     &__links {
       margin-bottom: 94px;
     }
+  }
+}
+
+@media (min-width: 1024px) {
+  .profile__bg {
+    background-image: url("/_nuxt/assets/images/desk-with-computer-desctop-version.png");
   }
 }
 
