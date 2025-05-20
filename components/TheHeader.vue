@@ -157,7 +157,7 @@ watch(
 .main-logo-no-animation,
 .main-logo-after-animation {
   position: relative;
-  z-index: 1000;
+  z-index: 10000;
 }
 .header {
   position: fixed;
@@ -166,7 +166,7 @@ watch(
   display: flex;
   align-items: center;
   height: 80px;
-  z-index: 9999;
+  z-index: 10000;
   background: transparent;
 }
 .nav {

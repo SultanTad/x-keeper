@@ -13,6 +13,10 @@ import Icon3 from "@/assets/images/icon-3.svg";
 import Circles from "@/assets/images/circles.svg";
 import Globe from "@/assets/images/globe.svg";
 import GlobeWithDots from "@/assets/images/globe-with-dots.svg";
+import { gsap } from "gsap";
+import { useAnimationStore } from "~/store/animationPlayedStore";
+
+const notMainPageFirst = useAnimationStore();
 
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -316,12 +320,108 @@ onMounted(async () => {
       }
     },
   });
+
+  if (!notMainPageFirst.animationPlayed) {
+    const mainLogo = document.querySelector(".main-logo");
+    const loadingLogo = document.querySelector("#loading-logo");
+    const loadingLineContainer = document.querySelector(
+      ".loading-line-container"
+    );
+    const loadingLine = document.querySelector("#loading-line");
+    const loadingText = document.querySelector("#loading-text");
+    const navInner = document.querySelector(".nav__inner");
+    const loading = document.querySelector(".loading");
+
+    if (loadingLogo && loadingLine && loading) {
+      const mainLogoBounds = mainLogo.getBoundingClientRect();
+      const tl = gsap.timeline({
+        onComplete: () => {
+          notMainPageFirst.animationPlayed = true;
+        },
+      });
+
+      tl.to(
+        "#loading-line",
+        {
+          width: "357px",
+          duration: 2.5,
+          ease: "none",
+          transformOrigin: "left",
+        },
+        0
+      )
+        .to(
+          loadingLogo,
+          {
+            top: mainLogoBounds.y,
+            left: mainLogoBounds.x,
+            x: 0,
+            y: 0,
+            scale: 1,
+            duration: 2,
+            onComplete: () => {
+              loadingLogo.remove();
+            },
+          },
+          2.5
+        )
+        .to(
+          mainLogo,
+          {
+            opacity: 1,
+            duration: 0,
+          },
+          4.5
+        )
+        .to(
+          loading,
+          {
+            y: "-100%",
+            delay: 1,
+          },
+          5
+        )
+        .to(
+          navInner,
+          {
+            y: 0,
+            delay: 0.4,
+          },
+          4.5
+        )
+        .to(
+          "#loading-text",
+          {
+            opacity: 0,
+            scale: 1.1,
+            delay: 0.5,
+            onComplete: () => {
+              loadingText.remove();
+            },
+          },
+          2.6
+        )
+        .to(
+          "#loading-line",
+          {
+            opacity: 0,
+            delay: 0.3,
+            onComplete: () => {
+              loadingLine.remove();
+              loadingLineContainer.remove();
+            },
+          },
+          3.2
+        );
+    }
+  }
 });
 onUnmounted(() => {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
 });
 </script>
 <template>
+  <MainLoader v-if="!notMainPageFirst.animationPlayed" />
   <main class="main">
     <div class="main__bg"></div>
     <div class="container">
@@ -804,7 +904,7 @@ body {
 
 .about-us .service-block {
   position: relative;
-  padding-bottom: 45px;
+  padding-bottom: 35px;
 }
 
 .about-us .service-block:last-child {
