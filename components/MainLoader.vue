@@ -33,6 +33,10 @@
 </template>
 
 <style>
+body.no-scroll {
+  overflow: hidden;
+  touch-action: none;
+}
 .loading {
   display: flex;
   justify-content: center;
@@ -64,22 +68,19 @@
 .loading-line-container {
   position: absolute;
   top: 55%;
-  width: 357px; /* Фиксируем ширину контейнера */
+  width: 357px;
   margin-top: 253px;
   left: 50%;
-  transform: translateX(-50%); /* Центрируем контейнер */
+  transform: translateX(-50%);
 }
 #loading-line {
   height: 2px;
   width: 0;
   border-radius: 83px;
   background: #333343;
-  transform-origin: left; /* Анимация начинается с левого края */
+  transform-origin: left;
 }
 @media (min-width: 1550px) {
-  .loading {
-    height: 846px;
-  }
   #loading-logo {
     top: 38%;
     scale: 4.3;

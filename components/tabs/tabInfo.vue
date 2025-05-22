@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, nextTick, onMounted, defineProps } from "vue";
+import { ref, defineProps } from "vue";
 
 defineProps({
   slides: Array,
@@ -7,100 +7,10 @@ defineProps({
 });
 
 const activeTab = ref(0);
-const tabPaginationRef = ref(null);
-const hoverIndex = ref(null);
-const windowWidth = ref(0);
-
-const setActiveTab = (index) => {
-  activeTab.value = index;
-  hoverIndex.value = null;
-};
-
-const handleMouseOver = (index) => {
-  hoverIndex.value = index;
-  const pagination = tabPaginationRef.value.$el;
-  if (index > activeTab.value) {
-    pagination.style.setProperty("--scaleX", `${1.08}`);
-    pagination.style.setProperty("--transform-origin", "left");
-  }
-  if (index < activeTab.value) {
-    pagination.style.setProperty("--scaleX", `${1.08}`);
-    pagination.style.setProperty("--transform-origin", "right");
-  }
-};
-
-const handleMouseLeave = () => {
-  hoverIndex.value = null;
-  const pagination = tabPaginationRef.value.$el;
-  pagination.style.setProperty("--scaleX", `${1}`);
-  pagination.style.setProperty("--transform-origin", "center");
-};
-
-const updateWidth = () => {
-  if (typeof window !== "undefined") {
-    windowWidth.value = window.innerWidth;
-  }
-};
-
-function updateBackgroundPosition() {
-  const pagination = tabPaginationRef.value.$el;
-  const bullets = pagination.querySelectorAll(".tabInfo__bullet");
-
-  const activeBulletWidth = bullets[activeTab.value].offsetWidth;
-  pagination.style.setProperty("--bullet-width", `${activeBulletWidth}px`);
-
-  let translateX = 0;
-  if (windowWidth.value > 860) {
-    for (let i = 0; i < activeTab.value; i++) {
-      translateX += bullets[i].offsetWidth + 5;
-    }
-  }
-  if (windowWidth.value < 860) {
-    for (let i = 0; i < activeTab.value; i++) {
-      translateX += bullets[i].offsetWidth;
-    }
-  }
-  translateX += 5;
-
-  pagination.style.setProperty("--translate-x", `${translateX}px`);
-}
-
-watch(activeTab, async (newTab) => {
-  await nextTick();
-  const pagination = tabPaginationRef.value.$el;
-  const bullets = pagination.querySelectorAll(".tabInfo__bullet");
-
-  const activeBulletWidth = bullets[newTab].offsetWidth;
-  pagination.style.setProperty("--bullet-width", `${activeBulletWidth}px`);
-
-  let translateX = 0;
-  for (let i = 0; i < newTab; i++) {
-    translateX += bullets[i].offsetWidth;
-  }
-  if (windowWidth.value > 860) {
-    translateX += 5;
-  }
-  pagination.style.setProperty("--translate-x", `${translateX}px`);
-});
-onBeforeMount(() => {
-  updateWidth();
-  window.addEventListener("resize", updateWidth);
-});
-onMounted(async () => {
-  await nextTick();
-  updateBackgroundPosition();
-});
 </script>
 <template>
   <div class="tabInfo">
-    <TabPagination
-      :pagination="pagination"
-      :activeTab="activeTab"
-      @set-tab="setActiveTab"
-      @mouse-over-tab="handleMouseOver"
-      @mouse-leave-tab="handleMouseLeave"
-      ref="tabPaginationRef"
-    />
+    <TabPagination :pagination="pagination" v-model:activeTab="activeTab" />
     <div
       class="tabInfo__content"
       v-for="(slide, index) in slides"
@@ -143,7 +53,7 @@ onMounted(async () => {
       visibility: visible;
       opacity: 1;
       transform: scale(1);
-      transition: transform 0.8s, opacity 0.8s;
+      transition: transform 0.8s, opacity 1s;
     }
     &-inner {
       padding-bottom: 60px;
@@ -173,6 +83,9 @@ onMounted(async () => {
 }
 
 @media (min-width: 1550px) {
+  .tabInfo {
+    height: 725px;
+  }
   .tabInfo__content {
     &--active {
       height: 725px;

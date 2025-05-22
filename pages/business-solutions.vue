@@ -1,173 +1,219 @@
 <script setup>
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
+import { useEventBus } from "@vueuse/core";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// onMounted(() => {
-//   const textElement = document.querySelector(".history__milestone-text");
-//   const words = textElement.textContent.split(" ");
+const historyActiveIndex = ref(-1);
+const windowWidth = ref(0);
+const bus = useEventBus("scrollTriggerAchievement");
 
-//   textElement.innerHTML = words.map((word) => `<span>${word}</span>`).join(" ");
+const updateWidth = () => {
+  if (typeof window !== "undefined") {
+    windowWidth.value = window.innerWidth;
+  }
+};
 
-//   gsap.fromTo(
-//     textElement.querySelectorAll("span"),
-//     {
-//       opacity: 0.5,
-//     },
-//     {
-//       opacity: 1,
-//       duration: 4,
-//       stagger: 1,
-//       scrollTrigger: {
-//         trigger: ".history__milestone-text",
-//         start: "top bottom",
-//         end: "+=100%",
-//         scrub: 1,
-//         once: true,
-//       },
-//     }
-//   );
-// });
+const historyMilestoneList = [
+  "В 2016 году мы запустили цифровую систему",
+  "аутсорсинга для лизинга, что позволило",
+  "нашим клиентам вынести процесс выдачи",
+  "автомобилей за пределы своих операций",
+];
+
+onBeforeMount(() => {
+  useGSAP().registerPlugin(ScrollTrigger);
+  updateWidth();
+  window.addEventListener("resize", updateWidth);
+});
+
+onMounted(() => {
+  if (windowWidth.value > 1180) {
+    ScrollTrigger.create({
+      trigger: "#historyScrollTrigger",
+      start: "top top",
+      end: "+=1500",
+      pin: true,
+      once: true,
+      onUpdate: (self) => {
+        const progress = self.progress;
+        historyActiveIndex.value =
+          progress === 0 ? -1 : Math.floor(progress * 6);
+
+        if (progress === 1) {
+          self.disable();
+          bus.emit();
+          nextTick(() => {
+            ScrollTrigger.refresh();
+          });
+        }
+      },
+    });
+  }
+});
+onUnmounted(() => {
+  ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+  window.removeEventListener("resize", updateWidth);
+});
 </script>
 
 <template>
-  <div class="container">
-    <section class="hero">
-      <div class="hero__inner">
-        <img
-          class="hero__logo"
-          src="../assets/images/lising-main.png"
-          alt="lising-main"
-        />
-        <h2 class="hero__title">IT решения для лизинга</h2>
-        <h3 class="hero__text">
-          С нами вы получаете высокотехнологичное оборудование и уверенность в
-          том, что ваши активы всегда будут доступны и защищены
-        </h3>
-      </div>
-    </section>
-    <section class="solutions__banner">
-      <div class="solutions__banner-img">
-        <p class="solutions__banner-text">
-          Устройства для мониторинга, аутсорсинг лизинговых операций,
-          инструменты аналитики
-        </p>
-      </div>
-    </section>
+  <div class="business-solutions__wrapper">
+    <div class="container">
+      <section class="hero">
+        <div class="hero__inner">
+          <img
+            class="hero__logo"
+            src="../assets/images/lising-main.png"
+            alt="lising-main"
+          />
+          <h2 class="hero__title">IT решения для лизинга</h2>
+          <h3 class="hero__text">
+            С нами вы получаете высокотехнологичное оборудование и уверенность в
+            том, что ваши активы всегда будут доступны и защищены
+          </h3>
+        </div>
+      </section>
+      <section class="solutions__banner">
+        <div class="solutions__banner-img">
+          <p class="solutions__banner-text">
+            Устройства для мониторинга, аутсорсинг лизинговых операций,
+            инструменты аналитики
+          </p>
+        </div>
+      </section>
 
-    <section class="history__milestone">
-      <div class="history__milestone-inner">
-        <h3 class="history__milestone-text">
-          В 2016 году мы запустили цифровую систему аутсорсинга для лизинга, что
-          позволило нашим клиентам вынести процесс выдачи автомобилей за пределы
-          своих операций
-        </h3>
+      <section class="history__milestone" id="historyScrollTrigger">
+        <div class="history__milestone-inner">
+          <h3
+            class="history__milestone-text"
+            v-for="(text, index) in historyMilestoneList"
+          >
+            <span
+              class="history__milestone-text-reveal"
+              :style="{
+                clipPath:
+                  historyActiveIndex >= index
+                    ? 'inset(0 0% -20% 0)'
+                    : 'inset(0 100% -20% 0)',
+              }"
+              >{{ text }}</span
+            >
+            {{ text }}
+          </h3>
+        </div>
+      </section>
+
+      <section class="achievements">
+        <div class="achievements__inner">
+          <h3 class="achievements__title">X-Keeper в лизинге</h3>
+          <div class="achievements__list">
+            <AchievementItem
+              :number="12"
+              titleText="лет"
+              text="сотрудничества"
+              :decimals="0"
+            />
+            <AchievementItem :number="63" text="контракта" :decimals="0" />
+            <AchievementItem
+              :number="513"
+              titleText="k"
+              text="закрытых поручений"
+              :decimals="0"
+            />
+            <AchievementItem
+              :number="1.5"
+              titleText="M+"
+              text="активных устройств"
+              :decimals="1"
+            />
+          </div>
+        </div>
+      </section>
+    </div>
+    <section class="solutions__turnkey">
+      <div class="container">
+        <div class="solutions__turnkey-inner">
+          <h2 class="solutions__turnkey-title">
+            Реализация проекта аутсорсинга под ключ
+          </h2>
+          <p class="solutions__turnkey-subtitle">
+            От анализа до поддержки, берем на себя выполнение бизнес-процессов,
+            чтобы вы могли фокусироваться на развитии бизнеса
+          </p>
+        </div>
+      </div>
+      <SolutionSlider />
+    </section>
+    <section class="banner">
+      <div class="container">
+        <img src="../assets/images/Frame 810424157.png" alt="" />
       </div>
     </section>
-
-    <section class="achievements">
-      <div class="achievements__inner">
-        <h3 class="achievements__title">X-Keeper в лизинге</h3>
-        <div class="achievements__list">
-          <div class="achievements__item">
-            <p class="item__title">12 лет</p>
-            <p class="item__text">сотрудничества</p>
+    <section class="connection__advantages">
+      <div class="container">
+        <h2 class="connection__advantages-title">Преимущества подключения</h2>
+        <h3 class="connection__advantages-subtitle">
+          Оптимизация времени и затрат, профессиональная команда, адаптивность
+          решений, защита данных и круглосуточная поддержка
+        </h3>
+        <VerticalSlider />
+      </div>
+      <MobileAdvantagesSlider />
+    </section>
+    <section class="services">
+      <div class="container">
+        <div class="services__inner">
+          <h2 class="services__title">Сервис X-Keeper</h2>
+          <h3 class="services__subtitle">
+            На протяжении всего срока договора обеспечиваем бесперебойную
+            эксплуатацию имущества, защиту от рисков и удобное управление
+            имуществом
+          </h3>
+        </div>
+        <div class="services__list">
+          <div class="list__item-wrap">
+            <div class="list__item">
+              <img src="../assets/images/monitor.png" alt="service-img" />
+              <p class="list__item-text">Техническая поддержка</p>
+            </div>
           </div>
-          <div class="achievements__item">
-            <p class="item__title">63</p>
-            <p class="item__text">контракта</p>
+          <div class="list__item-wrap">
+            <div class="list__item">
+              <img src="../assets/images/monitor.png" alt="service-img" />
+              <p class="list__item-text">Ремонт и обслуживание</p>
+            </div>
           </div>
-          <div class="achievements__item">
-            <p class="item__title">513k</p>
-            <p class="item__text">закрытых поручений</p>
+          <div class="list__item-wrap">
+            <div class="list__item">
+              <img src="../assets/images/monitor.png" alt="service-img" />
+              <p class="list__item-text">Поддержка в вопросах безопасности</p>
+            </div>
           </div>
-          <div class="achievements__item">
-            <p class="item__title">1.5M+</p>
-            <p class="item__text">активных устройств</p>
+          <div class="list__item-wrap">
+            <div class="list__item">
+              <img src="../assets/images/monitor.png" alt="service-img" />
+              <p class="list__item-text">Поддержка в вопросах безопасности</p>
+            </div>
           </div>
+        </div>
+      </div>
+      <MobileServicesSlider />
+      <div class="container">
+        <div class="services__link-btn">
+          <NuxtLink><Button green>оставить заявку</Button></NuxtLink>
         </div>
       </div>
     </section>
   </div>
-  <section class="solutions__turnkey">
-    <div class="container">
-      <div class="solutions__turnkey-inner">
-        <h2 class="solutions__turnkey-title">
-          Реализация проекта аутсорсинга под ключ
-        </h2>
-        <p class="solutions__turnkey-subtitle">
-          От анализа до поддержки, берем на себя выполнение бизнес-процессов,
-          чтобы вы могли фокусироваться на развитии бизнеса
-        </p>
-      </div>
-    </div>
-    <SolutionSlider />
-  </section>
-  <section class="banner">
-    <div class="container">
-      <img src="../assets/images/Frame 810424157.png" alt="" />
-    </div>
-  </section>
-  <section class="connection__advantages">
-    <div class="container">
-      <h2 class="connection__advantages-title">Преимущества подключения</h2>
-      <h3 class="connection__advantages-subtitle">
-        Оптимизация времени и затрат, профессиональная команда, адаптивность
-        решений, защита данных и круглосуточная поддержка
-      </h3>
-      <VerticalSlider />
-    </div>
-    <MobileAdvantagesSlider />
-  </section>
-  <section class="services">
-    <div class="container">
-      <div class="services__inner">
-        <h2 class="services__title">Сервис X-Keeper</h2>
-        <h3 class="services__subtitle">
-          На протяжении всего срока договора обеспечиваем бесперебойную
-          эксплуатацию имущества, защиту от рисков и удобное управление
-          имуществом
-        </h3>
-      </div>
-      <div class="services__list">
-        <div class="list__item-wrap">
-          <div class="list__item">
-            <img src="../assets/images/monitor.png" alt="service-img" />
-            <p class="list__item-text">Техническая поддержка</p>
-          </div>
-        </div>
-        <div class="list__item-wrap">
-          <div class="list__item">
-            <img src="../assets/images/monitor.png" alt="service-img" />
-            <p class="list__item-text">Ремонт и обслуживание</p>
-          </div>
-        </div>
-        <div class="list__item-wrap">
-          <div class="list__item">
-            <img src="../assets/images/monitor.png" alt="service-img" />
-            <p class="list__item-text">Поддержка в вопросах безопасности</p>
-          </div>
-        </div>
-        <div class="list__item-wrap">
-          <div class="list__item">
-            <img src="../assets/images/monitor.png" alt="service-img" />
-            <p class="list__item-text">Поддержка в вопросах безопасности</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <MobileServicesSlider />
-    <div class="container">
-      <div class="services__link-btn">
-        <NuxtLink><Button green>оставить заявку</Button></NuxtLink>
-      </div>
-    </div>
-  </section>
 </template>
 
 <style lang="scss">
+.business-solutions__wrapper {
+  overflow: hidden;
+}
 .hero {
   padding-top: 150px;
   &__inner {
@@ -229,13 +275,24 @@ gsap.registerPlugin(ScrollTrigger);
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
   }
   &-text {
     font-family: "VelaSans-bold";
     font-size: 50px;
     line-height: 122%;
-    color: #333343;
+    color: rgba(0, 0, 0, 0.2);
     text-align: center;
+    position: relative;
+  }
+  &-text-reveal {
+    clip-path: inset(0 100% -20% 0);
+    position: absolute;
+    color: #333343;
+    transition: clip-path 0.8s ease-in-out;
+    top: 0;
+    left: 0;
+    white-space: nowrap;
   }
 }
 
@@ -257,19 +314,6 @@ gsap.registerPlugin(ScrollTrigger);
     gap: 20px;
     max-width: 550px;
     width: 100%;
-    .item__title {
-      font-family: "VelaSans-Light";
-      font-weight: 300;
-      font-size: 65px;
-      line-height: 95%;
-    }
-    .item__text {
-      font-family: "VelaSans-Medium";
-      font-weight: 500;
-      font-size: 17px;
-      line-height: normal;
-      padding-bottom: 20px;
-    }
   }
   &__item {
     border-bottom: 1px solid rgba(51, 51, 67, 0.4);
@@ -578,6 +622,7 @@ gsap.registerPlugin(ScrollTrigger);
     }
     &-text {
       font-size: 28px;
+      color: #333343;
     }
   }
   .achievements {
@@ -642,6 +687,8 @@ gsap.registerPlugin(ScrollTrigger);
         width: 100%;
         button {
           width: 100%;
+          height: 54px;
+          font-size: 16px;
         }
       }
     }

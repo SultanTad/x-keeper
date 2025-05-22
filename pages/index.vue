@@ -24,6 +24,11 @@ const aboutUsActiveIndex = ref(-1);
 const trustGlobeActiveIndex = ref(-1);
 const route = useRoute();
 const bus = useEventBus("scrollTriggerReady");
+const trustInfoList = [
+  "Наши устройства",
+  "бесперебойно работают",
+  "по всему миру",
+];
 
 const windowWidth = ref(0);
 
@@ -191,33 +196,6 @@ onMounted(async () => {
       },
     });
   }
-  if (windowWidth.value < 1180) {
-    ScrollTrigger.create({
-      trigger: "#aboutUsScroll",
-      start: "top top",
-      end: "+=700",
-      once: true,
-      onUpdate: (self) => {
-        const progress = self.progress;
-
-        aboutUsActiveIndex.value =
-          progress === 0 ? -1 : Math.floor(progress * 5);
-
-        useGSAP().to("#aboutUsLine", {
-          scaleY: progress,
-          duration: 0.5,
-        });
-
-        if (progress === 1) {
-          self.disable();
-
-          nextTick(() => {
-            ScrollTrigger.refresh();
-          });
-        }
-      },
-    });
-  }
   if (windowWidth.value > 1200) {
     tabInfos.forEach((tab) => {
       ScrollTrigger.create({
@@ -322,6 +300,7 @@ onMounted(async () => {
   });
 
   if (!notMainPageFirst.animationPlayed) {
+    document.body.classList.add("no-scroll");
     const mainLogo = document.querySelector(".main-logo");
     const loadingLogo = document.querySelector("#loading-logo");
     const loadingLineContainer = document.querySelector(
@@ -336,6 +315,7 @@ onMounted(async () => {
       const mainLogoBounds = mainLogo.getBoundingClientRect();
       const tl = gsap.timeline({
         onComplete: () => {
+          document.body.classList.remove("no-scroll");
           notMainPageFirst.animationPlayed = true;
         },
       });
@@ -418,6 +398,7 @@ onMounted(async () => {
 });
 onUnmounted(() => {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+  window.removeEventListener("resize", updateWidth);
 });
 </script>
 <template>
@@ -514,7 +495,12 @@ onUnmounted(() => {
                 >
                   <div
                     class="about-us__service"
-                    :style="{ opacity: aboutUsActiveIndex >= index ? 1 : 0.2 }"
+                    :style="{
+                      opacity:
+                        windowWidth < 768 || aboutUsActiveIndex >= index
+                          ? 1
+                          : 0.2,
+                    }"
                   >
                     {{ block.text }}
                   </div>
@@ -606,11 +592,7 @@ onUnmounted(() => {
           <div class="container">
             <div class="trust-globe__text trust-globe__text--full-width">
               <div
-                v-for="(item, index) in [
-                  'Наши устройства',
-                  'бесперебойно',
-                  'работают по всему миру',
-                ]"
+                v-for="(item, index) in trustInfoList"
                 class="trust-globe__text-line"
               >
                 <span
@@ -650,10 +632,9 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss">
-body {
-  overflow-x: hidden;
+.main {
+  overflow: hidden;
 }
-
 .main__bg {
   background-color: #ebecf3;
   height: 650px;
@@ -938,37 +919,14 @@ body {
   margin-top: 50px;
 }
 
-.number-company__item {
-  border: 1px solid rgba(51, 51, 67, 0.4);
-  border-radius: 80px;
-  padding: 25px 10px 37px 32px;
-  overflow: hidden;
-}
-
-.number-company .item__title {
-  font-family: "VelaSans-Light";
-  font-weight: 300;
-  font-size: 90px;
-  line-height: 95%;
-  margin-bottom: 28px;
-  opacity: 0;
-  transform: translateY(350px);
-}
-
-.number-company .item__text {
-  font-family: "VelaSans-Regular";
-  font-size: 26px;
-  line-height: 100%;
-  opacity: 0;
-  transform: translateY(350px);
-}
-
 .trust__info {
   padding-top: 100px;
 }
 
 .trust__info button {
   cursor: pointer;
+  height: 70px;
+  font-size: 22px;
 }
 
 .trust__info-btn {
@@ -1044,6 +1002,20 @@ body {
 .trust-globe__text-line {
   color: rgba(0, 0, 0, 0.2);
   position: relative;
+}
+
+.trust-globe__text-line:nth-child(2) {
+  text-align: center;
+  .text-reveal {
+    left: 90px;
+  }
+}
+.trust-globe__text-line:nth-child(3) {
+  text-align: right;
+  .text-reveal {
+    right: 0;
+    left: unset;
+  }
 }
 
 .text-reveal {
@@ -1165,14 +1137,6 @@ body {
     margin-top: 72px;
   }
 
-  .number-company__item {
-    padding: 40px 10px 50px 52px;
-  }
-
-  .number-company .item__title {
-    font-size: 140px;
-  }
-
   .trust__info {
     padding-top: 146px;
   }
@@ -1195,9 +1159,6 @@ body {
   .about-us__line {
     left: 50px;
   }
-  .services-wrap {
-    padding-left: 10px;
-  }
   .number-company {
     padding-top: 90px;
   }
@@ -1213,12 +1174,7 @@ body {
   }
 
   .about-us__line {
-    left: 0;
-    transform: translateX(0);
-    height: auto;
-    display: flex;
-    justify-content: center;
-    position: relative;
+    display: none;
   }
 
   .about-us__line-indicator,
@@ -1368,6 +1324,16 @@ body {
     padding-top: 50px;
   }
 
+  .trust__info a {
+    width: 100%;
+  }
+
+  .trust__info button {
+    height: 54px;
+    width: 100%;
+    font-size: 16px;
+  }
+
   .trust__info-text {
     font-size: 16px;
     line-height: 120%;
@@ -1413,6 +1379,7 @@ body {
 
   .promo__banner img {
     border-radius: 32px;
+    width: 100%;
   }
 
   .main__bg {

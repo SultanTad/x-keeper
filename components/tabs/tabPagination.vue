@@ -2,20 +2,85 @@
 import { defineProps } from "vue";
 defineProps({
   pagination: Array,
-  activeTab: Number,
 });
-defineEmits(["set-tab", "mouse-over-tab", "mouse-leave-tab"]);
+
+const activeTab = defineModel("activeTab", { type: Number });
+
+const tabPaginationRef = ref(null);
+const hoverIndex = ref(null);
+
+const setActiveTab = (index) => {
+  activeTab.value = index;
+  hoverIndex.value = null;
+};
+
+const handleMouseOver = (index) => {
+  hoverIndex.value = index;
+  const pagination = tabPaginationRef.value;
+  if (index > activeTab.value) {
+    pagination.style.setProperty("--scaleX", `${1.08}`);
+    pagination.style.setProperty("--transform-origin", "left");
+  }
+  if (index < activeTab.value) {
+    pagination.style.setProperty("--scaleX", `${1.08}`);
+    pagination.style.setProperty("--transform-origin", "right");
+  }
+};
+
+const handleMouseLeave = () => {
+  hoverIndex.value = null;
+  const pagination = tabPaginationRef.value;
+  pagination.style.setProperty("--scaleX", `${1}`);
+  pagination.style.setProperty("--transform-origin", "center");
+};
+
+function updateBackgroundPosition() {
+  const pagination = tabPaginationRef.value;
+  const bullets = pagination.querySelectorAll(".tab__bullet");
+
+  const activeBulletWidth = bullets[activeTab.value].offsetWidth;
+  pagination.style.setProperty("--bullet-width", `${activeBulletWidth}px`);
+
+  let translateX = 0;
+  for (let i = 0; i < activeTab.value; i++) {
+    translateX += bullets[i].offsetWidth + 5;
+  }
+  translateX += 5;
+
+  pagination.style.setProperty("--translate-x", `${translateX}px`);
+}
+
+watch(activeTab, async (newTab) => {
+  await nextTick();
+  const pagination = tabPaginationRef.value;
+  const bullets = pagination.querySelectorAll(".tab__bullet");
+
+  const activeBulletWidth = bullets[newTab].offsetWidth;
+  pagination.style.setProperty("--bullet-width", `${activeBulletWidth}px`);
+
+  let translateX = 0;
+  for (let i = 0; i < newTab; i++) {
+    translateX += bullets[i].offsetWidth;
+  }
+  translateX += 5;
+  pagination.style.setProperty("--translate-x", `${translateX}px`);
+});
+
+onMounted(async () => {
+  await nextTick();
+  updateBackgroundPosition();
+});
 </script>
 <template>
-  <div class="tabInfo__pagination">
+  <div class="tab__pagination" ref="tabPaginationRef">
     <div
-      class="tabInfo__bullet"
+      class="tab__bullet"
       v-for="(bullet, index) in pagination"
       :key="index"
-      :class="{ 'tabInfo__bullet--active': index === activeTab }"
-      @click="$emit('set-tab', index)"
-      @mouseover="$emit('mouse-over-tab', index)"
-      @mouseleave="$emit('mouse-leave-tab')"
+      :class="{ 'tab__bullet--active': index === activeTab }"
+      @click="setActiveTab(index)"
+      @mouseover="handleMouseOver(index)"
+      @mouseleave="handleMouseLeave"
     >
       {{ bullet }}
     </div>
@@ -23,7 +88,7 @@ defineEmits(["set-tab", "mouse-over-tab", "mouse-leave-tab"]);
 </template>
 
 <style lang="scss">
-.tabInfo__pagination {
+.tab__pagination {
   width: max-content;
   height: 54px;
   border-radius: 86px;
@@ -53,7 +118,7 @@ defineEmits(["set-tab", "mouse-over-tab", "mouse-leave-tab"]);
   }
 }
 
-.tabInfo__bullet {
+.tab__bullet {
   border-radius: 55px;
   font-family: "VelaSans-SemiBold";
   font-weight: 600;
@@ -67,6 +132,55 @@ defineEmits(["set-tab", "mouse-over-tab", "mouse-leave-tab"]);
 
   &--active {
     color: #333343;
+  }
+}
+
+@media (max-width: 800px) {
+  .tabProducts {
+    .tab__bullet {
+      padding: 10px 16px;
+      font-size: 15px;
+    }
+  }
+}
+
+@media (max-width: 565px) {
+  .tabProducts {
+    .tab-bullet {
+      font-size: 12px;
+    }
+  }
+  .tabProducts {
+    .tab__pagination {
+      height: 40px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .tabProducts {
+    .tab__pagination {
+      top: 38px;
+    }
+    .tab-bullet {
+      padding: 10px 9px;
+    }
+  }
+  .tab {
+    &__pagination {
+      &::before {
+        content: none;
+        display: none;
+      }
+    }
+    &__bullet {
+      transition: background-color 0.2s;
+      &--active {
+        background-color: #35ec6f;
+        border-radius: 55px;
+        transition: background-color 0.2s;
+      }
+    }
   }
 }
 </style>

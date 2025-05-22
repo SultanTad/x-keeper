@@ -1,18 +1,17 @@
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import SliderBg from "@/assets/images/blurred_red.webp";
-import ProfileBgMobile from "@/assets/images/desk-with-computer.png";
-import ProfileBgDesctop from "@/assets/images/desk-with-computer-desctop-version.png";
 import GrayArrow from "@/assets/images/gray-arrow.svg";
 import WhiteArrow from "@/assets/images/white-arrow.svg";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const windowWidth = ref(process.client ? window.innerWidth : 0);
+// const windowWidth = ref(process.client ? window.innerWidth : 0);
 
-const updateWidth = () => {
-  if (process.client) {
-    windowWidth.value = window.innerWidth;
-  }
-};
+// const updateWidth = () => {
+//   if (process.client) {
+//     windowWidth.value = window.innerWidth;
+//   }
+// };
 
 const paginationText1 = ["Invis Duos 3D L", "Invis Duos S"];
 const paginationText2 = ["автомобили", "грузы"];
@@ -36,7 +35,7 @@ const sliderContent1 = [
       "Без подключения к бортовой сети",
       "Автономная работа не менее трёх лет с учётом типовых требований лизинговых компаний",
       "Самое низкое потребление в классе (0,6 mkA)",
-      "Степень защиты IP65",
+      "Степень защиты IP652",
     ],
   },
 ];
@@ -118,11 +117,6 @@ const productAdvantagesList = [
   "Самое длительное время автономной работы среди аналогичных устройств",
   "Поддержка двух SIM-карт и более (повышение устойчивости работы системы к перебоям сети связи)",
   "от –40 до +85: устойчивость к перепадам температуры",
-  "Три способа позиционирования Wi-FI/LBS/GNSS",
-  "Функция оповещения при смещении устройства в пространстве (демонтаж)",
-  "Герметичность",
-  "Влагостойкость",
-  "Без абонентской платы",
 ];
 const principleList = [
   {
@@ -139,49 +133,71 @@ const principleList = [
   },
 ];
 
-const profileBg = computed(() =>
-  windowWidth.value > 480 ? ProfileBgDesctop : ProfileBgMobile
-);
-onMounted(() => {
-  updateWidth();
-  window.addEventListener("resize", updateWidth);
+const productsAdvantagesActiveIndex = ref(-1);
+
+onBeforeMount(() => {
+  useGSAP().registerPlugin(ScrollTrigger);
 });
 
-onUnmounted(() => {
-  window.removeEventListener("resize", updateWidth);
+onMounted(async () => {
+  await nextTick(() => {
+    if (process.client) {
+      ScrollTrigger.refresh();
+    }
+  });
+
+  ScrollTrigger.create({
+    trigger: "#productsAdvantagesScroll",
+    start: "top +=50",
+    end: "+=2700",
+    pin: true,
+    once: true,
+    onUpdate: (self) => {
+      const progress = self.progress;
+
+      productsAdvantagesActiveIndex.value =
+        progress === 0 ? -1 : Math.floor(progress * 5);
+
+      useGSAP().to("#productsAdvantagesLine", {
+        scaleY: progress,
+        duration: 0,
+      });
+
+      if (progress === 1) {
+        self.disable();
+        nextTick(() => {
+          ScrollTrigger.refresh();
+        });
+      }
+    },
+  });
 });
+
+onUnmounted(() => {});
 </script>
 
 <template>
   <div class="container">
     <section class="products__hero">
       <h2 class="products__hero-title">Маяки X-Keeper</h2>
-      <ProductsSlider
+      <TabProducts
         class="products__hero-slider"
-        :paginationText="paginationText1"
-        :sliderContent="sliderContent1"
-      >
-        <template #content-text>
-          <ul class="swiper-slide__list">
-            <li class="list__item"></li>
-          </ul>
-        </template>
-      </ProductsSlider>
+        :pagination="paginationText1"
+        :slides="sliderContent1"
+      />
     </section>
-    <section class="products__advantages">
+    <section class="products__advantages" id="productsAdvantagesScroll">
       <div class="products__advantages-inner">
         <h3 class="products__advantages-title">Преимущества</h3>
         <div class="products__advantages-content">
-          <p class="products__advantages-text">
-            Маяки X-KEEPER — это гарантия надёжности и эффективности в области
-            спутникового (GNSS) мониторинга. Мы используем передовые материалы и
-            компоненты, что позволяет маякам X-KEEPER работать в любых условиях,
-            будь то городская среда или районы с экстремальными погодными
-            условиями.Гаражи, подземные парковки, лесная или горная местность,
-            пустыня или водное пространство — наши маяки работают везде
-          </p>
           <div class="products__advantages-animation">
-            <div class="line"></div>
+            <div class="products__advantages-line">
+              <div
+                id="productsAdvantagesLine"
+                class="products__advantages-line-indicator"
+              />
+              <div class="products__advantages-line-background" />
+            </div>
             <ul class="products__advantages-list">
               <li
                 class="products__advantages-list__item"
@@ -198,11 +214,7 @@ onUnmounted(() => {
 
     <section class="theft-protection">
       <h2 class="theft-protection__title">Защита от угона</h2>
-      <ProductsSlider
-        class="products__hero-slider"
-        :paginationText="paginationText2"
-        :sliderContent="sliderContent2"
-      />
+      <TabProducts :pagination="paginationText2" :slides="sliderContent2" />
     </section>
 
     <section class="geo-location">
@@ -217,9 +229,7 @@ onUnmounted(() => {
     </section>
 
     <section class="profile">
-      <div
-        class="profile__bg"
-      >
+      <div class="profile__bg">
         <NuxtLink
           ><Button green class="btn--profile"
             ><span>демо личного кабинета</span>
@@ -246,10 +256,7 @@ onUnmounted(() => {
 
     <section class="technical-parameters">
       <h3 class="technical-parameters__title">Технические параметры</h3>
-      <ProductsSlider
-        :paginationText="paginationText1"
-        :sliderContent="sliderContent3"
-      />
+      <TabProducts :pagination="paginationText1" :slides="sliderContent3" />
     </section>
 
     <section class="documentation">
@@ -319,16 +326,34 @@ onUnmounted(() => {
   &-list__item::marker {
     font-size: 10px;
   }
-  .line {
-    height: auto;
+  &-line {
+    position: absolute;
+    top: 0;
+    left: auto;
     width: 2px;
-    background: #333343;
-    margin-right: 45px;
-    opacity: 0.5;
-    transition: opacity 0.5s ease;
+    height: 100%;
+    transform: translateX(-50px);
+  }
+
+  &-line-indicator {
+    width: 2px;
+    background-color: #333343;
+    height: 100%;
+    transform-origin: top;
+    transform: scaleY(0);
+    position: absolute;
+  }
+
+  &-line-background {
+    width: 2px;
+    background-color: #000;
+    height: 100%;
+    transform-origin: top;
+    opacity: 0.2;
   }
   &-animation {
     display: flex;
+    position: relative;
   }
 }
 
@@ -349,6 +374,7 @@ onUnmounted(() => {
   &__inner {
     display: flex;
     justify-content: space-between;
+    color: #333343;
   }
   &__title {
     font-family: "VelaSans-ExtraBold";

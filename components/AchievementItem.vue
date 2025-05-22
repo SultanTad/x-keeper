@@ -4,6 +4,7 @@ import Vue3Autocounter from "vue3-autocounter";
 import { useEventBus } from "@vueuse/core";
 
 const windowWidth = ref(0);
+const achievementsItemRef = ref(null);
 
 const updateWidth = () => {
   if (process.client) {
@@ -19,7 +20,7 @@ const props = defineProps({
 });
 
 const animatedNumber = ref(1);
-const bus = useEventBus("scrollTriggerReady");
+const bus = useEventBus("scrollTriggerAchievement");
 
 onBeforeMount(() => {
   useGSAP().registerPlugin(ScrollTrigger);
@@ -27,17 +28,18 @@ onBeforeMount(() => {
 
 onMounted(async () => {
   await nextTick();
+  ScrollTrigger.refresh();
   updateWidth();
   window.addEventListener("resize", updateWidth);
   bus.on(() => {
     if (windowWidth.value > 1180) {
       ScrollTrigger.create({
-        trigger: ".number-company__title",
-        start: "top +=100",
+        trigger: achievementsItemRef.value,
+        start: "top +=160",
         end: "+=600",
-        onEnter: (self) => {
-          console.log("start");
-          useGSAP().to(".number-company__item > *", {
+        once: true,
+        onEnter: () => {
+          useGSAP().to(achievementsItemRef.value.children, {
             y: 0,
             opacity: 1,
             duration: 1,
@@ -56,8 +58,8 @@ onUnmounted(() => {
 });
 </script>
 <template>
-  <div class="number-company__item">
-    <h3 class="item__title" v-if="windowWidth > 1180">
+  <div class="achievements__item" ref="achievementsItemRef">
+    <p class="item__title" v-if="windowWidth > 1180">
       <vue3-autocounter
         ref="counter"
         :startAmount="1"
@@ -65,51 +67,40 @@ onUnmounted(() => {
         :duration="1.5"
         :decimals="decimals"
       />{{ titleText }}
-    </h3>
-    <h3 class="item__title" v-if="windowWidth < 1180">
+    </p>
+    <p class="item__title" v-if="windowWidth < 1180">
       {{ number }}{{ titleText }}
-    </h3>
+    </p>
     <p class="item__text">{{ text }}</p>
   </div>
 </template>
 
 <style lang="scss">
-.number-company {
+.achievements {
   &__item {
-    border: 1px solid rgba(51, 51, 67, 0.4);
-    border-radius: 80px;
-    padding: 25px 10px 37px 32px;
     overflow: hidden;
-  }
-  .item__title {
-    font-family: "VelaSans-Light";
-    font-weight: 300;
-    font-size: 90px;
-    line-height: 95%;
-    margin-bottom: 28px;
-    opacity: 0;
-    transform: translateY(350px);
-  }
-  .item__text {
-    font-family: "VelaSans-Regular";
-    font-size: 26px;
-    line-height: 100%;
-    opacity: 0;
-    transform: translateY(350px);
-  }
-}
-@media (min-width: 1550px) {
-  .number-company__item {
-    padding: 40px 10px 50px 52px;
-  }
-
-  .number-company .item__title {
-    font-size: 140px;
+    .item__title {
+      font-family: "VelaSans-Light";
+      font-weight: 300;
+      font-size: 65px;
+      line-height: 95%;
+      opacity: 0;
+      transform: translateY(350px);
+    }
+    .item__text {
+      font-family: "VelaSans-Medium";
+      font-weight: 500;
+      font-size: 17px;
+      line-height: normal;
+      padding-bottom: 20px;
+      opacity: 0;
+      transform: translateY(350px);
+    }
   }
 }
-@media (max-width: 480px) {
-  .number-company .item__title,
-  .number-company .item__text {
+@media (max-width: 1150px) {
+  .achievements .item__title,
+  .achievements .item__text {
     transform: translateY(0);
     opacity: 1;
   }

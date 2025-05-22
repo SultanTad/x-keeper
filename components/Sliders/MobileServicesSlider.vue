@@ -10,8 +10,7 @@ import { Pagination, Mousewheel } from "swiper/modules";
     :pagination="{
       type: 'progressbar',
     }"
-    :slides-offset-before="slidesOffsetBefore"
-    :slides-per-view="slidesPerView"
+    :slides-per-view="1.3"
     :space-between="14"
     :mousewheel="true"
     :modules="[Pagination, Mousewheel]"

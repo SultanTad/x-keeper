@@ -7,6 +7,7 @@ const openBurger = ref(false);
 const openMenu = ref(false);
 const route = useRoute();
 const activeHeader = ref(false);
+const deactiveHeaderBgScroll = ref(false);
 
 const activatedBurgerMenu = () => {
   if (document.body.style.overflow === "hidden") {
@@ -16,12 +17,14 @@ const activatedBurgerMenu = () => {
   }
   openBurger.value = !openBurger.value;
   openMenu.value = !openMenu.value;
+  deactiveHeaderBgScroll.value = !deactiveHeaderBgScroll.value;
 };
 
 const closeMenu = () => {
   if (window.innerWidth <= 800 && (openBurger.value || openMenu.value)) {
     openBurger.value = false;
     openMenu.value = false;
+    deactiveHeaderBgScroll.value = false;
     document.body.style.overflow = "";
   }
 };
@@ -60,7 +63,7 @@ watch(
 </script>
 
 <template>
-  <header class="header">
+  <header class="header" :class="{ deactive: deactiveHeaderBgScroll }">
     <div class="container">
       <nav class="nav">
         <NuxtLink to="/" v-if="route.path === '/'"
@@ -122,28 +125,28 @@ watch(
           @click="activatedBurgerMenu"
         ></div>
       </nav>
-      <div class="mobile__menu" :class="{ open__menu: openMenu }">
-        <ul class="mobile__menu-list">
-          <li class="mobile__menu-item">
-            <NuxtLink to="/products">Продукция</NuxtLink>
-          </li>
-          <li class="mobile__menu-item">
-            <NuxtLink to="/business-solutions">Решения для бизнеса</NuxtLink>
-          </li>
-        </ul>
-        <div class="mobile__menu-btns">
-          <NuxtLink to="/drop-message">
-            <Button green>оставить заявку</Button>
-          </NuxtLink>
-          <NuxtLink>
-            <Button white class="grey-btn" :link="'/drop-message'"
-              >личный кабинет</Button
-            >
-          </NuxtLink>
-        </div>
-      </div>
     </div>
   </header>
+  <div class="mobile__menu" :class="{ open__menu: openMenu }">
+    <ul class="mobile__menu-list">
+      <li class="mobile__menu-item">
+        <NuxtLink to="/products">Продукция</NuxtLink>
+      </li>
+      <li class="mobile__menu-item">
+        <NuxtLink to="/business-solutions">Решения для бизнеса</NuxtLink>
+      </li>
+    </ul>
+    <div class="mobile__menu-btns">
+      <NuxtLink to="/drop-message">
+        <Button green>оставить заявку</Button>
+      </NuxtLink>
+      <NuxtLink>
+        <Button white class="grey-btn" :link="'/drop-message'"
+          >личный кабинет</Button
+        >
+      </NuxtLink>
+    </div>
+  </div>
 </template>
 
 <style lang="scss">
@@ -168,6 +171,11 @@ watch(
   height: 80px;
   z-index: 10000;
   background: transparent;
+  &.deactive {
+    background: unset !important;
+    backdrop-filter: unset !important;
+    transition: background 0.4s, backdrop-filter 0.4s;
+  }
 }
 .nav {
   display: flex;
@@ -251,6 +259,7 @@ watch(
   background: rgba(255, 255, 255, 0.59);
   backdrop-filter: blur(53.3px);
   -webkit-backdrop-filter: blur(53.3px);
+  z-index: 1000;
   position: fixed;
   top: 0;
   left: 0;
