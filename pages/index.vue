@@ -1059,6 +1059,9 @@ onUnmounted(() => {
   .trust__info {
     padding-top: 146px;
   }
+  .marquee ul {
+    min-width: 76%;
+  }
 }
 
 @media (max-width: 1220px) {

@@ -1,10 +1,11 @@
 <script setup>
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Vue3Autocounter from "vue3-autocounter";
+import { useAnimationStore } from "~/store/animationPlayedStore";
 
 const windowWidth = ref(0);
 const achievementsItemRef = ref(null);
-
+const stopAnimation = useAnimationStore();
 
 const updateWidth = () => {
   if (process.client) {
@@ -26,29 +27,57 @@ onBeforeMount(() => {
 });
 
 onMounted(async () => {
-  await nextTick();
-  ScrollTrigger.refresh();
+  await nextTick(() => {
+    if (process.client) {
+      ScrollTrigger.refresh();
+    }
+  });
   updateWidth();
   window.addEventListener("resize", updateWidth);
-  if (windowWidth.value > 1180) {
-    ScrollTrigger.create({
-      trigger: achievementsItemRef.value,
-      start: "top +=160",
-      end: "+=600",
-      once: true,
-      onEnter: () => {
-        useGSAP().to(achievementsItemRef.value.children, {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          onComplete: () => {
-            animatedNumber.value = props.number;
-          },
-        });
-      },
-    });
-  }
+  // if (windowWidth.value > 1180 && stopAnimation.queueAnimation) {
+  //   ScrollTrigger.create({
+  //     trigger: achievementsItemRef.value,
+  //     start: "top +=160",
+  //     end: "+=600",
+  //     once: true,
+  //     markers: true,
+  //     onEnter: () => {
+  //       useGSAP().to(achievementsItemRef.value.children, {
+  //         y: 0,
+  //         opacity: 1,
+  //         duration: 1,
+  //         onComplete: () => {
+  //           animatedNumber.value = props.number;
+  //         },
+  //       });
+  //     },
+  //   });
+  // }
 });
+
+watch(
+  () => stopAnimation.queueAnimation,
+  (newVal) => {
+    if (newVal && windowWidth.value > 1180) {
+      ScrollTrigger.create({
+        trigger: achievementsItemRef.value,
+        start: "top +=160",
+        end: "+=600",
+        once: true,
+        onEnter: () => {
+          useGSAP().to(achievementsItemRef.value.children, {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            onComplete: () => {
+              animatedNumber.value = props.number;
+            },
+          });
+        },
+      });
+    }
+  }
+);
 onUnmounted(() => {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   window.removeEventListener("resize", updateWidth);

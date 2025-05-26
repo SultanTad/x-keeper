@@ -2,11 +2,13 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { onMounted, ref } from "vue";
+import { useAnimationStore } from "~/store/animationPlayedStore";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const historyActiveIndex = ref(-1);
 const windowWidth = ref(0);
+const stopAnimation = useAnimationStore();
 
 const updateWidth = () => {
   if (typeof window !== "undefined") {
@@ -27,7 +29,12 @@ onBeforeMount(() => {
   window.addEventListener("resize", updateWidth);
 });
 
-onMounted(() => {
+onMounted(async () => {
+  await nextTick(() => {
+    if (process.client) {
+      ScrollTrigger.refresh();
+    }
+  });
   if (windowWidth.value > 1180) {
     ScrollTrigger.create({
       trigger: "#historyScrollTrigger",
@@ -42,6 +49,7 @@ onMounted(() => {
 
         if (progress === 1) {
           self.disable();
+          stopAnimation.queueAnimation = true;
           nextTick(() => {
             ScrollTrigger.refresh();
           });
@@ -200,7 +208,9 @@ onUnmounted(() => {
       <MobileServicesSlider />
       <div class="container">
         <div class="services__link-btn">
-          <NuxtLink><Button green>оставить заявку</Button></NuxtLink>
+          <NuxtLink to="/drop-message"
+            ><Button green>оставить заявку</Button></NuxtLink
+          >
         </div>
       </div>
     </section>

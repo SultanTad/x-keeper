@@ -5,6 +5,7 @@ export const useAnimationStore = defineStore('activeAnimation', {
     return {
         animationPlayed: false,
         delayedAnimation: false,
+        queueAnimation: false,
     }
   }
 })

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import MonitorImg from "@/assets/images/monitor.png";
 import "v-slick-carousel/style.css";
 import { VSlickCarousel } from "v-slick-carousel";
@@ -8,7 +8,6 @@ const currentSlide = ref(0);
 
 const updateActiveSlide = (current, next) => {
   currentSlide.value = next;
-  console.log(currentSlide.value);
 };
 
 const settings = {
@@ -61,10 +60,6 @@ const getSlideClass = (index) => {
   if (index === (currentSlide.value + 1) % slides.length) return "next-slide";
   return "hidden-slide";
 };
-
-onMounted(() => {
-  console.log(currentSlide.value);
-});
 </script>
 <template>
   <div class="slider-container">

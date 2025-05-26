@@ -280,7 +280,7 @@ onUnmounted(() => {
         ></NuxtLink>
       </div>
       <div class="documentation__request">
-        <NuxtLink><Button green>оставить заявку</Button></NuxtLink>
+        <NuxtLink to="/drop-message"><Button green>оставить заявку</Button></NuxtLink>
       </div>
     </section>
   </div>

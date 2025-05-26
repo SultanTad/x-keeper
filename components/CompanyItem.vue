@@ -35,8 +35,7 @@ onMounted(async () => {
         trigger: ".number-company__title",
         start: "top +=100",
         end: "+=600",
-        onEnter: (self) => {
-          console.log("start");
+        onEnter: () => {
           useGSAP().to(".number-company__item > *", {
             y: 0,
             opacity: 1,
