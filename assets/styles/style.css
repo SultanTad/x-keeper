@@ -226,11 +226,14 @@ img {
   padding: 0 10px;
 }
 
-@media (max-width: 480px) {
-  .container,
-  .mini-container {
-    padding: 0 16px;
-  }
+.wrapper {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex-grow: 1;
 }
 
 @media (min-width: 1600px) {
@@ -242,12 +245,15 @@ img {
   }
 }
 
-.wrapper {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
+@media (max-width: 1550px) {
+  .container {
+    max-width: 1220px;
+  }
 }
 
-.main {
-  flex-grow: 1;
+@media (max-width: 480px) {
+  .container,
+  .mini-container {
+    padding: 0 16px;
+  }
 }

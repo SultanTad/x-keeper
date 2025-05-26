@@ -100,7 +100,7 @@ const activeTab = ref(0);
 }
 
 @media (max-width: 800px) {
-  .tabInfo_-content {
+  .tabInfo__content {
     &-title {
       font-size: 50px;
     }
@@ -110,8 +110,10 @@ const activeTab = ref(0);
   }
 }
 @media (max-width: 700px) {
-  .tabInfo__bullet {
-    font-size: 15px;
+  .tabInfo {
+    .tab__bullet {
+      font-size: 15px;
+    }
   }
   .tabInfo__content {
     &-icon {
@@ -128,8 +130,10 @@ const activeTab = ref(0);
 }
 
 @media (max-width: 600px) {
-  .tabInfo__bullet {
-    padding: 10px 16px;
+  .tabInfo {
+    .tab__bullet {
+      padding: 10px 16px;
+    }
   }
   .info-slider--0 {
     .tabInfo__content {
@@ -142,11 +146,15 @@ const activeTab = ref(0);
   .tabInfo {
     border-radius: 32px;
   }
-  .tabInfo__bullet {
-    font-size: 12px;
+  .tabInfo {
+    .tab__bullet {
+      font-size: 12px;
+    }
   }
-  .tabInfo__pagination {
-    height: 40px;
+  .tabInfo {
+    .tab__pagination {
+      height: 40px;
+    }
   }
   .tabInfo__content {
     border-radius: 32px;
@@ -164,8 +172,10 @@ const activeTab = ref(0);
 
 @media (max-width: 440px) {
   .info-slider--1 {
-    .tabInfo__pagination {
-      width: 210px;
+    .tabInfo {
+      .tab__pagination {
+        width: 210px;
+      }
     }
   }
 }

@@ -2,13 +2,11 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { onMounted, ref } from "vue";
-import { useEventBus } from "@vueuse/core";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const historyActiveIndex = ref(-1);
 const windowWidth = ref(0);
-const bus = useEventBus("scrollTriggerAchievement");
 
 const updateWidth = () => {
   if (typeof window !== "undefined") {
@@ -44,7 +42,6 @@ onMounted(() => {
 
         if (progress === 1) {
           self.disable();
-          bus.emit();
           nextTick(() => {
             ScrollTrigger.refresh();
           });

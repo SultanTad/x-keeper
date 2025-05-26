@@ -2,7 +2,9 @@
 import { ref, onBeforeMount, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useAnimationStore } from "~/store/animationPlayedStore";
 
+const stopAnimation = useAnimationStore();
 const openBurger = ref(false);
 const openMenu = ref(false);
 const route = useRoute();
@@ -34,24 +36,32 @@ onBeforeMount(() => {
 });
 
 onMounted(() => {
-  activeHeader.value = false;
-  ScrollTrigger.create({
-    trigger: "body",
-    start: "top top",
-    end: "50px top",
-    scrub: true,
-    onUpdate: () => {
-      useGSAP().to(".header", {
-        background: "rgba(255, 255, 255, 0.70)",
-        backdropFilter: "blur(27px)",
-        ease: "none",
+  if (route.path !== "/") {
+    stopAnimation.delayedAnimation = true;
+  }
+});
+
+watch(
+  () => stopAnimation.delayedAnimation,
+  (newVal) => {
+    if (newVal) {
+      ScrollTrigger.create({
+        trigger: "body",
+        start: "top top",
+        end: "50px top",
+        scrub: true,
+        onUpdate: () => {
+          useGSAP().to(".header", {
+            background: "rgba(255, 255, 255, 0.70)",
+            backdropFilter: "blur(27px)",
+            ease: "none",
+          });
+        },
       });
-    },
-  });
-});
-onUnmounted(() => {
-  ScrollTrigger.killAll();
-});
+    }
+  },
+  { immediate: true }
+);
 
 watch(
   () => route.path,

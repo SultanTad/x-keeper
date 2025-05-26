@@ -189,8 +189,11 @@ const activeTab = ref(0);
 
 @media (min-width: 1550px) {
   .tabProducts {
+    height: 725px;
     &__content {
-      height: 725px;
+      &--active {
+        height: 725px;
+      }
       &-title {
         font-size: 50px;
         margin-bottom: 48px;
@@ -225,9 +228,7 @@ const activeTab = ref(0);
 
 @media (max-width: 800px) {
   .tabProducts {
-    &__content {
-      border-radius: 32px;
-    }
+    border-radius: 32px;
   }
 }
 

@@ -32,7 +32,118 @@
   </div>
 </template>
 
-<style>
+<script setup>
+import { gsap } from "gsap";
+import { useAnimationStore } from "~/store/animationPlayedStore";
+
+const stopAnimation = useAnimationStore();
+
+onMounted(() => {
+  if (!stopAnimation.animationPlayed) {
+    const scrollBarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.paddingRight = `${scrollBarWidth}px`;
+    document.body.classList.add("no-scroll");
+    const mainLogo = document.querySelector(".main-logo");
+    const loadingLogo = document.querySelector("#loading-logo");
+    const loadingLineContainer = document.querySelector(
+      ".loading-line-container"
+    );
+    const loadingLine = document.querySelector("#loading-line");
+    const loadingText = document.querySelector("#loading-text");
+    const navInner = document.querySelector(".nav__inner");
+    const loading = document.querySelector(".loading");
+
+    if (loadingLogo && loadingLine && loading) {
+      const mainLogoBounds = mainLogo.getBoundingClientRect();
+      const tl = gsap.timeline({
+        onComplete: () => {
+          document.body.classList.remove("no-scroll");
+          document.body.style.paddingRight = "";
+          stopAnimation.animationPlayed = true;
+          stopAnimation.delayedAnimation = true;
+        },
+      });
+
+      tl.to(
+        "#loading-line",
+        {
+          width: "357px",
+          duration: 2.5,
+          ease: "none",
+          transformOrigin: "left",
+        },
+        0
+      )
+        .to(
+          loadingLogo,
+          {
+            top: mainLogoBounds.y,
+            left: mainLogoBounds.x,
+            x: 0,
+            y: 0,
+            scale: 1,
+            duration: 2,
+            onComplete: () => {
+              loadingLogo.remove();
+            },
+          },
+          2.5
+        )
+        .to(
+          mainLogo,
+          {
+            opacity: 1,
+            duration: 0,
+          },
+          4.5
+        )
+        .to(
+          loading,
+          {
+            y: "-100%",
+            delay: 1,
+          },
+          5
+        )
+        .to(
+          navInner,
+          {
+            y: 0,
+            delay: 0.4,
+          },
+          4.5
+        )
+        .to(
+          "#loading-text",
+          {
+            opacity: 0,
+            scale: 1.1,
+            delay: 0.5,
+            onComplete: () => {
+              loadingText.remove();
+            },
+          },
+          2.6
+        )
+        .to(
+          "#loading-line",
+          {
+            opacity: 0,
+            delay: 0.3,
+            onComplete: () => {
+              loadingLine.remove();
+              loadingLineContainer.remove();
+            },
+          },
+          3.2
+        );
+    }
+  }
+});
+</script>
+
+<style lang="scss">
 body.no-scroll {
   overflow: hidden;
   touch-action: none;
@@ -50,13 +161,13 @@ body.no-scroll {
 
 #loading-logo {
   position: absolute;
-  top: 30%;
+  top: 40%;
   scale: 5.3;
   z-index: 10000;
 }
 #loading-text {
   position: absolute;
-  top: 50%;
+  top: 60%;
   font-family: "VelaSans-Medium";
   font-weight: 500;
   font-size: 38px;
@@ -67,7 +178,7 @@ body.no-scroll {
 }
 .loading-line-container {
   position: absolute;
-  top: 55%;
+  bottom: 110px;
   width: 357px;
   margin-top: 253px;
   left: 50%;
@@ -82,22 +193,25 @@ body.no-scroll {
 }
 @media (min-width: 1550px) {
   #loading-logo {
-    top: 38%;
+    top: 44%;
     scale: 4.3;
   }
   #loading-text {
-    top: 55%;
+    top: 58%;
   }
-  .loading-line-container {
-    top: 75%;
-  }
+  
 }
 @media (max-width: 480px) {
   #loading-logo {
     scale: 3;
+    width: 30px;
+    height: 21px;
   }
   #loading-text {
     font-size: 22px;
+  }
+  .loading-line-container {
+    bottom: 50px;
   }
 }
 </style>

@@ -31,6 +31,7 @@ const trustInfoList = [
 ];
 
 const windowWidth = ref(0);
+const isMounted = ref(false);
 
 const updateWidth = () => {
   if (typeof window !== "undefined") {
@@ -161,11 +162,13 @@ watch(
 );
 
 onMounted(async () => {
+  isMounted.value = true;
   await nextTick(() => {
     if (process.client) {
       ScrollTrigger.refresh();
     }
   });
+
   const tabInfos = document.querySelectorAll(".tabInfo");
 
   if (windowWidth.value > 1180) {
@@ -298,103 +301,6 @@ onMounted(async () => {
       }
     },
   });
-
-  if (!notMainPageFirst.animationPlayed) {
-    document.body.classList.add("no-scroll");
-    const mainLogo = document.querySelector(".main-logo");
-    const loadingLogo = document.querySelector("#loading-logo");
-    const loadingLineContainer = document.querySelector(
-      ".loading-line-container"
-    );
-    const loadingLine = document.querySelector("#loading-line");
-    const loadingText = document.querySelector("#loading-text");
-    const navInner = document.querySelector(".nav__inner");
-    const loading = document.querySelector(".loading");
-
-    if (loadingLogo && loadingLine && loading) {
-      const mainLogoBounds = mainLogo.getBoundingClientRect();
-      const tl = gsap.timeline({
-        onComplete: () => {
-          document.body.classList.remove("no-scroll");
-          notMainPageFirst.animationPlayed = true;
-        },
-      });
-
-      tl.to(
-        "#loading-line",
-        {
-          width: "357px",
-          duration: 2.5,
-          ease: "none",
-          transformOrigin: "left",
-        },
-        0
-      )
-        .to(
-          loadingLogo,
-          {
-            top: mainLogoBounds.y,
-            left: mainLogoBounds.x,
-            x: 0,
-            y: 0,
-            scale: 1,
-            duration: 2,
-            onComplete: () => {
-              loadingLogo.remove();
-            },
-          },
-          2.5
-        )
-        .to(
-          mainLogo,
-          {
-            opacity: 1,
-            duration: 0,
-          },
-          4.5
-        )
-        .to(
-          loading,
-          {
-            y: "-100%",
-            delay: 1,
-          },
-          5
-        )
-        .to(
-          navInner,
-          {
-            y: 0,
-            delay: 0.4,
-          },
-          4.5
-        )
-        .to(
-          "#loading-text",
-          {
-            opacity: 0,
-            scale: 1.1,
-            delay: 0.5,
-            onComplete: () => {
-              loadingText.remove();
-            },
-          },
-          2.6
-        )
-        .to(
-          "#loading-line",
-          {
-            opacity: 0,
-            delay: 0.3,
-            onComplete: () => {
-              loadingLine.remove();
-              loadingLineContainer.remove();
-            },
-          },
-          3.2
-        );
-    }
-  }
 });
 onUnmounted(() => {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
@@ -495,6 +401,7 @@ onUnmounted(() => {
                 >
                   <div
                     class="about-us__service"
+                    v-if="isMounted"
                     :style="{
                       opacity:
                         windowWidth < 768 || aboutUsActiveIndex >= index
@@ -823,6 +730,7 @@ onUnmounted(() => {
 .about-us {
   padding-top: 200px;
   color: #333343;
+  width: 100%;
   &__animation-wrap {
     display: flex;
     position: relative;
@@ -845,7 +753,7 @@ onUnmounted(() => {
 
 .about-us__text {
   font-family: "VelaSans-Light";
-  font-size: 32px;
+  font-size: 25px;
   line-height: 125%;
   max-width: 588px;
   font-weight: 300;
@@ -880,12 +788,12 @@ onUnmounted(() => {
 .about-us__services {
   display: flex;
   flex-direction: column;
-  max-width: 576px;
+  max-width: 540px;
 }
 
 .about-us .service-block {
   position: relative;
-  padding-bottom: 35px;
+  padding-bottom: 30px;
 }
 
 .about-us .service-block:last-child {
@@ -895,7 +803,7 @@ onUnmounted(() => {
 .about-us__service {
   font-family: "VelaSans-ExtraBold";
   font-weight: 800;
-  font-size: 26px;
+  font-size: 24px;
   line-height: 120%;
   opacity: 0.2;
   transition: opacity 0.3s ease-in-out;
@@ -1049,7 +957,6 @@ onUnmounted(() => {
   flex-shrink: 0;
   min-width: 100%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   gap: var(--gap);
   transform: translateX(calc(-100% - var(--gap)));
@@ -1123,6 +1030,18 @@ onUnmounted(() => {
   .promo__text {
     margin-bottom: 108px;
     font-size: 20px;
+  }
+
+  .about-us__text {
+    font-size: 32px;
+  }
+
+  .about-us__services {
+    max-width: 576px;
+  }
+
+  .about-us__service {
+    font-size: 26px;
   }
 
   .about-us .service-block {

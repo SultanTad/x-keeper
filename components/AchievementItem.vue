@@ -1,10 +1,10 @@
 <script setup>
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Vue3Autocounter from "vue3-autocounter";
-import { useEventBus } from "@vueuse/core";
 
 const windowWidth = ref(0);
 const achievementsItemRef = ref(null);
+
 
 const updateWidth = () => {
   if (process.client) {
@@ -20,7 +20,6 @@ const props = defineProps({
 });
 
 const animatedNumber = ref(1);
-const bus = useEventBus("scrollTriggerAchievement");
 
 onBeforeMount(() => {
   useGSAP().registerPlugin(ScrollTrigger);
@@ -31,26 +30,24 @@ onMounted(async () => {
   ScrollTrigger.refresh();
   updateWidth();
   window.addEventListener("resize", updateWidth);
-  bus.on(() => {
-    if (windowWidth.value > 1180) {
-      ScrollTrigger.create({
-        trigger: achievementsItemRef.value,
-        start: "top +=160",
-        end: "+=600",
-        once: true,
-        onEnter: () => {
-          useGSAP().to(achievementsItemRef.value.children, {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            onComplete: () => {
-              animatedNumber.value = props.number;
-            },
-          });
-        },
-      });
-    }
-  });
+  if (windowWidth.value > 1180) {
+    ScrollTrigger.create({
+      trigger: achievementsItemRef.value,
+      start: "top +=160",
+      end: "+=600",
+      once: true,
+      onEnter: () => {
+        useGSAP().to(achievementsItemRef.value.children, {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          onComplete: () => {
+            animatedNumber.value = props.number;
+          },
+        });
+      },
+    });
+  }
 });
 onUnmounted(() => {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());

@@ -5,13 +5,13 @@ import GrayArrow from "@/assets/images/gray-arrow.svg";
 import WhiteArrow from "@/assets/images/white-arrow.svg";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// const windowWidth = ref(process.client ? window.innerWidth : 0);
+const windowWidth = ref(0);
 
-// const updateWidth = () => {
-//   if (process.client) {
-//     windowWidth.value = window.innerWidth;
-//   }
-// };
+const updateWidth = () => {
+  if (process.client) {
+    windowWidth.value = window.innerWidth;
+  }
+};
 
 const paginationText1 = ["Invis Duos 3D L", "Invis Duos S"];
 const paginationText2 = ["автомобили", "грузы"];
@@ -137,6 +137,8 @@ const productsAdvantagesActiveIndex = ref(-1);
 
 onBeforeMount(() => {
   useGSAP().registerPlugin(ScrollTrigger);
+  updateWidth();
+  window.addEventListener("resize", updateWidth);
 });
 
 onMounted(async () => {
@@ -145,35 +147,39 @@ onMounted(async () => {
       ScrollTrigger.refresh();
     }
   });
+  if (windowWidth.value > 1180) {
+    ScrollTrigger.create({
+      trigger: "#productsAdvantagesScroll",
+      start: "top +=50",
+      end: "+=2700",
+      pin: true,
+      once: true,
+      onUpdate: (self) => {
+        const progress = self.progress;
 
-  ScrollTrigger.create({
-    trigger: "#productsAdvantagesScroll",
-    start: "top +=50",
-    end: "+=2700",
-    pin: true,
-    once: true,
-    onUpdate: (self) => {
-      const progress = self.progress;
+        productsAdvantagesActiveIndex.value =
+          progress === 0 ? -1 : Math.floor(progress * 5);
 
-      productsAdvantagesActiveIndex.value =
-        progress === 0 ? -1 : Math.floor(progress * 5);
-
-      useGSAP().to("#productsAdvantagesLine", {
-        scaleY: progress,
-        duration: 0,
-      });
-
-      if (progress === 1) {
-        self.disable();
-        nextTick(() => {
-          ScrollTrigger.refresh();
+        useGSAP().to("#productsAdvantagesLine", {
+          scaleY: progress,
+          duration: 0,
         });
-      }
-    },
-  });
+
+        if (progress === 1) {
+          self.disable();
+          nextTick(() => {
+            ScrollTrigger.refresh();
+          });
+        }
+      },
+    });
+  }
 });
 
-onUnmounted(() => {});
+onUnmounted(() => {
+  ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+  window.removeEventListener("resize", updateWidth);
+});
 </script>
 
 <template>
@@ -307,7 +313,7 @@ onUnmounted(() => {});
     line-height: 125%;
   }
   &-content {
-    max-width: 669px;
+    max-width: 600px;
     height: 100%;
   }
   &-text {
@@ -319,12 +325,12 @@ onUnmounted(() => {});
   }
   &-list__item {
     font-family: "VelaSans-ExtraBold";
-    font-size: 26px;
+    font-size: 24px;
     line-height: 164%;
     list-style-type: disc;
   }
   &-list__item::marker {
-    font-size: 10px;
+    font-size: 11px;
   }
   &-line {
     position: absolute;
@@ -538,6 +544,14 @@ onUnmounted(() => {});
       font-size: 26px;
     }
   }
+  .products__advantages {
+    &-content {
+      max-width: 669px;
+    }
+    &-list__item {
+      font-size: 26px;
+    }
+  }
   .theft-protection {
     padding-top: 150px;
   }
@@ -567,7 +581,7 @@ onUnmounted(() => {});
 
 @media (min-width: 1024px) {
   .profile__bg {
-    background-image: url("/_nuxt/assets/images/desk-with-computer-desctop-version.png");
+    background-image: url("../assets/images/desk-with-computer-desctop-version.png");
   }
 }
 
