@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onBeforeMount, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useAnimationStore } from "~/store/animationPlayedStore";
 
 const stopAnimation = useAnimationStore();
@@ -10,6 +9,7 @@ const openMenu = ref(false);
 const route = useRoute();
 const activeHeader = ref(false);
 const deactiveHeaderBgScroll = ref(false);
+const nuxtApp = useNuxtApp();
 
 const activatedBurgerMenu = () => {
   if (document.body.style.overflow === "hidden") {
@@ -31,37 +31,32 @@ const closeMenu = () => {
   }
 };
 
-onBeforeMount(() => {
-  useGSAP().registerPlugin(ScrollTrigger);
-});
-
 onMounted(() => {
   if (route.path !== "/") {
     stopAnimation.delayedAnimation = true;
   }
 });
 
-watch(
-  () => stopAnimation.delayedAnimation,
-  (newVal) => {
-    if (newVal) {
-      ScrollTrigger.create({
-        trigger: "body",
-        start: "top top",
-        end: "50px top",
-        scrub: true,
-        onUpdate: () => {
-          useGSAP().to(".header", {
-            background: "rgba(255, 255, 255, 0.70)",
-            backdropFilter: "blur(27px)",
-            ease: "none",
-          });
-        },
-      });
-    }
-  },
-  { immediate: true }
-);
+// watch(
+//   () => stopAnimation.delayedAnimation,
+//   (newVal) => {
+//     if (newVal) {
+//       nuxtApp.$ScrollTrigger.create({
+//         trigger: "body",
+//         start: "top top",
+//         end: "50px top",
+//         scrub: true,
+//         onUpdate: () => {
+//           useGSAP().to(".header", {
+//             background: "rgba(255, 255, 255, 0.70)",
+//             backdropFilter: "blur(27px)",
+//             ease: "none",
+//           });
+//         },
+//       });
+//     }
+//   }
+// );
 
 watch(
   () => route.path,

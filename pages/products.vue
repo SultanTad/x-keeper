@@ -1,11 +1,11 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, watch } from "vue";
 import SliderBg from "@/assets/images/blurred_red.webp";
 import GrayArrow from "@/assets/images/gray-arrow.svg";
 import WhiteArrow from "@/assets/images/white-arrow.svg";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const windowWidth = ref(0);
+const nuxtApp = useNuxtApp();
 
 const updateWidth = () => {
   if (process.client) {
@@ -136,22 +136,19 @@ const principleList = [
 const productsAdvantagesActiveIndex = ref(-1);
 
 onBeforeMount(() => {
-  useGSAP().registerPlugin(ScrollTrigger);
   updateWidth();
   window.addEventListener("resize", updateWidth);
 });
 
 onMounted(async () => {
-  await nextTick(() => {
-    if (process.client) {
-      ScrollTrigger.refresh();
-    }
-  });
+  console.log('mounted');
+  await nextTick();
+  nuxtApp.$ScrollTrigger.refresh();
   if (windowWidth.value > 1180) {
-    ScrollTrigger.create({
+    nuxtApp.$ScrollTrigger.create({
       trigger: "#productsAdvantagesScroll",
-      start: "top +=50",
-      end: "+=2700",
+      start: "top top",
+      end: "+=1000",
       pin: true,
       once: true,
       onUpdate: (self) => {
@@ -168,7 +165,7 @@ onMounted(async () => {
         if (progress === 1) {
           self.disable();
           nextTick(() => {
-            ScrollTrigger.refresh();
+            nuxtApp.$ScrollTrigger.refresh();
           });
         }
       },
@@ -176,8 +173,8 @@ onMounted(async () => {
   }
 });
 
-onUnmounted(() => {
-  ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+onBeforeUnmount(() => {
+  nuxtApp.$ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   window.removeEventListener("resize", updateWidth);
 });
 </script>
@@ -280,7 +277,9 @@ onUnmounted(() => {
         ></NuxtLink>
       </div>
       <div class="documentation__request">
-        <NuxtLink to="/drop-message"><Button green>оставить заявку</Button></NuxtLink>
+        <NuxtLink to="/drop-message"
+          ><Button green>оставить заявку</Button></NuxtLink
+        >
       </div>
     </section>
   </div>
@@ -301,7 +300,7 @@ onUnmounted(() => {
 }
 
 .products__advantages {
-  padding-top: 100px;
+  padding-top: 200px;
   color: #333343;
   &-inner {
     display: flex;
@@ -364,7 +363,7 @@ onUnmounted(() => {
 }
 
 .theft-protection {
-  padding-top: 100px;
+  padding-top: 200px;
   &__title {
     font-family: "VelaSans-bold";
     font-size: 35px;
@@ -550,6 +549,8 @@ onUnmounted(() => {
     }
     &-list__item {
       font-size: 26px;
+      line-height: 100%;
+      padding-bottom: 40px;
     }
   }
   .theft-protection {

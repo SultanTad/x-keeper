@@ -1,7 +1,5 @@
 <script setup>
 import { ref, onMounted, onBeforeMount } from "vue";
-import { useRoute } from "vue-router";
-import { useEventBus } from "@vueuse/core";
 import ForestCountry from "@/assets/images/forest-country-road-1.webp";
 import YellowBulldozer from "@/assets/images/yellow-bulldozer.webp";
 import Cargoes from "@/assets/images/cargoes.webp";
@@ -13,17 +11,13 @@ import Icon3 from "@/assets/images/icon-3.svg";
 import Circles from "@/assets/images/circles.svg";
 import Globe from "@/assets/images/globe.svg";
 import GlobeWithDots from "@/assets/images/globe-with-dots.svg";
-import { gsap } from "gsap";
 import { useAnimationStore } from "~/store/animationPlayedStore";
 
 const notMainPageFirst = useAnimationStore();
-
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
+const stopScrollAnimationMain = useAnimationStore();
+const nuxtApp = useNuxtApp();
 const aboutUsActiveIndex = ref(-1);
 const trustGlobeActiveIndex = ref(-1);
-const route = useRoute();
-const bus = useEventBus("scrollTriggerReady");
 const trustInfoList = [
   "Наши устройства",
   "бесперебойно работают",
@@ -145,34 +139,19 @@ const closeWidget = () => {
 };
 
 onBeforeMount(() => {
-  useGSAP().registerPlugin(ScrollTrigger);
   updateWidth();
   window.addEventListener("resize", updateWidth);
 });
 
-watch(
-  () => route.path,
-  () => {
-    nextTick(() => {
-      if (process.client) {
-        ScrollTrigger.refresh();
-      }
-    });
-  }
-);
-
 onMounted(async () => {
   isMounted.value = true;
-  await nextTick(() => {
-    if (process.client) {
-      ScrollTrigger.refresh();
-    }
-  });
+  await nextTick();
+  nuxtApp.$ScrollTrigger.refresh();
 
   const tabInfos = document.querySelectorAll(".tabInfo");
 
   if (windowWidth.value > 1180) {
-    ScrollTrigger.create({
+    nuxtApp.$ScrollTrigger.create({
       trigger: "#aboutUsScroll",
       start: "top top",
       end: "+=2700",
@@ -191,9 +170,9 @@ onMounted(async () => {
 
         if (progress === 1) {
           self.disable();
-          bus.emit();
+          stopScrollAnimationMain.queueAnimationMainPage = true;
           nextTick(() => {
-            ScrollTrigger.refresh();
+            nuxtApp.$ScrollTrigger.refresh();
           });
         }
       },
@@ -201,7 +180,7 @@ onMounted(async () => {
   }
   if (windowWidth.value > 1200) {
     tabInfos.forEach((tab) => {
-      ScrollTrigger.create({
+      nuxtApp.$ScrollTrigger.create({
         trigger: tab,
         start: "top 80%",
         end: "top 80%",
@@ -221,7 +200,7 @@ onMounted(async () => {
     });
   }
 
-  ScrollTrigger.create({
+  nuxtApp.$ScrollTrigger.create({
     trigger: "#trustGlobe",
     start: "top top",
     end: "+=3000",
@@ -296,14 +275,15 @@ onMounted(async () => {
         self.disable();
 
         nextTick(() => {
-          ScrollTrigger.refresh();
+          nuxtApp.$ScrollTrigger.refresh();
         });
       }
     },
   });
 });
-onUnmounted(() => {
-  ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+
+onBeforeUnmount(() => {
+  // ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   window.removeEventListener("resize", updateWidth);
 });
 </script>

@@ -1,14 +1,12 @@
 <script setup>
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { onMounted, ref } from "vue";
 import { useAnimationStore } from "~/store/animationPlayedStore";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const historyActiveIndex = ref(-1);
 const windowWidth = ref(0);
 const stopAnimation = useAnimationStore();
+const nuxtApp = useNuxtApp();
 
 const updateWidth = () => {
   if (typeof window !== "undefined") {
@@ -24,22 +22,18 @@ const historyMilestoneList = [
 ];
 
 onBeforeMount(() => {
-  useGSAP().registerPlugin(ScrollTrigger);
   updateWidth();
   window.addEventListener("resize", updateWidth);
 });
 
 onMounted(async () => {
-  await nextTick(() => {
-    if (process.client) {
-      ScrollTrigger.refresh();
-    }
-  });
+  await nextTick();
+  nuxtApp.$ScrollTrigger.refresh();
   if (windowWidth.value > 1180) {
-    ScrollTrigger.create({
+    nuxtApp.$ScrollTrigger.create({
       trigger: "#historyScrollTrigger",
       start: "top top",
-      end: "+=1500",
+      end: "+=400",
       pin: true,
       once: true,
       onUpdate: (self) => {
@@ -51,15 +45,16 @@ onMounted(async () => {
           self.disable();
           stopAnimation.queueAnimation = true;
           nextTick(() => {
-            ScrollTrigger.refresh();
+            nuxtApp.$ScrollTrigger.refresh();
           });
         }
       },
     });
   }
 });
+
 onUnmounted(() => {
-  ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+  nuxtApp.$ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   window.removeEventListener("resize", updateWidth);
 });
 </script>
@@ -232,6 +227,8 @@ onUnmounted(() => {
   }
   &__logo {
     margin-bottom: 12px;
+    width: 240px;
+    height: 248px;
   }
   &__title {
     font-family: "VelaSans-Regular";
@@ -275,13 +272,12 @@ onUnmounted(() => {
 }
 
 .history__milestone {
+  padding-top: 200px;
   &-inner {
-    height: 640px;
     max-width: 1145px;
     margin: 0 auto;
     display: flex;
     align-items: center;
-    justify-content: center;
     flex-direction: column;
   }
   &-text {
@@ -304,6 +300,7 @@ onUnmounted(() => {
 }
 
 .achievements {
+  padding-top: 200px;
   &__inner {
     display: flex;
     justify-content: space-between;

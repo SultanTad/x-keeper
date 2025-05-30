@@ -47,13 +47,9 @@ const activeTab = ref(0);
     justify-content: end;
     overflow: hidden;
     visibility: hidden;
-    opacity: 0;
     transform: scale(1.1);
     &--active {
-      visibility: visible;
-      opacity: 1;
-      transform: scale(1);
-      transition: transform 0.8s, opacity 1s;
+      animation: fade 1.5s ease forwards;
     }
     &-inner {
       padding-bottom: 60px;
@@ -79,6 +75,14 @@ const activeTab = ref(0);
       line-height: normal;
       max-width: 808px;
     }
+  }
+}
+
+@keyframes fade {
+  to {
+    filter: brightness(1);
+    visibility: visible;
+    transform: scale(1);
   }
 }
 

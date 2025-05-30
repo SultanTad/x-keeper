@@ -1,9 +1,10 @@
 <script setup>
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Vue3Autocounter from "vue3-autocounter";
-import { useEventBus } from "@vueuse/core";
+import { useAnimationStore } from "~/store/animationPlayedStore";
 
 const windowWidth = ref(0);
+const nuxtApp = useNuxtApp();
+const stopScrollAnimationMain = useAnimationStore();
 
 const updateWidth = () => {
   if (process.client) {
@@ -19,19 +20,17 @@ const props = defineProps({
 });
 
 const animatedNumber = ref(1);
-const bus = useEventBus("scrollTriggerReady");
-
-onBeforeMount(() => {
-  useGSAP().registerPlugin(ScrollTrigger);
-});
 
 onMounted(async () => {
   await nextTick();
   updateWidth();
   window.addEventListener("resize", updateWidth);
-  bus.on(() => {
-    if (windowWidth.value > 1180) {
-      ScrollTrigger.create({
+});
+watch(
+  () => stopScrollAnimationMain.queueAnimationMainPage,
+  (newVal) => {
+    if (newVal && windowWidth.value > 1180) {
+      nuxtApp.$ScrollTrigger.create({
         trigger: ".number-company__title",
         start: "top +=100",
         end: "+=600",
@@ -47,10 +46,10 @@ onMounted(async () => {
         },
       });
     }
-  });
-});
+  }
+);
 onUnmounted(() => {
-  ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+  nuxtApp.$ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   window.removeEventListener("resize", updateWidth);
 });
 </script>
