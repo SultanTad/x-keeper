@@ -746,6 +746,9 @@ onBeforeUnmount(() => {
       }
     }
   }
+  .products__advantages-header {
+    gap: 0;
+  }
 }
 
 @media (max-width: 460px) {
