@@ -1,5 +1,4 @@
 <script setup>
-import { ref, onBeforeMount, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useAnimationStore } from "~/store/animationPlayedStore";
 
@@ -36,27 +35,6 @@ onMounted(() => {
     stopAnimation.delayedAnimation = true;
   }
 });
-
-// watch(
-//   () => stopAnimation.delayedAnimation,
-//   (newVal) => {
-//     if (newVal) {
-//       nuxtApp.$ScrollTrigger.create({
-//         trigger: "body",
-//         start: "top top",
-//         end: "50px top",
-//         scrub: true,
-//         onUpdate: () => {
-//           useGSAP().to(".header", {
-//             background: "rgba(255, 255, 255, 0.70)",
-//             backdropFilter: "blur(27px)",
-//             ease: "none",
-//           });
-//         },
-//       });
-//     }
-//   }
-// );
 
 watch(
   () => route.path,

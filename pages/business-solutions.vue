@@ -1,6 +1,4 @@
 <script setup>
-import { gsap } from "gsap";
-import { onMounted, ref } from "vue";
 import { useAnimationStore } from "~/store/animationPlayedStore";
 
 const historyActiveIndex = ref(-1);
@@ -33,7 +31,7 @@ onMounted(async () => {
     nuxtApp.$ScrollTrigger.create({
       trigger: "#historyScrollTrigger",
       start: "top top",
-      end: "+=400",
+      end: "+=1000",
       pin: true,
       once: true,
       onUpdate: (self) => {
@@ -54,7 +52,6 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-  nuxtApp.$ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   window.removeEventListener("resize", updateWidth);
 });
 </script>

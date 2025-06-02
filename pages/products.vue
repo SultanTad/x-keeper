@@ -1,5 +1,4 @@
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from "vue";
 import SliderBg from "@/assets/images/blurred_red.webp";
 import GrayArrow from "@/assets/images/gray-arrow.svg";
 import WhiteArrow from "@/assets/images/white-arrow.svg";
@@ -141,14 +140,13 @@ onBeforeMount(() => {
 });
 
 onMounted(async () => {
-  console.log('mounted');
   await nextTick();
   nuxtApp.$ScrollTrigger.refresh();
   if (windowWidth.value > 1180) {
     nuxtApp.$ScrollTrigger.create({
       trigger: "#productsAdvantagesScroll",
       start: "top top",
-      end: "+=1000",
+      end: "+=1100",
       pin: true,
       once: true,
       onUpdate: (self) => {
@@ -174,7 +172,6 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(() => {
-  nuxtApp.$ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   window.removeEventListener("resize", updateWidth);
 });
 </script>
@@ -191,7 +188,16 @@ onBeforeUnmount(() => {
     </section>
     <section class="products__advantages" id="productsAdvantagesScroll">
       <div class="products__advantages-inner">
-        <h3 class="products__advantages-title">Преимущества</h3>
+        <div class="products__advantages-header">
+          <h3 class="products__advantages-title">Преимущества</h3>
+          <div class="products__advantages-text">
+            Мы используем передовые материалы и компоненты, что позволяет маякам
+            X-KEEPER работать в любых условиях, будь то городская среда или
+            районы с экстремальными погодными условиями. Гаражи, подземные
+            парковки, лесная или горная местность, пустыня или водное
+            пространство — наши маяки работают везде
+          </div>
+        </div>
         <div class="products__advantages-content">
           <div class="products__advantages-animation">
             <div class="products__advantages-line">
@@ -306,6 +312,12 @@ onBeforeUnmount(() => {
     display: flex;
     justify-content: space-between;
   }
+  &-header {
+    display: flex;
+    flex-direction: column;
+    gap: 20px 0;
+    max-width: 500px;
+  }
   &-title {
     font-family: "VelaSans-ExtraBold";
     font-size: 36px;
@@ -317,7 +329,7 @@ onBeforeUnmount(() => {
   }
   &-text {
     font-family: "VelaSans-Medium";
-    font-size: 26px;
+    font-size: 22px;
     line-height: normal;
     margin-bottom: 50px;
     font-weight: 500;
@@ -544,6 +556,12 @@ onBeforeUnmount(() => {
     }
   }
   .products__advantages {
+    &-header {
+      gap: 50px 0;
+    }
+    &-text {
+      font-size: 26px;
+    }
     &-content {
       max-width: 669px;
     }

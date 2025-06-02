@@ -31,7 +31,7 @@
             <div class="footer__actions">
               <div class="footer__actions-box">
                 <NuxtLink><Button transparent>личный кабинет</Button></NuxtLink>
-                <NuxtLink
+                <NuxtLink to="/drop-message"
                   ><Button transparent>оставить заявку</Button></NuxtLink
                 >
               </div>
@@ -165,5 +165,4 @@
     }
   }
 }
-
 </style>

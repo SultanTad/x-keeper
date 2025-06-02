@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from "vue";
 import MonitorImg from "@/assets/images/monitor.png";
 import "v-slick-carousel/style.css";
 import { VSlickCarousel } from "v-slick-carousel";
@@ -100,7 +99,7 @@ const getSlideClass = (index) => {
   align-items: center;
   height: 260px !important;
   img {
-    margin-right: 150px;
+    margin-right: 90px;
     padding-left: 25px;
   }
   &__inner {
@@ -176,7 +175,7 @@ const getSlideClass = (index) => {
   content: "";
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1550px) {
   .slide {
     &__title {
       font-size: 36px;
@@ -186,7 +185,7 @@ const getSlideClass = (index) => {
       font-size: 20px;
     }
     img {
-      margin-right: 118px;
+      margin-right: 150px;
       padding-left: 91px;
       width: 436px;
       height: 365px;

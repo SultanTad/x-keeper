@@ -1,5 +1,4 @@
 <script setup>
-import { ref, onMounted, onBeforeMount } from "vue";
 import ForestCountry from "@/assets/images/forest-country-road-1.webp";
 import YellowBulldozer from "@/assets/images/yellow-bulldozer.webp";
 import Cargoes from "@/assets/images/cargoes.webp";
@@ -148,7 +147,7 @@ onMounted(async () => {
   await nextTick();
   nuxtApp.$ScrollTrigger.refresh();
 
-  const tabInfos = document.querySelectorAll(".tabInfo");
+  const tabInfos = document.querySelectorAll(".info");
 
   if (windowWidth.value > 1180) {
     nuxtApp.$ScrollTrigger.create({
@@ -182,7 +181,7 @@ onMounted(async () => {
     tabInfos.forEach((tab) => {
       nuxtApp.$ScrollTrigger.create({
         trigger: tab,
-        start: "top 80%",
+        start: "top -=150",
         end: "top 80%",
         once: true,
         onUpdate: () => {
@@ -191,7 +190,7 @@ onMounted(async () => {
             { scale: 1.2 },
             {
               scale: 1,
-              duration: 0.6,
+              duration: 1,
               ease: "power2.out",
             }
           );
@@ -283,7 +282,6 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(() => {
-  // ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   window.removeEventListener("resize", updateWidth);
 });
 </script>
@@ -292,9 +290,6 @@ onBeforeUnmount(() => {
   <main class="main">
     <div class="main__bg"></div>
     <div class="container">
-      <div class="widget" @click="activatedWidget">
-        <img src="../assets/images/widget.svg" alt="" />
-      </div>
       <div class="get-in-touch" :class="{ open__widget: activeWidget }">
         <h2 class="title">Связаться</h2>
         <div class="icon-wrap" @click="closeWidget">
@@ -895,7 +890,7 @@ onBeforeUnmount(() => {
 .trust-globe__text-line:nth-child(2) {
   text-align: center;
   .text-reveal {
-    left: 90px;
+    left: 24px;
   }
 }
 .trust-globe__text-line:nth-child(3) {
@@ -955,7 +950,7 @@ onBeforeUnmount(() => {
 
 @media (min-width: 1350px) {
   .widget {
-    right: calc((100vw - 1352px) / 2 + 3px);
+    right: calc((100vw - 1220px) / 2 + 3px);
   }
 }
 
@@ -1041,6 +1036,17 @@ onBeforeUnmount(() => {
   }
   .marquee ul {
     min-width: 76%;
+  }
+  .trust-globe__text-line:nth-child(2) {
+    .text-reveal {
+      left: 90px;
+    }
+  }
+}
+
+@media (min-width: 1200px) {
+  .info {
+    scale: 1.2;
   }
 }
 

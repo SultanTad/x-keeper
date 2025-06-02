@@ -1,6 +1,4 @@
 <script setup>
-import { ref, defineProps } from "vue";
-
 defineProps({
   slides: Array,
   pagination: Array,
@@ -85,14 +83,13 @@ const activeTab = ref(0);
     display: flex;
     align-items: end;
     color: #fff;
-    visibility: hidden;
     opacity: 0;
     transform: scale(1.1);
+    transition: transform 1.5s, opacity 1.5s;
     &--active {
-      visibility: visible;
       opacity: 1;
       transform: scale(1);
-      transition: transform 0.8s, opacity 1s;
+      transition: transform 1.5s, opacity 1.5s;
     }
     &-inner {
       padding-left: 56px;

@@ -49,7 +49,6 @@ watch(
   }
 );
 onUnmounted(() => {
-  nuxtApp.$ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   window.removeEventListener("resize", updateWidth);
 });
 </script>

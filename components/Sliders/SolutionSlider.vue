@@ -1,6 +1,5 @@
 <script setup>
 import { Swiper, SwiperSlide } from "swiper/vue";
-import { ref, computed, onMounted, onUnmounted } from "vue";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/mousewheel";
@@ -14,16 +13,17 @@ const updateWidth = () => {
   }
 };
 
-onMounted(() => {
+onBeforeMount(() => {
   updateWidth();
   window.addEventListener("resize", updateWidth);
 });
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   window.removeEventListener("resize", updateWidth);
 });
 
 const slidesOffsetBefore = computed(() => {
+  if (windowWidth.value > 1550) return 1100;
   if (windowWidth.value > 1200) return 430;
   if (windowWidth.value <= 800) return 0;
   return 0;

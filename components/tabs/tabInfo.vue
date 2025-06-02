@@ -1,6 +1,4 @@
 <script setup>
-import { ref, defineProps } from "vue";
-
 defineProps({
   slides: Array,
   pagination: Array,
@@ -45,11 +43,13 @@ const activeTab = ref(0);
     display: flex;
     flex-direction: column;
     justify-content: end;
-    overflow: hidden;
-    visibility: hidden;
     transform: scale(1.1);
+    opacity: 0;
+    transition: opacity 1.5s, transform 1.5s;
     &--active {
-      animation: fade 1.5s ease forwards;
+      opacity: 1;
+      transform: scale(1);
+      transition: opacity 1.5s, transform 1.5s;
     }
     &-inner {
       padding-bottom: 60px;
@@ -78,14 +78,6 @@ const activeTab = ref(0);
   }
 }
 
-@keyframes fade {
-  to {
-    filter: brightness(1);
-    visibility: visible;
-    transform: scale(1);
-  }
-}
-
 @media (min-width: 1550px) {
   .tabInfo {
     height: 725px;
@@ -94,12 +86,6 @@ const activeTab = ref(0);
     &--active {
       height: 725px;
     }
-  }
-}
-
-@media (min-width: 1200px) {
-  .tabInfo {
-    scale: 1.2;
   }
 }
 

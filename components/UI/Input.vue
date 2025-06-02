@@ -1,7 +1,4 @@
 <script setup>
-import { defineModel, ref, computed, onMounted } from "vue";
-
-// Деструктурируем props
 const { type, placeholder, shouldValidate, isInvalid } = defineProps({
   type: String,
   placeholder: String,
@@ -14,12 +11,6 @@ const isFocused = ref(false);
 
 const isLabelShrunk = computed(() => {
   return isFocused.value || inputValue.value.length > 0;
-});
-
-onMounted(() => {
-  // Устанавливаем начальное значение для inputValue
-  console.log(inputValue.value);
-  
 });
 </script>
 
