@@ -83,9 +83,7 @@ const activeTab = ref(0);
     height: 725px;
   }
   .tabInfo__content {
-    &--active {
-      height: 725px;
-    }
+    height: 725px;
   }
 }
 

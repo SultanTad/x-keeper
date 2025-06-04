@@ -1,11 +1,6 @@
 <template>
   <div class="wrapper">
     <TheHeader />
-    <div class="container">
-      <div class="widget" @click="activatedWidget">
-        <img src="../assets/images/widget.svg" alt="" />
-      </div>
-    </div>
     <slot />
     <TheFooter />
   </div>

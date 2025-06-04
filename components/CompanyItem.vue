@@ -32,8 +32,8 @@ watch(
     if (newVal && windowWidth.value > 1180) {
       nuxtApp.$ScrollTrigger.create({
         trigger: ".number-company__title",
-        start: "top +=100",
-        end: "+=600",
+        start: "top 50%",
+        end: "top 50%",
         onEnter: () => {
           useGSAP().to(".number-company__item > *", {
             y: 0,

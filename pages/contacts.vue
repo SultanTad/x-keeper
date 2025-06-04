@@ -1,6 +1,7 @@
 <template>
   <section class="contacts">
     <div class="container">
+      <Widget/>
       <h2 class="contacts__title">Контакты</h2>
       <h3 class="contacts__subtitle">
         Eдиный справочный номер: <span>8 (800) 222-22-83</span>

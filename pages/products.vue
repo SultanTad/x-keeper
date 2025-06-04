@@ -178,6 +178,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="container">
+    <Widget/>
     <section class="products__hero">
       <h2 class="products__hero-title">Маяки X-Keeper</h2>
       <TabProducts

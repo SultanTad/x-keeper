@@ -35,12 +35,12 @@ watch(
     if (newVal && windowWidth.value > 1180) {
       nuxtApp.$ScrollTrigger.create({
         trigger: achievementsItemRef.value,
-        start: "top +=160",
-        end: "bottom bottom",
+        start: "top 50%",
+        end: "top 50%",
         once: true,
         onEnter: () => {
           console.log("achievements__item");
-          
+
           useGSAP().to(achievementsItemRef.value.children, {
             y: 0,
             opacity: 1,

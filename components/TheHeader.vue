@@ -8,7 +8,6 @@ const openMenu = ref(false);
 const route = useRoute();
 const activeHeader = ref(false);
 const deactiveHeaderBgScroll = ref(false);
-const nuxtApp = useNuxtApp();
 
 const activatedBurgerMenu = () => {
   if (document.body.style.overflow === "hidden") {
@@ -278,6 +277,12 @@ watch(
     .grey-btn {
       margin-top: 16px;
     }
+  }
+}
+
+@media (min-width: 1550px) {
+  .nav__btns .btn--white {
+    font-size: 15px;
   }
 }
 

@@ -59,6 +59,7 @@ onUnmounted(() => {
 <template>
   <div class="business-solutions__wrapper">
     <div class="container">
+      <Widget />
       <section class="hero">
         <div class="hero__inner">
           <img

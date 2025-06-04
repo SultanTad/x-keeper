@@ -60,6 +60,7 @@ const isActive = (index) => {
 <template>
   <section class="drop-message">
     <div class="mini-container">
+      <Widget/>
       <h2 class="drop-message__title">Оставить заявку</h2>
       <h3 class="drop-message__subtitle">
         Заполните заявку или позвоните нам: <span>+7 (495) 989-22-83</span>
